@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/sampleRow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+                
+                	<ImageView
+                	    android:id="@+id/restaurantResult_thumbnailImageView"
+                	    android:layout_width="100dp"
+					    android:layout_height="80dp"
+					    android:scaleType="fitXY"></ImageView>
+                	
+                	<TableLayout
+                	    android:layout_width="match_parent"
+                	    android:layout_height="wrap_content"
+                	    android:layout_margin="2dp">
+                	    	<TableRow 
+                	    	    android:layout_width="wrap_content"
+                	    	    android:layout_height="wrap_content">
+
+                	    		<TextView
+                	    		    android:id="@+id/restaurantResult_nameTextView"
+                	    		    android:layout_width="wrap_content"
+                	    		    android:layout_height="wrap_content"
+                	    		    android:text="name"
+                	    		    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                	    	</TableRow>
+                	    	<TableRow 
+                	    	    android:id="@+id/tableRow1_sampleTypeRow"
+                	    	    android:layout_width="wrap_content"
+                	    	    android:layout_height="wrap_content">
+
+                	    		<TextView
+                	    		    android:id="@+id/restaurantResult_typeTextView"
+                	    		    android:layout_width="wrap_content"
+                	    		    android:layout_height="wrap_content"
+                	    		    android:text="type"
+                	    		    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                	    	</TableRow>
+                	    	<TableRow 
+                	    	    android:id="@+id/tableRow1_sampleRatingRow"
+                	    	    android:layout_width="wrap_content"
+                	    	    android:layout_height="wrap_content">
+
+                	    		<TextView
+                	    		    android:id="@+id/restaurantResult_ratingTextView"
+                	    		    android:layout_width="wrap_content"
+                	    		    android:layout_height="wrap_content"
+                	    		    android:text="rating"
+                	    		    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+							</TableRow>
+                	    	<TableRow 
+                	    	    android:id="@+id/tableRow1_slot"
+                	    	    android:layout_width="wrap_content"
+                	    	    android:layout_height="wrap_content">
+
+                	    		<TextView
+                	    		    android:id="@+id/restaurantResult_slotTextView"
+                	    		    android:layout_width="wrap_content"
+                	    		    android:layout_height="wrap_content"
+                	    		    android:text="19:00 19:15 19:30"
+                	    		    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+							</TableRow>
+                	    
+                	    
+                	    
+                	</TableLayout>
+                
+
+     </TableRow>
