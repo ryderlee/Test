@@ -145,7 +145,7 @@ public class MainActivity extends Activity {
     }
 
     public void search(){
-    	String str="http://10.0.2.2:8888/restaurant?keyword=&page=0";
+    	String str="http://10.0.2.2:8888/restaurant.json";
     	String type, dist, licno, ss, adr;
     	
     	try{
