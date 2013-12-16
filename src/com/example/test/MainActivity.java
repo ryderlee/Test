@@ -224,7 +224,7 @@ public class MainActivity extends Activity {
     			intent.putExtra("RESTAURANT_LICNO", typeTextView.getText());
     			
     			startActivity(intent);
-    			
+    			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 		    	
     		}
     	}));
