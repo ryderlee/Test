@@ -6,6 +6,7 @@ import java.util.Date;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.*;
 import android.widget.*;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -209,12 +210,21 @@ public class MainActivity extends Activity {
     		@Override
     		public void onClick(View v){
     			TextView typeTextView = (TextView) v.findViewById(R.id.restaurantResult_typeTextView);
-    			
+    			/*
     			Log.i("view","" + typeTextView.getText());
     			View tv = v.getRootView();
     			TextView restaurantInfoTextView = (TextView) tv.findViewById(R.id.restaurantInfo_textView);
     			restaurantInfoTextView.setText(typeTextView.getText());
     			vflipper.showNext();
+    			*/
+    			
+    			Intent intent = new Intent();
+    			intent.setClass(MainActivity.this, RestaurantInfoActivity.class);
+    			
+    			intent.putExtra("RESTAURANT_LICNO", typeTextView.getText());
+    			
+    			startActivity(intent);
+    			
 		    	
     		}
     	}));
