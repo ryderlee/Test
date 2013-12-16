@@ -4,5 +4,7 @@
     <string name="app_name">Test</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_resturant_info">Restaurant inofrmation</string>
+    <string name="title_activity_restaurant_info">Restaurant Information</string>
 
 </resources>
