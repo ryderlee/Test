@@ -9,8 +9,10 @@ package com.example.test;
 
 public final class R {
     public static final class anim {
-        public static final int slide_in_right=0x7f040000;
-        public static final int slide_out_left=0x7f040001;
+        public static final int slide_in_left=0x7f040000;
+        public static final int slide_in_right=0x7f040001;
+        public static final int slide_out_left=0x7f040002;
+        public static final int slide_out_right=0x7f040003;
     }
     public static final class attr {
         /**  The sibling to hide after the image is downloaded 
@@ -40,7 +42,20 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int imagequeued=0x7f020006;
     }
     public static final class id {
-        public static final int action_settings=0x7f090018;
+        public static final int RESTAURANT_ADDRESS=0x7f09000f;
+        public static final int RESTAURANT_CUISINE=0x7f090011;
+        public static final int RESTAURANT_DESCRIPTION=0x7f090015;
+        public static final int RESTAURANT_HOURS=0x7f090013;
+        public static final int RESTAURANT_MENU=0x7f090016;
+        public static final int RESTAURANT_NAME=0x7f09000e;
+        public static final int RESTAURANT_PARKING=0x7f090014;
+        public static final int RESTAURANT_PHONE=0x7f090010;
+        public static final int RESTAURANT_PRICE=0x7f090012;
+        public static final int RESTAURANT_REVIEW_AMBIENCE=0x7f09001a;
+        public static final int RESTAURANT_REVIEW_FOOD=0x7f090018;
+        public static final int RESTAURANT_REVIEW_OVERALL=0x7f090017;
+        public static final int RESTAURANT_REVIEW_SERVICE=0x7f090019;
+        public static final int action_settings=0x7f090025;
         public static final int dateButton=0x7f090003;
         public static final int datePicker1=0x7f090008;
         public static final int dateText1=0x7f09000c;
@@ -49,35 +64,40 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int numberButton=0x7f090005;
         public static final int numberPicker1=0x7f090009;
         public static final int numberSeekBar1=0x7f09000a;
-        public static final int restaurantInfo_textView=0x7f09000e;
-        public static final int restaurantResult_nameTextView=0x7f090011;
-        public static final int restaurantResult_ratingTextView=0x7f090015;
-        public static final int restaurantResult_slotTextView=0x7f090017;
-        public static final int restaurantResult_thumbnailImageView=0x7f090010;
-        public static final int restaurantResult_typeTextView=0x7f090013;
-        public static final int sampleRow=0x7f09000f;
+        public static final int restaurantInfo_textView=0x7f09001b;
+        public static final int restaurantResult_nameTextView=0x7f09001e;
+        public static final int restaurantResult_ratingTextView=0x7f090022;
+        public static final int restaurantResult_slotTextView=0x7f090024;
+        public static final int restaurantResult_thumbnailImageView=0x7f09001d;
+        public static final int restaurantResult_typeTextView=0x7f090020;
+        public static final int sampleRow=0x7f09001c;
         public static final int searchButton=0x7f090006;
         public static final int searchPageLinearLayout=0x7f090002;
         public static final int searchResultListView=0x7f09000b;
-        public static final int tableRow1_sampleRatingRow=0x7f090014;
-        public static final int tableRow1_sampleTypeRow=0x7f090012;
-        public static final int tableRow1_slot=0x7f090016;
+        public static final int tableRow1_sampleRatingRow=0x7f090021;
+        public static final int tableRow1_sampleTypeRow=0x7f09001f;
+        public static final int tableRow1_slot=0x7f090023;
         public static final int timeButton=0x7f090004;
         public static final int timePicker1=0x7f090007;
         public static final int timeText1=0x7f09000d;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int restaurant_info=0x7f030001;
-        public static final int restaurant_search_result_tablerow=0x7f030002;
+        public static final int activity_restaurant_info=0x7f030001;
+        public static final int restaurant_info=0x7f030002;
+        public static final int restaurant_search_result_tablerow=0x7f030003;
     }
     public static final class menu {
         public static final int main=0x7f080000;
+        public static final int restaurant_info=0x7f080001;
+        public static final int resturant_info=0x7f080002;
     }
     public static final class string {
         public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
         public static final int hello_world=0x7f060002;
+        public static final int title_activity_restaurant_info=0x7f060004;
+        public static final int title_activity_resturant_info=0x7f060003;
     }
     public static final class style {
         /** 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.*;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
@@ -196,6 +197,52 @@ public class MainActivity extends Activity {
 	    	catch(MalformedURLException mfe){}
 	    	catch(IOException ioe){}
 	    	
+	    	
+	    	
+	    	convertView.setOnClickListener((new View.OnClickListener(){
+	    		@Override
+	    		public void onClick(View v){
+	    			TextView typeTextView = (TextView) v.findViewById(R.id.restaurantResult_typeTextView);
+	    			/*
+	    			Log.i("view","" + typeTextView.getText());
+	    			View tv = v.getRootView();
+	    			TextView restaurantInfoTextView = (TextView) tv.findViewById(R.id.restaurantInfo_textView);
+	    			restaurantInfoTextView.setText(typeTextView.getText());
+	    			vflipper.showNext();
+	    			*/
+	    			
+	    			Intent intent = new Intent();
+	    			intent.setClass(MainActivity.this, RestaurantInfoActivity.class);
+	    			String json = MainActivity.this.getJsonString("http://10.0.2.2:8888/restaurantInfo.json");
+	    			JSONObject jso;
+	    			try {
+						jso = new JSONObject(json);
+		    			intent.putExtra("RESTAURANT_ID", typeTextView.getText());
+		    			intent.putExtra("RESTAURANT_NAME", jso.getString("RESTAURANT_NAME"));
+		    			intent.putExtra("RESTAURANT_ADDRESS", jso.getString("RESTAURANT_ADDRESS"));
+		    			intent.putExtra("RESTAURANT_PHONE", jso.getString("RESTAURANT_PHONE"));
+		    			intent.putExtra("RESTAURANT_CUISINE", jso.getString("RESTAURANT_CUISINE"));
+		    			intent.putExtra("RESTAURANT_PRICE", jso.getString("RESTAURANT_PRICE"));
+		    			intent.putExtra("RESTAURANT_HOURS",jso.getString("RESTAURANT_HOURS") );
+		    			intent.putExtra("RESTAURANT_PARKING", jso.getString("RESTAURANT_PARKING"));
+		    			intent.putExtra("RESTAURANT_DESCRIPTION", jso.getString("RESTAURANT_DESCRIPTION"));
+		    			intent.putExtra("RESTAURANT_MENU", jso.getString("RESTAURANT_MENU"));
+		    			intent.putExtra("RESTAURANT_REVIEW_OVERALL", jso.getString("RESTAURANT_REVIEW_OVERALL"));
+		    			intent.putExtra("RESTAURANT_REVIEW_FOOD", jso.getString("RESTAURANT_REVIEW_FOOD"));
+		    			intent.putExtra("RESTAURANT_REVIEW_SERVICE", jso.getString("RESTAURANT_REVIEW_SERVICE"));
+		    			intent.putExtra("RESTAURANT_REVIEW_AMBIENCE", jso.getString("RESTAURANT_REVIEW_AMBIENCE"));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	    			
+	    			
+	    			startActivity(intent);
+	    			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+			    	
+	    		}
+	    	}));
+	    	/*
 	    	convertView.setOnClickListener((new View.OnClickListener(){
 	    		@Override
 	    		public void onClick(View v){
@@ -208,7 +255,7 @@ public class MainActivity extends Activity {
 	    		vflipper.showNext();
 	    		}
 	    	}));
-			
+			*/
 			return convertView;
 		}
     }
@@ -241,21 +288,39 @@ public class MainActivity extends Activity {
     	
     }
     
-    public void search(){
-    	String str="http://10.0.2.2:8888/restaurant.json";
-    	
-        try{
-            URL url=new URL(str);
-            URLConnection urlc=url.openConnection();
+    public String getJsonString(String s){
+    	URL r; 
+    	try {
+    	r = new URL (s);
+    	return this.getJsonString(r);
+    	}catch (Exception e){}
+    	return "";
+    }
+    public String getJsonString(URL url){
+        String line;
+        StringBuilder sb = new StringBuilder();
+    	try{
+    		URLConnection urlc=url.openConnection();
             BufferedReader bfr=new BufferedReader(new InputStreamReader(urlc.getInputStream()));
-            String line;
-            StringBuilder sb = new StringBuilder();
             while((line=bfr.readLine())!=null)
             {
             	sb.append(line + "\n");
             }
+    		
+    	} catch(Exception e){
+        	Log.d("exception", e.getMessage());
+        }
+		return sb.toString();
+    	
+    	
+    }
+    public void search(){
+    	String str="http://10.0.2.2:8888/restaurant.json";
+    	
+        try{
             ArrayList<RestaurantResultItem> results = new ArrayList<RestaurantResultItem>();
-	        JSONArray jsa=new JSONArray(sb.toString());
+        	String s = this.getJsonString(str);
+	        JSONArray jsa=new JSONArray(s);
             for(int i=0;i<jsa.length();i++) {
                		JSONObject jo=(JSONObject)jsa.get(i);
                		RestaurantResultItem item = new RestaurantResultItem();
@@ -276,6 +341,71 @@ public class MainActivity extends Activity {
     	
     }
     
+    Bitmap mIcon;
+    /*
+    public void addRestaurantResultItem(String name, String type, int rating){
+    	LayoutInflater inflater = LayoutInflater.from(this);
+    	TableRow rowView = (TableRow)inflater.inflate(R.layout.restaurant_search_result_tablerow, null );
+    	TableLayout t = (TableLayout)this.findViewById(R.id.searchResultTableLayout);
+    	
+    	TextView nameTextView = (TextView) rowView.findViewById(R.id.restaurantResult_nameTextView);
+    	TextView typeTextView = (TextView) rowView.findViewById(R.id.restaurantResult_typeTextView);
+    	TextView ratingTextView = (TextView) rowView.findViewById(R.id.restaurantResult_ratingTextView);
+    	TextView slotTextView = (TextView) rowView.findViewById(R.id.restaurantResult_slotTextView);
+    	
+    	ImageView iv = (ImageView) rowView.findViewById(R.id.restaurantResult_thumbnailImageView);
+    	nameTextView.setText(name);
+    	typeTextView.setText(type);
+    	ratingTextView.setText("" + rating);
+    	iv.setImageBitmap(mIcon);
+    	
+    	rowView.setClickable(true);
+    	rowView.setOnClickListener((new View.OnClickListener(){
+    		@Override
+    		public void onClick(View v){
+    			TextView typeTextView = (TextView) v.findViewById(R.id.restaurantResult_typeTextView);
+    			//Log.i("view","" + typeTextView.getText());
+    			//View tv = v.getRootView();
+    			//TextView restaurantInfoTextView = (TextView) tv.findViewById(R.id.restaurantInfo_textView);
+    			//restaurantInfoTextView.setText(typeTextView.getText());
+    			//vflipper.showNext();
+    			
+    			Intent intent = new Intent();
+    			intent.setClass(MainActivity.this, RestaurantInfoActivity.class);
+    			String json = MainActivity.this.getJsonString("http://10.0.2.2:8888/restaurantInfo.json");
+    			JSONObject jso;
+    			try {
+					jso = new JSONObject(json);
+	    			intent.putExtra("RESTAURANT_ID", typeTextView.getText());
+	    			intent.putExtra("RESTAURANT_NAME", jso.getString("RESTAURANT_NAME"));
+	    			intent.putExtra("RESTAURANT_ADDRESS", jso.getString("RESTAURANT_ADDRESS"));
+	    			intent.putExtra("RESTAURANT_PHONE", jso.getString("RESTAURANT_PHONE"));
+	    			intent.putExtra("RESTAURANT_CUISINE", jso.getString("RESTAURANT_CUISINE"));
+	    			intent.putExtra("RESTAURANT_PRICE", jso.getString("RESTAURANT_PRICE"));
+	    			intent.putExtra("RESTAURANT_HOURS",jso.getString("RESTAURANT_HOURS") );
+	    			intent.putExtra("RESTAURANT_PARKING", jso.getString("RESTAURANT_PARKING"));
+	    			intent.putExtra("RESTAURANT_DESCRIPTION", jso.getString("RESTAURANT_DESCRIPTION"));
+	    			intent.putExtra("RESTAURANT_MENU", jso.getString("RESTAURANT_MENU"));
+	    			intent.putExtra("RESTAURANT_REVIEW_OVERALL", jso.getString("RESTAURANT_REVIEW_OVERALL"));
+	    			intent.putExtra("RESTAURANT_REVIEW_FOOD", jso.getString("RESTAURANT_REVIEW_FOOD"));
+	    			intent.putExtra("RESTAURANT_REVIEW_SERVICE", jso.getString("RESTAURANT_REVIEW_SERVICE"));
+	    			intent.putExtra("RESTAURANT_REVIEW_AMBIENCE", jso.getString("RESTAURANT_REVIEW_AMBIENCE"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    			
+    			
+    			startActivity(intent);
+    			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+		    	
+    		}
+    	}));
+    	t.addView(rowView);
+    	
+    	
+    }
+    */
     public void resetSearch(){
     	
     }
