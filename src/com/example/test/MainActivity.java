@@ -144,7 +144,32 @@ public class MainActivity extends Activity {
 		
 		
     }
-
+    public String getJsonString(String s){
+    	URL r; 
+    	try {
+    	r = new URL (s);
+    	return this.getJsonString(r);
+    	}catch (Exception e){}
+    	return "";
+    }
+    public String getJsonString(URL url){
+        String line;
+        StringBuilder sb = new StringBuilder();
+    	try{
+    		URLConnection urlc=url.openConnection();
+            BufferedReader bfr=new BufferedReader(new InputStreamReader(urlc.getInputStream()));
+            while((line=bfr.readLine())!=null)
+            {
+            	sb.append(line + "\n");
+            }
+    		
+    	} catch(Exception e){
+        	Log.d("exception", e.getMessage());
+        }
+		return sb.toString();
+    	
+    	
+    }
     public void search(){
     	String str="http://10.0.2.2:8888/restaurant.json";
     	String type, dist, licno, ss, adr;
@@ -158,16 +183,8 @@ public class MainActivity extends Activity {
         catch(IOException ioe){}	
     	
         try{
-            URL url=new URL(str);
-            URLConnection urlc=url.openConnection();
-            BufferedReader bfr=new BufferedReader(new InputStreamReader(urlc.getInputStream()));
-            String line;
-            StringBuilder sb = new StringBuilder();
-            while((line=bfr.readLine())!=null)
-            {
-            	sb.append(line + "\n");
-            }
-	        JSONArray jsa=new JSONArray(sb.toString());
+        	String s = this.getJsonString(str);
+	        JSONArray jsa=new JSONArray(s);
             for(int i=0;i<jsa.length();i++) {
 	               JSONObject jo=(JSONObject)jsa.get(i);
                			licno= jo.getString("LICNO");
@@ -220,8 +237,29 @@ public class MainActivity extends Activity {
     			
     			Intent intent = new Intent();
     			intent.setClass(MainActivity.this, RestaurantInfoActivity.class);
+    			String json = MainActivity.this.getJsonString("http://10.0.2.2:8888/restaurantInfo.json");
+    			JSONObject jso;
+    			try {
+					jso = new JSONObject(json);
+	    			intent.putExtra("RESTAURANT_ID", typeTextView.getText());
+	    			intent.putExtra("RESTAURANT_NAME", jso.getString("RESTAURANT_NAME"));
+	    			intent.putExtra("RESTAURANT_ADDRESS", jso.getString("RESTAURANT_ADDRESS"));
+	    			intent.putExtra("RESTAURANT_PHONE", jso.getString("RESTAURANT_PHONE"));
+	    			intent.putExtra("RESTAURANT_CUISINE", jso.getString("RESTAURANT_CUISINE"));
+	    			intent.putExtra("RESTAURANT_PRICE", jso.getString("RESTAURANT_PRICE"));
+	    			intent.putExtra("RESTAURANT_HOURS",jso.getString("RESTAURANT_HOURS") );
+	    			intent.putExtra("RESTAURANT_PARKING", jso.getString("RESTAURANT_PARKING"));
+	    			intent.putExtra("RESTAURANT_DESCRIPTION", jso.getString("RESTAURANT_DESCRIPTION"));
+	    			intent.putExtra("RESTAURANT_MENU", jso.getString("RESTAURANT_MENU"));
+	    			intent.putExtra("RESTAURANT_REVIEW_OVERALL", jso.getString("RESTAURANT_REVIEW_OVERALL"));
+	    			intent.putExtra("RESTAURANT_REVIEW_FOOD", jso.getString("RESTAURANT_REVIEW_FOOD"));
+	    			intent.putExtra("RESTAURANT_REVIEW_SERVICE", jso.getString("RESTAURANT_REVIEW_SERVICE"));
+	    			intent.putExtra("RESTAURANT_REVIEW_AMBIENCE", jso.getString("RESTAURANT_REVIEW_AMBIENCE"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
     			
-    			intent.putExtra("RESTAURANT_LICNO", typeTextView.getText());
     			
     			startActivity(intent);
     			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

@@ -21,9 +21,52 @@ public class RestaurantInfoActivity extends Activity {
 		
 		
 		Intent intent = getIntent();
-		String msg = intent.getStringExtra("RESTAURANT_LICNO");
-		TextView tv = (TextView) findViewById(R.id.restaurant_LICNOTextView);
-		tv.setText(msg);
+		
+		
+		String RESTAURANT_ID  = intent.getStringExtra("RESTAURANT_ID");
+		String RESTAURANT_NAME  = intent.getStringExtra("RESTAURANT_NAME");
+		String RESTAURANT_ADDRESS  = intent.getStringExtra("RESTAURANT_ADDRESS");
+		String RESTAURANT_PHONE  = intent.getStringExtra("RESTAURANT_PHONE");
+		String RESTAURANT_CUISINE  = intent.getStringExtra("RESTAURANT_CUISINE");
+		String RESTAURANT_PRICE  = intent.getStringExtra("RESTAURANT_PRICE");
+		String RESTAURANT_HOURS  = intent.getStringExtra("RESTAURANT_HOURS");
+		String RESTAURANT_PARKING  = intent.getStringExtra("RESTAURANT_PARKING");
+		String RESTAURANT_DESCRIPTION  = intent.getStringExtra("RESTAURANT_DESCRIPTION");
+		String RESTAURANT_MENU  = intent.getStringExtra("RESTAURANT_MENU");
+		String RESTAURANT_REVIEW_OVERALL  = intent.getStringExtra("RESTAURANT_REVIEW_OVERALL");
+		String RESTAURANT_REVIEW_FOOD = intent.getStringExtra("RESTAURANT_REVIEW_FOOD");
+		String RESTAURANT_REVIEW_SERVICE  = intent.getStringExtra("RESTAURANT_REVIEW_SERVICE");
+		String RESTAURANT_REVIEW_AMBIENCE = intent.getStringExtra("RESTAURANT_REVIEW_AMBIENCE");
+		
+		
+		
+		String RESTAURANT_LICNO = intent.getStringExtra("RESTAURANT_LICNO");
+		TextView tv_RESTAURANT_NAME = (TextView) findViewById(R.id.RESTAURANT_NAME);
+		TextView tv_RESTAURANT_ADDRESS = (TextView) findViewById(R.id.RESTAURANT_ADDRESS);
+		TextView tv_RESTAURANT_PHONE= (TextView) findViewById(R.id.RESTAURANT_PHONE);
+		TextView tv_RESTAURANT_CUISINE = (TextView) findViewById(R.id.RESTAURANT_CUISINE);
+		TextView tv_RESTAURANT_PRICE= (TextView) findViewById(R.id.RESTAURANT_PRICE);
+		TextView tv_RESTAURANT_HOURS= (TextView) findViewById(R.id.RESTAURANT_HOURS);
+		TextView tv_RESTAURANT_PARKING= (TextView) findViewById(R.id.RESTAURANT_PARKING);
+		TextView tv_RESTAURANT_DESCRIPTION = (TextView) findViewById(R.id.RESTAURANT_DESCRIPTION);
+		TextView tv_RESTAURANT_MENU= (TextView) findViewById(R.id.RESTAURANT_MENU);
+		TextView tv_RESTAURANT_REVIEW_OVERALL = (TextView) findViewById(R.id.RESTAURANT_REVIEW_OVERALL);
+		TextView tv_RESTAURANT_REVIEW_FOOD = (TextView) findViewById(R.id.RESTAURANT_REVIEW_FOOD);
+		TextView tv_RESTAURANT_REVIEW_SERVICE = (TextView) findViewById(R.id.RESTAURANT_REVIEW_SERVICE);
+		TextView tv_RESTAURANT_REVIEW_AMBIENCE = (TextView) findViewById(R.id.RESTAURANT_REVIEW_AMBIENCE);
+		tv_RESTAURANT_NAME.setText(RESTAURANT_NAME);
+		tv_RESTAURANT_ADDRESS.setText(RESTAURANT_ADDRESS);
+		tv_RESTAURANT_PHONE.setText(RESTAURANT_PHONE);
+		tv_RESTAURANT_CUISINE.setText(RESTAURANT_CUISINE);
+		tv_RESTAURANT_PRICE.setText(RESTAURANT_PRICE);
+		tv_RESTAURANT_HOURS.setText(RESTAURANT_HOURS);
+		tv_RESTAURANT_PARKING.setText(RESTAURANT_PARKING);
+		tv_RESTAURANT_DESCRIPTION.setText(RESTAURANT_DESCRIPTION);
+		tv_RESTAURANT_MENU.setText(RESTAURANT_MENU);
+		tv_RESTAURANT_REVIEW_OVERALL.setText(RESTAURANT_REVIEW_OVERALL);
+		tv_RESTAURANT_REVIEW_FOOD.setText(RESTAURANT_REVIEW_FOOD);
+		tv_RESTAURANT_REVIEW_SERVICE.setText(RESTAURANT_REVIEW_SERVICE);
+		tv_RESTAURANT_REVIEW_AMBIENCE.setText(RESTAURANT_REVIEW_AMBIENCE);
 	}
 
 	/**
@@ -34,8 +77,6 @@ public class RestaurantInfoActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 	}
-
-	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
