@@ -13,6 +13,12 @@ public final class R {
         public static final int slide_out_left=0x7f040001;
     }
     public static final class attr {
+        /**  The sibling to hide after the image is downloaded 
+             and show when the image is being downloaded 
+         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int hideShowSibling=0x7f010000;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -25,34 +31,40 @@ public final class R {
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int decodedecoding=0x7f020000;
+        public static final int decodequeued=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int imagedownloadfailed=0x7f020003;
+        public static final int imagedownloading=0x7f020004;
+        public static final int imagenotqueued=0x7f020005;
+        public static final int imagequeued=0x7f020006;
     }
     public static final class id {
         public static final int action_settings=0x7f090018;
         public static final int dateButton=0x7f090003;
         public static final int datePicker1=0x7f090008;
-        public static final int dateText1=0x7f09000d;
+        public static final int dateText1=0x7f09000c;
         public static final int linearLayout1=0x7f090001;
         public static final int masterViewFlipper=0x7f090000;
         public static final int numberButton=0x7f090005;
         public static final int numberPicker1=0x7f090009;
         public static final int numberSeekBar1=0x7f09000a;
-        public static final int restaurantInfo_textView=0x7f09000f;
+        public static final int restaurantInfo_textView=0x7f09000e;
         public static final int restaurantResult_nameTextView=0x7f090011;
         public static final int restaurantResult_ratingTextView=0x7f090015;
         public static final int restaurantResult_slotTextView=0x7f090017;
         public static final int restaurantResult_thumbnailImageView=0x7f090010;
         public static final int restaurantResult_typeTextView=0x7f090013;
-        public static final int sampleRow=0x7f09000c;
+        public static final int sampleRow=0x7f09000f;
         public static final int searchButton=0x7f090006;
         public static final int searchPageLinearLayout=0x7f090002;
-        public static final int searchResultTableLayout=0x7f09000b;
+        public static final int searchResultListView=0x7f09000b;
         public static final int tableRow1_sampleRatingRow=0x7f090014;
         public static final int tableRow1_sampleTypeRow=0x7f090012;
         public static final int tableRow1_slot=0x7f090016;
         public static final int timeButton=0x7f090004;
         public static final int timePicker1=0x7f090007;
-        public static final int timeText1=0x7f09000e;
+        public static final int timeText1=0x7f09000d;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -95,4 +107,33 @@ public final class R {
          */
         public static final int AppTheme=0x7f070001;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a ImageDownloaderView.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #ImageDownloaderView_hideShowSibling com.example.test:hideShowSibling}</code></td><td> The sibling to hide after the image is downloaded 
+             and show when the image is being downloaded </td></tr>
+           </table>
+           @see #ImageDownloaderView_hideShowSibling
+         */
+        public static final int[] ImageDownloaderView = {
+            0x7f010000
+        };
+        /**
+          <p>
+          @attr description
+           The sibling to hide after the image is downloaded 
+             and show when the image is being downloaded 
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          <p>This is a private symbol.
+          @attr name com.example.test:hideShowSibling
+        */
+        public static final int ImageDownloaderView_hideShowSibling = 0;
+    };
 }

@@ -6,6 +6,7 @@ import java.util.Date;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.app.Activity;
+import android.content.Context;
 import android.view.*;
 import android.widget.*;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -15,6 +16,7 @@ import android.graphics.*;
 import android.util.Log;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.*;
 
 import org.json.*;
@@ -147,6 +149,64 @@ public class MainActivity extends Activity {
 		
     }
 
+    private class RestaurantResultItem {
+    	public String licno;
+    	public String type;
+    	public String dist;
+    	public String ss;
+    	public String adr;
+    	public int rating;
+    	public String img;
+    }
+    
+    private class ListViewAdapter<T> extends ArrayAdapter {
+		public ListViewAdapter(Context context, int resource, Object[] objects) {
+			super(context, resource, objects);
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				LayoutInflater inflater = LayoutInflater.from(this.getContext());
+				convertView = inflater.inflate(R.layout.restaurant_search_result_tablerow, parent, false);
+			}
+			
+			TextView nameTextView = (TextView) convertView.findViewById(R.id.restaurantResult_nameTextView);
+	    	TextView typeTextView = (TextView) convertView.findViewById(R.id.restaurantResult_typeTextView);
+	    	TextView ratingTextView = (TextView) convertView.findViewById(R.id.restaurantResult_ratingTextView);
+	    	TextView slotTextView = (TextView) convertView.findViewById(R.id.restaurantResult_slotTextView);
+	    	
+	    	RestaurantResultItem item = (RestaurantResultItem)this.getItem(position);
+	    	nameTextView.setText(item.ss);
+	    	typeTextView.setText(item.licno);
+//	    	ratingTextView.setText("" + item.rating);
+	    	
+	    	PhotoView pv = ((PhotoView) convertView.findViewById(R.id.restaurantResult_thumbnailImageView));
+	    	try{
+	    		//URL req = new URL( "http://giverny.org/hotels/corniche/restaurant-room.jpg");
+	    		URL req = new URL(item.img);
+	    		pv.setImageURL(req, true, null);
+	    	}
+	    	catch(MalformedURLException mfe){}
+	    	catch(IOException ioe){}
+	    	
+	    	convertView.setOnClickListener((new View.OnClickListener(){
+	    		@Override
+	    		public void onClick(View v){
+	    		TextView typeTextView = (TextView) v.findViewById(R.id.restaurantResult_typeTextView);
+	    		
+	    		Log.i("view","" + typeTextView.getText());
+	    		View tv = v.getRootView();
+	    		TextView restaurantInfoTextView = (TextView) tv.findViewById(R.id.restaurantInfo_textView);
+	    		restaurantInfoTextView.setText(typeTextView.getText());
+	    		vflipper.showNext();
+	    		}
+	    	}));
+			
+			return convertView;
+		}
+    }
+    
     public void search(){
     	String str="http://10.0.2.2:8888/restaurant.json";
     	String type, dist, licno, ss, adr;
@@ -161,66 +221,27 @@ public class MainActivity extends Activity {
             {
             	sb.append(line + "\n");
             }
+        	ArrayList<RestaurantResultItem> results = new ArrayList<RestaurantResultItem>();
 	        JSONArray jsa=new JSONArray(sb.toString());
             for(int i=0;i<jsa.length();i++) {
-	               JSONObject jo=(JSONObject)jsa.get(i);
-               			licno= jo.getString("LICNO");
-               			type= jo.getString("TYPE");
-               			dist= jo.getString("DIST");
-               			ss= jo.getString("SS");
-               			adr= jo.getString("ADR");
-               			
-				        this.addRestaurantResultItem(ss, licno , 1);
-                        //    title=jo.getString("deal_title");  //tag name "deal_title",will return value that we save in title string
-                        //des=jo.getString("deal_description");
-               			Log.i("search",type);
+               		JSONObject jo=(JSONObject)jsa.get(i);
+               		RestaurantResultItem item = new RestaurantResultItem();
+               		item.licno = jo.getString("LICNO");
+               		item.type = jo.getString("TYPE");
+           			item.dist = jo.getString("DIST");
+           			item.ss = jo.getString("SS");
+           			item.adr = jo.getString("ADR");
+           			item.img = jo.getString("IMAGE");
+           			item.rating = 1;
+           			results.add(item);
 	        }
+            ListViewAdapter<RestaurantResultItem> adapter = new ListViewAdapter<RestaurantResultItem>(this, R.layout.restaurant_search_result_tablerow, results.toArray());
+            ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
+            listView.setAdapter(adapter);
         }
         catch(Exception e){
         	Log.d("exception", e.getMessage());
         }
-    	
-    }
-    
-    public void addRestaurantResultItem(String name, String type, int rating){
-    	LayoutInflater inflater = LayoutInflater.from(this);
-    	TableRow rowView = (TableRow)inflater.inflate(R.layout.restaurant_search_result_tablerow, null );
-    	TableLayout t = (TableLayout)this.findViewById(R.id.searchResultTableLayout);
-    	
-    	TextView nameTextView = (TextView) rowView.findViewById(R.id.restaurantResult_nameTextView);
-    	TextView typeTextView = (TextView) rowView.findViewById(R.id.restaurantResult_typeTextView);
-    	TextView ratingTextView = (TextView) rowView.findViewById(R.id.restaurantResult_ratingTextView);
-    	TextView slotTextView = (TextView) rowView.findViewById(R.id.restaurantResult_slotTextView);
-    	
-//    	ImageView iv = (ImageView) rowView.findViewById(R.id.restaurantResult_thumbnailImageView);
-    	PhotoView pv = ((PhotoView) rowView.findViewById(R.id.restaurantResult_thumbnailImageView));
-    	try{
-        	URL req = new URL( "http://giverny.org/hotels/corniche/restaurant-room.jpg");
-        	pv.setImageURL(req, false, null);
-        }
-        catch(MalformedURLException mfe){}
-        catch(IOException ioe){}	
-    	nameTextView.setText(name);
-    	typeTextView.setText(type);
-    	ratingTextView.setText("" + rating);
-//    	iv.setImageBitmap(mIcon);
-    	
-    	rowView.setClickable(true);
-    	rowView.setOnClickListener((new View.OnClickListener(){
-    		@Override
-    		public void onClick(View v){
-    			TextView typeTextView = (TextView) v.findViewById(R.id.restaurantResult_typeTextView);
-    			
-    			Log.i("view","" + typeTextView.getText());
-    			View tv = v.getRootView();
-    			TextView restaurantInfoTextView = (TextView) tv.findViewById(R.id.restaurantInfo_textView);
-    			restaurantInfoTextView.setText(typeTextView.getText());
-    			vflipper.showNext();
-		    	
-    		}
-    	}));
-    	t.addView(rowView);
-    	
     	
     }
     
