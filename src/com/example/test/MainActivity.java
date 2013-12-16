@@ -211,8 +211,6 @@ public class MainActivity extends Activity {
 	    			vflipper.showNext();
 	    			*/
 	    			
-	    			Intent intent = new Intent();
-	    			intent.setClass(MainActivity.this, RestaurantInfoActivity.class);
 	    			String json = MainActivity.this.getJsonString("http://10.0.2.2:8888/restaurantInfo.json");
 	    			JSONObject jso;
 	    			try {
@@ -236,6 +234,8 @@ public class MainActivity extends Activity {
 						e.printStackTrace();
 					}
 	    			
+	    			Intent intent = new Intent();
+	    			intent.setClass(MainActivity.this, RestaurantInfoActivity.class);
 	    			
 	    			startActivity(intent);
 	    			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
