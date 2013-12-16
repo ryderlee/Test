@@ -35,6 +35,8 @@ public class RestaurantInfoActivity extends Activity {
 
 	}
 
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -54,6 +56,7 @@ public class RestaurantInfoActivity extends Activity {
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
 			NavUtils.navigateUpFromSameTask(this);
+			overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
