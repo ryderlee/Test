@@ -96,27 +96,13 @@
         android:secondaryProgress="5"
         android:visibility="gone" />
 
-        <ScrollView
+        <ListView
+    android:id="@+id/searchResultListView"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:scrollbars="none"
-    android:layout_weight="1">
+    android:layout_weight="1" />
         
-        <TableLayout
-            android:id="@+id/searchResultTableLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dip" >
-
-            <TableRow
-                android:id="@+id/sampleRow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone" >
-		     </TableRow>
-            
-        </TableLayout>
-		</ScrollView>
         <EditText
             android:id="@+id/dateText1"
             android:layout_width="wrap_content"
