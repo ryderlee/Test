@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.*;
 import android.widget.*;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.DatePicker.*;
 import android.widget.TimePicker.*;
@@ -45,6 +46,8 @@ public class MainActivity extends Activity {
 	EditText timeText;
 	
 	ViewFlipper vflipper;
+	
+	ListViewAdapter<RestaurantResultItem> adapter;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +149,10 @@ public class MainActivity extends Activity {
 		
 		numberSeekBar1.setProgress(2 * 5);
 		
-		
+		adapter = new ListViewAdapter<RestaurantResultItem>(this, R.layout.restaurant_search_result_tablerow);
+        ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
+        listView.setAdapter(adapter);
+        listView.setOnScrollListener(new ScrollListener());
     }
 
     private class RestaurantResultItem {
@@ -160,8 +166,8 @@ public class MainActivity extends Activity {
     }
     
     private class ListViewAdapter<T> extends ArrayAdapter {
-		public ListViewAdapter(Context context, int resource, Object[] objects) {
-			super(context, resource, objects);
+		public ListViewAdapter(Context context, int resource) {
+			super(context, resource);
 		}
 		
 		@Override
@@ -207,9 +213,36 @@ public class MainActivity extends Activity {
 		}
     }
     
+    private class ScrollListener implements OnScrollListener {
+    	
+    	private int visibleThreshold = 0;
+        private int currentPage = 0;
+        private int previousTotal = 0;
+        private boolean loading = true;
+        
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+			if (loading) {
+                if (totalItemCount > previousTotal) {
+                    loading = false;
+                    previousTotal = totalItemCount;
+                    currentPage++;
+                }
+            }
+            if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+            	search();
+                loading = true;
+            }
+		}
+
+		@Override
+		public void onScrollStateChanged(AbsListView view, int scrollState) {
+		}
+    	
+    }
+    
     public void search(){
     	String str="http://10.0.2.2:8888/restaurant.json";
-    	String type, dist, licno, ss, adr;
     	
         try{
             URL url=new URL(str);
@@ -221,7 +254,7 @@ public class MainActivity extends Activity {
             {
             	sb.append(line + "\n");
             }
-        	ArrayList<RestaurantResultItem> results = new ArrayList<RestaurantResultItem>();
+            ArrayList<RestaurantResultItem> results = new ArrayList<RestaurantResultItem>();
 	        JSONArray jsa=new JSONArray(sb.toString());
             for(int i=0;i<jsa.length();i++) {
                		JSONObject jo=(JSONObject)jsa.get(i);
@@ -235,9 +268,7 @@ public class MainActivity extends Activity {
            			item.rating = 1;
            			results.add(item);
 	        }
-            ListViewAdapter<RestaurantResultItem> adapter = new ListViewAdapter<RestaurantResultItem>(this, R.layout.restaurant_search_result_tablerow, results.toArray());
-            ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
-            listView.setAdapter(adapter);
+            adapter.addAll(results);
         }
         catch(Exception e){
         	Log.d("exception", e.getMessage());
@@ -246,7 +277,6 @@ public class MainActivity extends Activity {
     }
     
     public void resetSearch(){
-    	
     	
     }
     public void searchButton_onClick(View view){
