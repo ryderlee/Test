@@ -19,6 +19,9 @@ import java.net.*;
 
 import org.json.*;
 
+import com.example.test.PhotoView;
+import com.example.test.R;
+
 import java.util.*;
 
 import android.view.*;
@@ -148,14 +151,6 @@ public class MainActivity extends Activity {
     	String str="http://10.0.2.2:8888/restaurant.json";
     	String type, dist, licno, ss, adr;
     	
-    	try{
-        	URL req = new URL( "http://giverny.org/hotels/corniche/restaurant-room.jpg");
-        		
-		mIcon= BitmapFactory.decodeStream(req.openConnection().getInputStream());
-        }
-        catch(MalformedURLException mfe){}
-        catch(IOException ioe){}	
-    	
         try{
             URL url=new URL(str);
             URLConnection urlc=url.openConnection();
@@ -187,7 +182,6 @@ public class MainActivity extends Activity {
     	
     }
     
-    Bitmap mIcon;
     public void addRestaurantResultItem(String name, String type, int rating){
     	LayoutInflater inflater = LayoutInflater.from(this);
     	TableRow rowView = (TableRow)inflater.inflate(R.layout.restaurant_search_result_tablerow, null );
@@ -198,11 +192,18 @@ public class MainActivity extends Activity {
     	TextView ratingTextView = (TextView) rowView.findViewById(R.id.restaurantResult_ratingTextView);
     	TextView slotTextView = (TextView) rowView.findViewById(R.id.restaurantResult_slotTextView);
     	
-    	ImageView iv = (ImageView) rowView.findViewById(R.id.restaurantResult_thumbnailImageView);
+//    	ImageView iv = (ImageView) rowView.findViewById(R.id.restaurantResult_thumbnailImageView);
+    	PhotoView pv = ((PhotoView) rowView.findViewById(R.id.restaurantResult_thumbnailImageView));
+    	try{
+        	URL req = new URL( "http://giverny.org/hotels/corniche/restaurant-room.jpg");
+        	pv.setImageURL(req, false, null);
+        }
+        catch(MalformedURLException mfe){}
+        catch(IOException ioe){}	
     	nameTextView.setText(name);
     	typeTextView.setText(type);
     	ratingTextView.setText("" + rating);
-    	iv.setImageBitmap(mIcon);
+//    	iv.setImageBitmap(mIcon);
     	
     	rowView.setClickable(true);
     	rowView.setOnClickListener((new View.OnClickListener(){
