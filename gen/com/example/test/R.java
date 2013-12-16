@@ -28,7 +28,7 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f090018;
+        public static final int action_settings=0x7f090019;
         public static final int dateButton=0x7f090003;
         public static final int datePicker1=0x7f090008;
         public static final int dateText1=0x7f09000d;
@@ -37,19 +37,20 @@ public final class R {
         public static final int numberButton=0x7f090005;
         public static final int numberPicker1=0x7f090009;
         public static final int numberSeekBar1=0x7f09000a;
-        public static final int restaurantInfo_textView=0x7f09000f;
-        public static final int restaurantResult_nameTextView=0x7f090011;
-        public static final int restaurantResult_ratingTextView=0x7f090015;
-        public static final int restaurantResult_slotTextView=0x7f090017;
-        public static final int restaurantResult_thumbnailImageView=0x7f090010;
-        public static final int restaurantResult_typeTextView=0x7f090013;
+        public static final int restaurantInfo_textView=0x7f090010;
+        public static final int restaurantResult_nameTextView=0x7f090012;
+        public static final int restaurantResult_ratingTextView=0x7f090016;
+        public static final int restaurantResult_slotTextView=0x7f090018;
+        public static final int restaurantResult_thumbnailImageView=0x7f090011;
+        public static final int restaurantResult_typeTextView=0x7f090014;
+        public static final int restaurant_LICNOTextView=0x7f09000f;
         public static final int sampleRow=0x7f09000c;
         public static final int searchButton=0x7f090006;
         public static final int searchPageLinearLayout=0x7f090002;
         public static final int searchResultTableLayout=0x7f09000b;
-        public static final int tableRow1_sampleRatingRow=0x7f090014;
-        public static final int tableRow1_sampleTypeRow=0x7f090012;
-        public static final int tableRow1_slot=0x7f090016;
+        public static final int tableRow1_sampleRatingRow=0x7f090015;
+        public static final int tableRow1_sampleTypeRow=0x7f090013;
+        public static final int tableRow1_slot=0x7f090017;
         public static final int timeButton=0x7f090004;
         public static final int timePicker1=0x7f090007;
         public static final int timeText1=0x7f09000e;

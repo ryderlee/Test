@@ -1,7 +1,10 @@
 package com.example.test;
 
 import android.os.Bundle;
+import android.view.*;
+import android.widget.*;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
@@ -14,6 +17,13 @@ public class RestaurantInfoActivity extends Activity {
 		setContentView(R.layout.activity_restaurant_info);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		
+		
+		Intent intent = getIntent();
+		String msg = intent.getStringExtra("RESTAURANT_LICNO");
+		TextView tv = (TextView) findViewById(R.id.restaurant_LICNOTextView);
+		tv.setText(msg);
 	}
 
 	/**
