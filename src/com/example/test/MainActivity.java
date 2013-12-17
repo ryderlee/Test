@@ -234,7 +234,6 @@ public class MainActivity extends Activity {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
 	    			intent.setClass(MainActivity.this, RestaurantInfoActivity.class);
 	    			
 	    			startActivity(intent);
