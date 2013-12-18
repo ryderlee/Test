@@ -1,12 +1,14 @@
 package com.example.test;
 
 import android.os.Bundle;
+import android.support.v7.app.*;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 
-public class SigninOptionActivity extends Activity {
+public class SigninOptionActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

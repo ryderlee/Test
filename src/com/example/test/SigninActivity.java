@@ -17,12 +17,14 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.support.v7.app.*;
+
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class SigninActivity extends Activity {
+public class SigninActivity extends ActionBarActivity {
 	/**
 	 * A dummy authentication store containing known user names and passwords.
 	 * TODO: remove after connecting to a real authentication system.

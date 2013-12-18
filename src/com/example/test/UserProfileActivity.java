@@ -1,12 +1,14 @@
 package com.example.test;
 
 import android.os.Bundle;
+import android.support.v7.app.*;
+
 import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
-public class UserProfileActivity extends Activity {
+public class UserProfileActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
