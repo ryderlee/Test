@@ -214,7 +214,7 @@ public class MainActivity extends ActionBarActivity {
 	    			*/
 	    			
 	    			Intent intent = new Intent();
-	    			String json = MainActivity.this.getJsonString("http://10.0.2.2:8888/restaurantInfo.json");
+	    			String json = Utils.getJsonString("http://10.0.2.2:8888/restaurantInfo.json");
 	    			JSONObject jso;
 	    			try {
 						jso = new JSONObject(json);
@@ -289,38 +289,12 @@ public class MainActivity extends ActionBarActivity {
     	
     }
     
-    public String getJsonString(String s){
-    	URL r; 
-    	try {
-    	r = new URL (s);
-    	return this.getJsonString(r);
-    	}catch (Exception e){}
-    	return "";
-    }
-    public String getJsonString(URL url){
-        String line;
-        StringBuilder sb = new StringBuilder();
-    	try{
-    		URLConnection urlc=url.openConnection();
-            BufferedReader bfr=new BufferedReader(new InputStreamReader(urlc.getInputStream()));
-            while((line=bfr.readLine())!=null)
-            {
-            	sb.append(line + "\n");
-            }
-    		
-    	} catch(Exception e){
-        	Log.d("exception", e.getMessage());
-        }
-		return sb.toString();
-    	
-    	
-    }
     public void search(){
     	String str="http://10.0.2.2:8888/restaurant.json";
     	
         try{
             ArrayList<RestaurantResultItem> results = new ArrayList<RestaurantResultItem>();
-        	String s = this.getJsonString(str);
+        	String s = Utils.getJsonString(str);
 	        JSONArray jsa=new JSONArray(s);
             for(int i=0;i<jsa.length();i++) {
                		JSONObject jo=(JSONObject)jsa.get(i);
@@ -415,6 +389,9 @@ public class MainActivity extends ActionBarActivity {
     	resetSearch();
     	search();
     }
+    public void loginButton_onClick(View view){
+    	UserManager.getInstance(this).login(false);
+    }
     public void timeButton_onClick(View view){
     	//timePicker1.setVisibility(View.GONE);
     	datePicker1.setVisibility(View.GONE);
@@ -441,6 +418,15 @@ public class MainActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+    
+    @Override
+    protected void onNewIntent(Intent intent) {
+        String action = intent.getStringExtra("ACTION");
+    	if (action.equals(Constants.ACTION_LOGIN_SUCCESS)) {
+            Log.d("example", "login success and show profile now");
+    		UserManager.getInstance(this).showProfile();
+    	}
     }
     
 }

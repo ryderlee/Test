@@ -88,4 +88,8 @@ public final class Constants {
     public static final int STATE_LOG = -1;
 
     public static final CharSequence BLANK = " ";
+    
+    public static final String ACTION_LOGIN_SUCCESS = "com.example.test.ACTION_LOGIN_SUCCESS";
+    public static final String ACTION_LOGOUT = "com.example.test.ACTION_LOGOUT";
+    public static final String ACTION_RESERVE_AS_GUEST = "com.example.test.ACTION_RESERVE_AS_GUEST";
 }

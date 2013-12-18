@@ -2,6 +2,8 @@ package com.example.test;
 
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.*;
 import android.widget.*;
 import android.app.Activity;
 import android.content.Intent;
@@ -109,4 +111,17 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 	}
 
+	public void reserveButton_onClick(View view) {
+		UserManager.getInstance(this).login(true);
+	}
+
+	@Override
+    protected void onNewIntent(Intent intent) {
+        String action = intent.getStringExtra("ACTION");
+    	if (action.equals(Constants.ACTION_LOGIN_SUCCESS)) {
+            Log.d("example", "ready to reserve as user");
+    	} else if (action.equals(Constants.ACTION_RESERVE_AS_GUEST)) {
+    		Log.d("example", "ready to reserve as guest");
+    	}
+    }
 }
