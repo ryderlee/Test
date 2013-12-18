@@ -42,6 +42,8 @@ public class MainActivity extends Activity {
 	NumberPicker numberPicker1;
 	
 	SeekBar numberSeekBar1;
+
+	BookingPicker mBookingPicker;
 	
 	EditText dateText;
 	EditText timeText;
@@ -69,6 +71,21 @@ public class MainActivity extends Activity {
         vflipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
         vflipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
         
+        mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
+        mBookingPicker.setOnValueChangeListener(new BookingPicker.OnValueChangeListener() {
+			
+			@Override
+			public void onValueChange(int numOfPeople, Date date, String timeString) {
+				Button tb = (Button) findViewById(R.id.timeButton);
+				tb.setText(timeString);
+				
+				Button db = (Button) findViewById(R.id.dateButton);
+    			db.setText(new SimpleDateFormat("dd/MM/yy").format(date));
+    			
+				numberButton.setText("" + numOfPeople);
+			}
+		});
+        
         datePicker1.setMinDate(System.currentTimeMillis() - 1000);
         numberPicker1.setMaxValue(12);
         numberPicker1.setMinValue(2);
@@ -91,7 +108,6 @@ public class MainActivity extends Activity {
 				tb.setText(f.format(d));
 				
 				// TODO Auto-generated method stub
-				
 			}
 		});
         datePicker1.init(d.getYear(), d.getMonth(), d.getDay(), new OnDateChangedListener(){
@@ -414,24 +430,27 @@ public class MainActivity extends Activity {
     	search();
     }
     public void timeButton_onClick(View view){
+    	mBookingPicker.setVisibility(mBookingPicker.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
     	//timePicker1.setVisibility(View.GONE);
-    	datePicker1.setVisibility(View.GONE);
-    	numberSeekBar1.setVisibility(View.GONE);
-    	timePicker1.setVisibility(timePicker1.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
+//    	datePicker1.setVisibility(View.GONE);
+//    	numberSeekBar1.setVisibility(View.GONE);
+//    	timePicker1.setVisibility(timePicker1.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
     }
     
     public void dateButton_onClick(View view){
-    	timePicker1.setVisibility(View.GONE);
+    	mBookingPicker.setVisibility(mBookingPicker.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
+//    	timePicker1.setVisibility(View.GONE);
     	//datePicker1.setVisibility(View.GONE);
-    	numberSeekBar1.setVisibility(View.GONE);
-    	datePicker1.setVisibility(datePicker1.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
+//    	numberSeekBar1.setVisibility(View.GONE);
+//    	datePicker1.setVisibility(datePicker1.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
     }
     
     public void numberButton_onClick(View view){
-    	timePicker1.setVisibility(View.GONE);
-    	datePicker1.setVisibility(View.GONE);
+    	mBookingPicker.setVisibility(mBookingPicker.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
+//    	timePicker1.setVisibility(View.GONE);
+//    	datePicker1.setVisibility(View.GONE);
     	//numberSeekBar1.setVisibility(View.GONE);
-    	numberSeekBar1.setVisibility(numberSeekBar1.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
+//    	numberSeekBar1.setVisibility(numberSeekBar1.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
     }
 
     @Override

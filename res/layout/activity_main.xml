@@ -24,6 +24,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical" >
+
         <LinearLayout
             android:id="@+id/searchPageLinearLayout"
             android:layout_width="fill_parent"
@@ -59,8 +60,13 @@
                 android:text="S" 
                 android:onClick="searchButton_onClick"/>
             
-
         </LinearLayout>
+
+        <com.example.test.BookingPicker
+            android:id="@+id/bookingPicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <TimePicker
             android:id="@+id/timePicker1"
