@@ -1,2 +1,7 @@
 *.class
+
 bin/
+
+project.properties
+
+gen/
