@@ -1,15 +1,16 @@
 package com.example.test;
 
+
 import android.os.Bundle;
-import android.view.*;
 import android.widget.*;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
+import android.support.v4.app.*;
+import android.support.v7.app.*;
+import android.view.*;
+//import android.view.*;
 
-public class RestaurantInfoActivity extends Activity {
+public class RestaurantInfoActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

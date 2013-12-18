@@ -8,7 +8,6 @@ import android.os.StrictMode;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.view.*;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -23,6 +22,9 @@ import java.net.*;
 
 import org.json.*;
 
+import android.support.v7.app.*;
+
+
 import com.example.test.PhotoView;
 import com.example.test.R;
 
@@ -31,7 +33,7 @@ import java.util.*;
 import android.view.*;
 import android.view.animation.AnimationUtils;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
 	Button dateButton;
 	Button timeButton;
