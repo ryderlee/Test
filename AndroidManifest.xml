@@ -61,6 +61,14 @@
             android:name="com.example.test.UserProfileActivity"
             android:label="@string/title_activity_user_profile" >
         </activity>
+        <activity
+            android:name="com.example.test.BookingActivity"
+            android:label="@string/title_activity_booking" >
+        </activity>
+        <activity
+            android:name="com.example.test.GuestInfoActivity"
+            android:label="@string/title_activity_guest_info" >
+        </activity>
     </application>
 
 </manifest>

@@ -90,6 +90,10 @@ public final class Constants {
     public static final CharSequence BLANK = " ";
     
     public static final String ACTION_LOGIN_SUCCESS = "com.example.test.ACTION_LOGIN_SUCCESS";
+    public static final String ACTION_BOOK_AS_GUEST = "com.example.test.ACTION_BOOK_AS_GUEST";
+    public static final String ACTION_GUEST_CANCEL = "com.example.test.ACTION_GUEST_CANCEL";
+    public static final String ACTION_BOOK_SUCCESS = "com.example.test.ACTION_BOOK_SUCCESS";
+    public static final String ACTION_BOOK_CANCEL = "com.example.test.ACTION_BOOK_CANCEL";
     public static final String ACTION_LOGOUT = "com.example.test.ACTION_LOGOUT";
-    public static final String ACTION_RESERVE_AS_GUEST = "com.example.test.ACTION_RESERVE_AS_GUEST";
+	    		
 }

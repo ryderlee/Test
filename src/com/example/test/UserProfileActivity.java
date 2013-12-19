@@ -3,7 +3,6 @@ package com.example.test;
 import android.os.Bundle;
 import android.support.v7.app.*;
 
-import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -16,7 +15,7 @@ public class UserProfileActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_user_profile);
 		
 		TextView usernameTextView = (TextView) findViewById(R.id.usernameTextView);
-		usernameTextView.setText(UserData.getInstance(this.getApplicationContext()).getFullName());
+		usernameTextView.setText(UserData.getInstance().getFullName());
 	}
 
 	@Override

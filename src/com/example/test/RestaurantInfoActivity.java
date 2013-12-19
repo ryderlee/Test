@@ -2,15 +2,11 @@ package com.example.test;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
-import android.view.*;
-//import android.view.*;
 
 public class RestaurantInfoActivity extends ActionBarActivity {
 
@@ -118,10 +114,22 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 	@Override
     protected void onNewIntent(Intent intent) {
         String action = intent.getStringExtra("ACTION");
-    	if (action.equals(Constants.ACTION_LOGIN_SUCCESS)) {
-            Log.d("example", "ready to reserve as user");
-    	} else if (action.equals(Constants.ACTION_RESERVE_AS_GUEST)) {
-    		Log.d("example", "ready to reserve as guest");
-    	}
+        if (action != null) {
+	    	if (action.equals(Constants.ACTION_LOGIN_SUCCESS)) {
+	            int numOfPeople = 1;
+	            int timeSlotId = 1;
+	            BookingManager.getInstance(this).book(numOfPeople, timeSlotId);
+	    	} else if (action.equals(Constants.ACTION_BOOK_AS_GUEST)) {
+	            int numOfPeople = 1;
+	            int timeSlotId = 1;
+	    		BookingManager.getInstance(this).bookAsGuest(numOfPeople, timeSlotId);
+	    	} else if (action.equals(Constants.ACTION_GUEST_CANCEL)) {
+	    		UserManager.getInstance(this).login(true);
+	    	} else if (action.equals(Constants.ACTION_BOOK_CANCEL)) {
+	    		
+	    	} else if (action.equals(Constants.ACTION_BOOK_SUCCESS)) {
+	    		
+	    	}
+        }
     }
 }

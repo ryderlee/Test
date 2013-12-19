@@ -23,7 +23,7 @@ public class UserManager {
 	
 	protected void login(boolean reserve) {
 		this.mLoginTopActivity = this.mActivity;
-		if (UserData.getInstance(this.mActivity.getApplicationContext()).isLogin()) {
+		if (UserData.getInstance().isLogin()) {
 			this.backToTopActivity(Constants.ACTION_LOGIN_SUCCESS);
 		} else {
 			Intent intent = new Intent();
@@ -35,21 +35,21 @@ public class UserManager {
 	}
 	
 	protected void loginSuccess(JSONObject userJson) {
-		UserData.getInstance(this.mActivity.getApplicationContext()).setLogin(true);
+		UserData.getInstance().setLogin(true);
 		try {
-			UserData.getInstance(this.mActivity.getApplicationContext()).setUserId(userJson.getString("uid"));
-			UserData.getInstance(this.mActivity.getApplicationContext()).setFirstName(userJson.getString("first_name"));
-            UserData.getInstance(this.mActivity.getApplicationContext()).setLastName(userJson.getString("last_name"));
-            UserData.getInstance(this.mActivity.getApplicationContext()).setEmail(userJson.getString("email"));
-            UserData.getInstance(this.mActivity.getApplicationContext()).setPhone(userJson.getString("phone"));
+			UserData.getInstance().setUserId(userJson.getString("uid"));
+			UserData.getInstance().setFirstName(userJson.getString("first_name"));
+            UserData.getInstance().setLastName(userJson.getString("last_name"));
+            UserData.getInstance().setEmail(userJson.getString("email"));
+            UserData.getInstance().setPhone(userJson.getString("phone"));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		this.backToTopActivity(Constants.ACTION_LOGIN_SUCCESS);
 	}
 	
-	protected void reserveAsGuest() {
-		this.backToTopActivity(Constants.ACTION_RESERVE_AS_GUEST);
+	protected void bookAsGuest() {
+		this.backToTopActivity(Constants.ACTION_BOOK_AS_GUEST);
 	}
 	
 	protected void showProfile() {
@@ -60,7 +60,7 @@ public class UserManager {
 	}
 	
 	protected void logout() {
-		UserData.getInstance(this.mActivity.getApplicationContext()).clearAll();
+		UserData.getInstance().clearAll();
 		this.backToTopActivity(Constants.ACTION_LOGOUT);
 	}
 	

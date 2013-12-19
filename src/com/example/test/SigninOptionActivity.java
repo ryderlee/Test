@@ -46,7 +46,7 @@ public class SigninOptionActivity extends ActionBarActivity {
 	}
 	
 	public void guestButton_onClick(View view) {
-		UserManager.getInstance(this).reserveAsGuest();
+		UserManager.getInstance(this).bookAsGuest();
 	}
 	
 }
