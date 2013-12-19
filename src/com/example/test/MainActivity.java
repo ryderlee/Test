@@ -221,42 +221,7 @@ public class MainActivity extends ActionBarActivity {
 	    		@Override
 	    		public void onClick(View v){
 	    			TextView typeTextView = (TextView) v.findViewById(R.id.restaurantResult_typeTextView);
-	    			/*
-	    			Log.i("view","" + typeTextView.getText());
-	    			View tv = v.getRootView();
-	    			TextView restaurantInfoTextView = (TextView) tv.findViewById(R.id.restaurantInfo_textView);
-	    			restaurantInfoTextView.setText(typeTextView.getText());
-	    			vflipper.showNext();
-	    			*/
-	    			
-	    			Intent intent = new Intent();
-	    			String json = Utils.getJsonString("http://10.0.2.2:8888/restaurantInfo.json");
-	    			JSONObject jso;
-	    			try {
-						jso = new JSONObject(json);
-		    			intent.putExtra("RESTAURANT_ID", typeTextView.getText());
-		    			intent.putExtra("RESTAURANT_NAME", jso.getString("RESTAURANT_NAME"));
-		    			intent.putExtra("RESTAURANT_ADDRESS", jso.getString("RESTAURANT_ADDRESS"));
-		    			intent.putExtra("RESTAURANT_PHONE", jso.getString("RESTAURANT_PHONE"));
-		    			intent.putExtra("RESTAURANT_CUISINE", jso.getString("RESTAURANT_CUISINE"));
-		    			intent.putExtra("RESTAURANT_PRICE", jso.getString("RESTAURANT_PRICE"));
-		    			intent.putExtra("RESTAURANT_HOURS",jso.getString("RESTAURANT_HOURS") );
-		    			intent.putExtra("RESTAURANT_PARKING", jso.getString("RESTAURANT_PARKING"));
-		    			intent.putExtra("RESTAURANT_DESCRIPTION", jso.getString("RESTAURANT_DESCRIPTION"));
-		    			intent.putExtra("RESTAURANT_MENU", jso.getString("RESTAURANT_MENU"));
-		    			intent.putExtra("RESTAURANT_REVIEW_OVERALL", jso.getString("RESTAURANT_REVIEW_OVERALL"));
-		    			intent.putExtra("RESTAURANT_REVIEW_FOOD", jso.getString("RESTAURANT_REVIEW_FOOD"));
-		    			intent.putExtra("RESTAURANT_REVIEW_SERVICE", jso.getString("RESTAURANT_REVIEW_SERVICE"));
-		    			intent.putExtra("RESTAURANT_REVIEW_AMBIENCE", jso.getString("RESTAURANT_REVIEW_AMBIENCE"));
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	    			intent.setClass(MainActivity.this, RestaurantInfoActivity.class);
-	    			
-	    			startActivity(intent);
-	    			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-			    	
+	    			RestaurantManager.getInstance(MainActivity.this).showMain(typeTextView.getText().toString());
 	    		}
 	    	}));
 	    	/*
