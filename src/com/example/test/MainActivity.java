@@ -5,19 +5,16 @@ import java.util.Date;
 
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.DatePicker.*;
-import android.widget.TimePicker.*;
 import android.graphics.*;
 import android.util.Log;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.*;
 
 import org.json.*;
@@ -58,6 +55,9 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        UserData userData = UserData.getInstance();
+        userData.init(this.getApplicationContext());
         
         dateText = (EditText) findViewById(R.id.dateText1);
         timeText = (EditText) findViewById(R.id.timeText1);

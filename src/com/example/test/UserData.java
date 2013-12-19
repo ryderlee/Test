@@ -15,18 +15,19 @@ public class UserData {
 	
 	private static UserData sInstance;
 	
-	private Context mApplicationContext;
 	private SharedPreferences mPrefs;
 	
 	private UserData() {}
 	
-	public static synchronized UserData getInstance(Context mApplicationContext) {
+	public static synchronized UserData getInstance() {
 		if (sInstance == null) {
 			sInstance = new UserData();
-			sInstance.mApplicationContext = mApplicationContext;
-			sInstance.mPrefs = mApplicationContext.getSharedPreferences("com.example.test", Context.MODE_PRIVATE);
 		}
 		return sInstance;
+	}
+	
+	protected void init(Context applicationContext) {
+		mPrefs = applicationContext.getSharedPreferences("com.example.test", Context.MODE_PRIVATE);
 	}
 	
 	protected void clearAll() {

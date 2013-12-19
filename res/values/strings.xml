@@ -8,5 +8,7 @@
     <string name="title_activity_restaurant_info">Restaurant Information</string>
     <string name="title_activity_signin_option">SigninOptionActivity</string>
     <string name="title_activity_user_profile">UserProfileActivity</string>
+    <string name="title_activity_booking">BookingActivity</string>
+    <string name="title_activity_guest_info">GuestInfoActivity</string>
 
 </resources>
