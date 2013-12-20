@@ -20,14 +20,14 @@ public class UserData {
 	private UserData() {}
 	
 	public static synchronized UserData getInstance() {
-		if (sInstance == null) {
-			sInstance = new UserData();
-		}
 		return sInstance;
 	}
 	
-	protected void init(Context applicationContext) {
-		mPrefs = applicationContext.getSharedPreferences("com.example.test", Context.MODE_PRIVATE);
+	public static synchronized void init(Context context) {
+		if (sInstance == null) {
+			sInstance = new UserData();
+			sInstance.mPrefs = context.getSharedPreferences("com.example.test", Context.MODE_PRIVATE);
+		}
 	}
 	
 	protected void clearAll() {

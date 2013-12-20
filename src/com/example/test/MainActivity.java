@@ -56,9 +56,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        UserData userData = UserData.getInstance();
-        userData.init(this.getApplicationContext());
-        
         dateText = (EditText) findViewById(R.id.dateText1);
         timeText = (EditText) findViewById(R.id.timeText1);
         dateButton = (Button) findViewById(R.id.dateButton);
