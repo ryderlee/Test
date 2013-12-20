@@ -80,28 +80,21 @@ public class MainActivity extends ActionBarActivity {
         
         
         mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
+        
         mBookingPicker.setOnValueChangeListener(new BookingPicker.OnValueChangeListener() {
 			
 			@Override
 			public void onValueChange(int numOfPeople, Date date) {
 				
-				//Log.i("test", sdf.format(bookingDateTime));
+				SearchData.getInstance(MainActivity.this).setDateTime(date);
+				SearchData.getInstance(MainActivity.this).setNumberOfReservation(numOfPeople);
 				
 				Button db = (Button) findViewById(R.id.dateButton);
-				String s = "Table for " + numOfPeople + sdf.format(date);
+				String s = "Table for " + numOfPeople + " " + sdf.format(date);
 				db.setText(s);
-				/*
-				Button tb = (Button) findViewById(R.id.timeButton);
-				tb.setText(timeString);
-				
-				Button db = (Button) findViewById(R.id.dateButton);
-    			db.setText(new SimpleDateFormat("dd/MM/yy").format(date));
-				numberButton.setText("" + numOfPeople);
-    			*/
 			}
 		});
-        
-        datePicker1.setMinDate(System.currentTimeMillis() - 1000);
+        //datePicker1.setMinDate(System.currentTimeMillis() - 1000);
         //numberPicker1.setMaxValue(12);
         //numberPicker1.setMinValue(2);
         Date d= new Date();
@@ -109,7 +102,8 @@ public class MainActivity extends ActionBarActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         
-        datePicker1.init(d.getYear(), d.getMonth(), d.getDay(), new OnDateChangedListener(){
+        
+        /*datePicker1.init(d.getYear(), d.getMonth(), d.getDay(), new OnDateChangedListener(){
         	
         		@Override
         		public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth){
@@ -126,7 +120,7 @@ public class MainActivity extends ActionBarActivity {
         		}	
         	
         });
-        
+        */
         /*
         timePicker1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
 			
@@ -288,6 +282,7 @@ public class MainActivity extends ActionBarActivity {
     }
     
     public void search(){
+    	mBookingPicker.setVisibility(View.GONE);
     	String str="http://10.0.2.2:8888/restaurant.json";
     	
         try{
