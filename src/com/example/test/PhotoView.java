@@ -23,7 +23,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -210,7 +209,6 @@ public class PhotoView extends ImageView {
     protected void onDraw(Canvas canvas) {
         // If the image isn't already drawn, and the URL is set
         if ((!mIsDrawn) && (mImageURL != null)) {
-            
             // Starts downloading this View, using the current cache setting
             mDownloadThread = PhotoManager.startDownload(this, mCacheFlag);
             
@@ -289,7 +287,6 @@ public class PhotoView extends ImageView {
      * @param imageDrawable The Drawable to use for this ImageView
      */
     public void setImageURL(URL pictureURL, boolean cacheFlag, Drawable imageDrawable) {
-        Log.d("photo", "cacheFlag 1: "+cacheFlag);
         // If the picture URL for this ImageView is already set
         if (mImageURL != null) {
             
@@ -311,17 +308,15 @@ public class PhotoView extends ImageView {
         // Stores the picture URL for this ImageView
         mImageURL = pictureURL;
         
+        // Sets the cache flag
+        mCacheFlag = cacheFlag;    
+        
         // If the draw operation for this ImageVIew has completed, and the picture URL isn't empty
         if ((mIsDrawn) && (pictureURL != null)) {
-            
-            // Sets the cache flag
-            mCacheFlag = cacheFlag;
-            
             /*
              * Starts a download of the picture file. Notice that if caching is on, the picture
              * file's contents may be taken from the cache.
              */
-            Log.d("photo", "cacheFlag 2: "+cacheFlag);
             mDownloadThread = PhotoManager.startDownload(this, cacheFlag);
         }
     }

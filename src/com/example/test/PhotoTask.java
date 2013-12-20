@@ -20,7 +20,6 @@ import com.example.test.PhotoDecodeRunnable.TaskRunnableDecodeMethods;
 import com.example.test.PhotoDownloadRunnable.TaskRunnableDownloadMethods;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -164,7 +163,6 @@ public class PhotoTask implements
 
     // Detects the state of caching
     boolean isCacheEnabled() {
-    	Log.d("photo", "CacheEnabled: "+mCacheEnabled);
         return mCacheEnabled;
     }
 
