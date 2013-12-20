@@ -98,5 +98,13 @@
         android:layout_height="wrap_content"
         android:text="I am time slot"
         android:onClick="reserveButton_onClick" />
+
+    <Button
+        android:id="@+id/RESTAURANT_ALBUM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show album"
+        android:onClick="albumButton_onClick" />
+    
 	</LinearLayout>
 </RelativeLayout>

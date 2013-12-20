@@ -23,6 +23,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -288,6 +289,7 @@ public class PhotoView extends ImageView {
      * @param imageDrawable The Drawable to use for this ImageView
      */
     public void setImageURL(URL pictureURL, boolean cacheFlag, Drawable imageDrawable) {
+        Log.d("photo", "cacheFlag 1: "+cacheFlag);
         // If the picture URL for this ImageView is already set
         if (mImageURL != null) {
             
@@ -319,6 +321,7 @@ public class PhotoView extends ImageView {
              * Starts a download of the picture file. Notice that if caching is on, the picture
              * file's contents may be taken from the cache.
              */
+            Log.d("photo", "cacheFlag 2: "+cacheFlag);
             mDownloadThread = PhotoManager.startDownload(this, cacheFlag);
         }
     }

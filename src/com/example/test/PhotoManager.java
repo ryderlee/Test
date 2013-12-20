@@ -17,10 +17,12 @@
 package com.example.test;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 
 import java.net.URL;
 import java.util.Queue;
@@ -60,7 +62,7 @@ public class PhotoManager {
     static final int TASK_COMPLETE = 4;
 
     // Sets the size of the storage that's used to cache images
-    private static final int IMAGE_CACHE_SIZE = 1024 * 1024 * 4;
+    private static final int IMAGE_CACHE_SIZE = 1024 * 1024 * 16;
 
     // Sets the amount of time an idle thread will wait for a task before terminating
     private static final int KEEP_ALIVE_TIME = 1;
@@ -154,6 +156,7 @@ public class PhotoManager {
                 KEEP_ALIVE_TIME, KEEP_ALIVE_TIME_UNIT, mDecodeWorkQueue);
 
         // Instantiates a new cache based on the cache size estimate
+        Log.d("photo", "Cache size: " + IMAGE_CACHE_SIZE);
         mPhotoCache = new LruCache<URL, byte[]>(IMAGE_CACHE_SIZE) {
 
             /*
@@ -277,13 +280,15 @@ public class PhotoManager {
             // The task finished downloading and decoding the image
             case TASK_COMPLETE:
                 
+                Log.d("photo", "Task complete");
                 // Puts the image into cache
-                if (photoTask.isCacheEnabled()) {
+                //if (photoTask.isCacheEnabled()) {
                     // If the task is set to cache the results, put the buffer
                     // that was
                     // successfully decoded into the cache
+                	Log.d("photo", "Putting into cache");
                     mPhotoCache.put(photoTask.getImageURL(), photoTask.getByteBuffer());
-                }
+                //}
                 
                 // Gets a Message object, stores the state in it, and sends it to the Handler
                 Message completeMessage = mHandler.obtainMessage(state, photoTask);
@@ -406,6 +411,8 @@ public class PhotoManager {
         // If the byte buffer was empty, the image wasn't cached
         if (null == downloadTask.getByteBuffer()) {
             
+        	Log.d("photo", "Download now");
+        	
             /*
              * "Executes" the tasks' download Runnable in order to download the image. If no
              * Threads are available in the thread pool, the Runnable waits in the queue.
@@ -417,6 +424,7 @@ public class PhotoManager {
         
         // The image was cached, so no download is required.
         } else {
+        	Log.d("photo", "Cache found");
             
             /*
              * Signals that the download is "complete", because the byte array already contains the
