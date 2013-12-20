@@ -17,6 +17,7 @@
 package com.example.test;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -60,7 +61,7 @@ public class PhotoManager {
     static final int TASK_COMPLETE = 4;
 
     // Sets the size of the storage that's used to cache images
-    private static final int IMAGE_CACHE_SIZE = 1024 * 1024 * 4;
+    private static final int IMAGE_CACHE_SIZE = 1024 * 1024 * 16;
 
     // Sets the amount of time an idle thread will wait for a task before terminating
     private static final int KEEP_ALIVE_TIME = 1;
@@ -405,7 +406,6 @@ public class PhotoManager {
 
         // If the byte buffer was empty, the image wasn't cached
         if (null == downloadTask.getByteBuffer()) {
-            
             /*
              * "Executes" the tasks' download Runnable in order to download the image. If no
              * Threads are available in the thread pool, the Runnable waits in the queue.
@@ -417,7 +417,6 @@ public class PhotoManager {
         
         // The image was cached, so no download is required.
         } else {
-            
             /*
              * Signals that the download is "complete", because the byte array already contains the
              * undecoded image. The decoding starts.

@@ -110,6 +110,12 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 	public void reserveButton_onClick(View view) {
 		UserManager.getInstance(this).login(true);
 	}
+	
+	public void albumButton_onClick(View view) {
+		Intent intent = new Intent();
+		intent.setClass(this, FullScreenAlbumActivity.class);
+		startActivity(intent);
+	}
 
 	@Override
     protected void onNewIntent(Intent intent) {
