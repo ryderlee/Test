@@ -1,11 +1,14 @@
 package com.example.test;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -21,6 +24,9 @@ public class BookingPicker extends LinearLayout {
 	private ArrayList<Date> mDates;
 	
 	private OnValueChangeListener mOnValueChangeListener;
+	
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd hh:mm a");
+	private SimpleDateFormat psdf = new SimpleDateFormat("yyyyMMdd");
 	
 	public BookingPicker(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -118,7 +124,14 @@ public class BookingPicker extends LinearLayout {
 			String timeStrings[] = mTimePicker.getDisplayedValues();
 			String timeString = timeStrings[mTimePicker.getValue()];
 			Date date = mDates.get(mDatePicker.getValue());
-			mOnValueChangeListener.onValueChange(numOfPeople, date, timeString);
+			try{
+				date = sdf.parse("" + psdf.format(date) + " " + timeString);
+			}catch(ParseException pe){
+			}
+			
+			
+			
+			mOnValueChangeListener.onValueChange(numOfPeople, date);
 		}
 	}
 	
@@ -127,7 +140,7 @@ public class BookingPicker extends LinearLayout {
 	}
 	
 	public static interface OnValueChangeListener {
-		public abstract void onValueChange(int numOfPeople, Date date, String timeString);
+		public abstract void onValueChange(int numOfPeople, Date date);
 	}
 
 }

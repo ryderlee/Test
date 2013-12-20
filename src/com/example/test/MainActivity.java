@@ -1,5 +1,6 @@
 package com.example.test;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,7 +24,6 @@ import java.net.*;
 import org.json.*;
 
 import android.support.v7.app.*;
-
 
 import com.example.test.PhotoView;
 import com.example.test.R;
@@ -53,7 +53,9 @@ public class MainActivity extends ActionBarActivity {
 	ViewFlipper vflipper;
 	
 	ListViewAdapter<RestaurantResultItem> adapter;
+	Date bookingDateTime;
 	
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/M 'at' kk:mm");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,10 +64,10 @@ public class MainActivity extends ActionBarActivity {
         dateText = (EditText) findViewById(R.id.dateText1);
         timeText = (EditText) findViewById(R.id.timeText1);
         dateButton = (Button) findViewById(R.id.dateButton);
-        timeButton = (Button) findViewById(R.id.timeButton);
-        numberButton = (Button) findViewById(R.id.numberButton);
-        datePicker1= (DatePicker) findViewById(R.id.datePicker1);
-        timePicker1= (TimePicker) findViewById(R.id.timePicker1);
+        //timeButton = (Button) findViewById(R.id.timeButton);
+        //numberButton = (Button) findViewById(R.id.numberButton);
+        //datePicker1= (DatePicker) findViewById(R.id.datePicker1);
+        //timePicker1= (TimePicker) findViewById(R.id.timePicker1);
         numberPicker1= (NumberPicker) findViewById(R.id.numberPicker1);
         numberSeekBar1= (SeekBar) findViewById(R.id.numberSeekBar1);
         vflipper = (ViewFlipper) findViewById(R.id.masterViewFlipper);
@@ -73,45 +75,40 @@ public class MainActivity extends ActionBarActivity {
         vflipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
         vflipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
         
+        
+
+        
+        
         mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
         mBookingPicker.setOnValueChangeListener(new BookingPicker.OnValueChangeListener() {
 			
 			@Override
-			public void onValueChange(int numOfPeople, Date date, String timeString) {
+			public void onValueChange(int numOfPeople, Date date) {
+				
+				//Log.i("test", sdf.format(bookingDateTime));
+				
+				Button db = (Button) findViewById(R.id.dateButton);
+				String s = "Table for " + numOfPeople + sdf.format(date);
+				db.setText(s);
+				/*
 				Button tb = (Button) findViewById(R.id.timeButton);
 				tb.setText(timeString);
 				
 				Button db = (Button) findViewById(R.id.dateButton);
     			db.setText(new SimpleDateFormat("dd/MM/yy").format(date));
-    			
 				numberButton.setText("" + numOfPeople);
+    			*/
 			}
 		});
         
         datePicker1.setMinDate(System.currentTimeMillis() - 1000);
-        numberPicker1.setMaxValue(12);
-        numberPicker1.setMinValue(2);
+        //numberPicker1.setMaxValue(12);
+        //numberPicker1.setMinValue(2);
         Date d= new Date();
         
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         
-        
-        timePicker1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-			
-			@Override
-			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-				Date d = new Date();
-				d.setHours(hourOfDay);
-				d.setMinutes(minute);
-				
-				SimpleDateFormat f = new SimpleDateFormat("kk:mm");
-				Button tb = (Button) findViewById(R.id.timeButton);
-				tb.setText(f.format(d));
-				
-				// TODO Auto-generated method stub
-			}
-		});
         datePicker1.init(d.getYear(), d.getMonth(), d.getDay(), new OnDateChangedListener(){
         	
         		@Override
@@ -130,6 +127,22 @@ public class MainActivity extends ActionBarActivity {
         	
         });
         
+        /*
+        timePicker1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+			
+			@Override
+			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+				Date d = new Date();
+				d.setHours(hourOfDay);
+				d.setMinutes(minute);
+				
+				SimpleDateFormat f = new SimpleDateFormat("kk:mm");
+				Button tb = (Button) findViewById(R.id.timeButton);
+				tb.setText(f.format(d));
+				
+				// TODO Auto-generated method stub
+			}
+		});
         numberSeekBar1.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			int progressChanged = 0;
 
@@ -148,6 +161,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onStopTrackingTouch(SeekBar seekBar) {
 			}
 		});
+		*/
         
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -156,7 +170,7 @@ public class MainActivity extends ActionBarActivity {
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int min = cal.get(Calendar.MINUTE);
         
-        datePicker1.updateDate(year, mon, day);
+        /*datePicker1.updateDate(year, mon, day);
         
         timePicker1.setCurrentHour(hour);
         timePicker1.setCurrentMinute(min);
@@ -166,8 +180,8 @@ public class MainActivity extends ActionBarActivity {
 		Button tb = (Button) findViewById(R.id.timeButton);
 		tb.setText(f.format(dat));
 		
-		numberSeekBar1.setProgress(2 * 5);
-		
+		//numberSeekBar1.setProgress(2 * 5);
+		*/
 		adapter = new ListViewAdapter<RestaurantResultItem>(this, R.layout.restaurant_search_result_tablerow);
         ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
         listView.setAdapter(adapter);
@@ -221,6 +235,9 @@ public class MainActivity extends ActionBarActivity {
 	    		@Override
 	    		public void onClick(View v){
 	    			TextView typeTextView = (TextView) v.findViewById(R.id.restaurantResult_typeTextView);
+	    			
+	    			
+	    			//SearchData.getInstance(MainActivity.this).setDateTime(d)
 	    			RestaurantManager.getInstance(MainActivity.this).showMain(typeTextView.getText().toString());
 	    		}
 	    	}));
