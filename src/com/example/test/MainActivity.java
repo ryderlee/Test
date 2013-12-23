@@ -1,5 +1,6 @@
 package com.example.test;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -20,7 +21,6 @@ import java.net.*;
 import org.json.*;
 
 import android.support.v7.app.*;
-
 
 import com.example.test.PhotoView;
 import com.example.test.R;
@@ -50,7 +50,9 @@ public class MainActivity extends ActionBarActivity {
 	ViewFlipper vflipper;
 	
 	ListViewAdapter<RestaurantResultItem> adapter;
+	Date bookingDateTime;
 	
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/M 'at' kk:mm");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,10 +61,10 @@ public class MainActivity extends ActionBarActivity {
         dateText = (EditText) findViewById(R.id.dateText1);
         timeText = (EditText) findViewById(R.id.timeText1);
         dateButton = (Button) findViewById(R.id.dateButton);
-        timeButton = (Button) findViewById(R.id.timeButton);
-        numberButton = (Button) findViewById(R.id.numberButton);
-        datePicker1= (DatePicker) findViewById(R.id.datePicker1);
-        timePicker1= (TimePicker) findViewById(R.id.timePicker1);
+        //timeButton = (Button) findViewById(R.id.timeButton);
+        //numberButton = (Button) findViewById(R.id.numberButton);
+        //datePicker1= (DatePicker) findViewById(R.id.datePicker1);
+        //timePicker1= (TimePicker) findViewById(R.id.timePicker1);
         numberPicker1= (NumberPicker) findViewById(R.id.numberPicker1);
         numberSeekBar1= (SeekBar) findViewById(R.id.numberSeekBar1);
         vflipper = (ViewFlipper) findViewById(R.id.masterViewFlipper);
@@ -70,46 +72,37 @@ public class MainActivity extends ActionBarActivity {
         vflipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
         vflipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
         
+        
+
+        
+        
         mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
+        
         mBookingPicker.setOnValueChangeListener(new BookingPicker.OnValueChangeListener() {
 			
 			@Override
-			public void onValueChange(int numOfPeople, Date date, String timeString) {
-				Button tb = (Button) findViewById(R.id.timeButton);
-				tb.setText(timeString);
+			public void onValueChange(int numOfPeople, Date date) {
+
+				SearchData.getInstance(MainActivity.this).setDateTime(date);
+				SearchData.getInstance(MainActivity.this).setNumberOfReservation(numOfPeople);
+
 				
 				Button db = (Button) findViewById(R.id.dateButton);
-    			db.setText(new SimpleDateFormat("dd/MM/yy").format(date));
-    			
-				numberButton.setText("" + numOfPeople);
+				String s = "Table for " + numOfPeople + " " + sdf.format(date);
+				db.setText(s);
 			}
 		});
         
-        datePicker1.setMinDate(System.currentTimeMillis() - 1000);
-        numberPicker1.setMaxValue(12);
-        numberPicker1.setMinValue(2);
+        //datePicker1.setMinDate(System.currentTimeMillis() - 1000);
+        //numberPicker1.setMaxValue(12);
+        //numberPicker1.setMinValue(2);
         Date d= new Date();
         
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         
         
-        timePicker1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-			
-			@Override
-			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-				Date d = new Date();
-				d.setHours(hourOfDay);
-				d.setMinutes(minute);
-				
-				SimpleDateFormat f = new SimpleDateFormat("kk:mm");
-				Button tb = (Button) findViewById(R.id.timeButton);
-				tb.setText(f.format(d));
-				
-				// TODO Auto-generated method stub
-			}
-		});
-        datePicker1.init(d.getYear(), d.getMonth(), d.getDay(), new OnDateChangedListener(){
+        /*datePicker1.init(d.getYear(), d.getMonth(), d.getDay(), new OnDateChangedListener(){
         	
         		@Override
         		public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth){
@@ -126,7 +119,23 @@ public class MainActivity extends ActionBarActivity {
         		}	
         	
         });
-        
+        */
+        /*
+        timePicker1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+			
+			@Override
+			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+				Date d = new Date();
+				d.setHours(hourOfDay);
+				d.setMinutes(minute);
+				
+				SimpleDateFormat f = new SimpleDateFormat("kk:mm");
+				Button tb = (Button) findViewById(R.id.timeButton);
+				tb.setText(f.format(d));
+				
+				// TODO Auto-generated method stub
+			}
+		});
         numberSeekBar1.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			int progressChanged = 0;
 
@@ -145,6 +154,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onStopTrackingTouch(SeekBar seekBar) {
 			}
 		});
+		*/
         
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -153,7 +163,9 @@ public class MainActivity extends ActionBarActivity {
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int min = cal.get(Calendar.MINUTE);
         
-        datePicker1.updateDate(year, mon, day);
+        mBookingPicker.setDate(cal.getTime());
+        mBookingPicker.setNumOfReservation(2);
+        /*datePicker1.updateDate(year, mon, day);
         
         timePicker1.setCurrentHour(hour);
         timePicker1.setCurrentMinute(min);
@@ -163,8 +175,8 @@ public class MainActivity extends ActionBarActivity {
 		Button tb = (Button) findViewById(R.id.timeButton);
 		tb.setText(f.format(dat));
 		
-		numberSeekBar1.setProgress(2 * 5);
-		
+		//numberSeekBar1.setProgress(2 * 5);
+		*/
 		adapter = new ListViewAdapter<RestaurantResultItem>(this, R.layout.restaurant_search_result_tablerow);
         ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
         listView.setAdapter(adapter);
@@ -180,6 +192,19 @@ public class MainActivity extends ActionBarActivity {
     	public int rating;
     	public String img;
     }
+    
+    @Override
+        public boolean onOptionsItemSelected(MenuItem item){
+            // same as using a normal menu
+            switch(item.getItemId()) {
+            case R.id.action_user:
+            	UserManager.getInstance(this).login(false);
+                break;
+            }
+            return true;
+        }
+
+    
     
     private class ListViewAdapter<T> extends ArrayAdapter {
 		public ListViewAdapter(Context context, int resource) {
@@ -218,6 +243,9 @@ public class MainActivity extends ActionBarActivity {
 	    		@Override
 	    		public void onClick(View v){
 	    			TextView typeTextView = (TextView) v.findViewById(R.id.restaurantResult_typeTextView);
+	    			
+	    			
+	    			//SearchData.getInstance(MainActivity.this).setDateTime(d)
 	    			RestaurantManager.getInstance(MainActivity.this).showMain(typeTextView.getText().toString());
 	    		}
 	    	}));
@@ -268,6 +296,13 @@ public class MainActivity extends ActionBarActivity {
     }
     
     public void search(){
+    	mBookingPicker.setVisibility(View.GONE);
+    	
+
+    	ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
+    	
+
+    	listView.setVisibility(View.VISIBLE);
     	String str="http://10.0.2.2:8888/restaurant.json";
     	
         try{
@@ -363,13 +398,17 @@ public class MainActivity extends ActionBarActivity {
     	
     }
     public void searchButton_onClick(View view){
+
     	//timePicker1.setVisibility(View.GONE);
     	resetSearch();
     	search();
     }
+    
+    /*
     public void loginButton_onClick(View view){
-    	UserManager.getInstance(this).login(false);
+    	
     }
+    */
     public void timeButton_onClick(View view){
     	mBookingPicker.setVisibility(mBookingPicker.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
     	//timePicker1.setVisibility(View.GONE);
@@ -380,6 +419,8 @@ public class MainActivity extends ActionBarActivity {
     
     public void dateButton_onClick(View view){
     	mBookingPicker.setVisibility(mBookingPicker.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
+    	ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
+    	listView.setVisibility(View.GONE);
 //    	timePicker1.setVisibility(View.GONE);
     	//datePicker1.setVisibility(View.GONE);
 //    	numberSeekBar1.setVisibility(View.GONE);

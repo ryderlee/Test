@@ -38,12 +38,13 @@
                 android:text="Button" 
 				android:contentDescription="Input coordinate reference system info"
                 android:onClick="dateButton_onClick"/>
-
+	<!--  
             <Button
                 android:id="@+id/timeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Button" 
+                android.visibility="gone"
                 android:onClick="timeButton_onClick"/>
 
             <Button
@@ -51,8 +52,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Button" 
+                android.visibility="gone"
                 android:onClick="numberButton_onClick"/>
-            
+ 	-->           
             <Button
                 android:id="@+id/searchButton"
                 android:layout_width="wrap_content"
@@ -60,13 +62,13 @@
                 android:text="S" 
                 android:onClick="searchButton_onClick"/>
             
-            <Button
+            <!--  <Button
                 android:id="@+id/loginButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="L" 
                 android:onClick="loginButton_onClick"/>
-
+			-->
         </LinearLayout>
 
         <com.example.test.BookingPicker
