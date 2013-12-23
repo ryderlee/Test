@@ -47,7 +47,19 @@ public class SearchData {
 		}catch(ParseException e){
 		}
 	}
-
+	public Date getDateTime(){
+		Date d =null;
+		try{
+			
+			d= dateFormat.parse(mPrefs.getString(SEARCHDATA_DATETIME, defaultDateTimeString));
+		}catch(ParseException e){}
+		return d;
+	}
+	
+	public int getNumberOfReservation(){
+		
+		return mPrefs.getInt(SEARCHDATA_NUMBEROFRESERVATION, 2);
+	}
 	protected Date setDateTime(Date d) {
 		// TODO Auto-generated method stub
 		mPrefs.edit().putString( SEARCHDATA_DATETIME, dateFormat.format(d)).commit();
