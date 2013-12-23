@@ -192,6 +192,19 @@ public class MainActivity extends ActionBarActivity {
     	public String img;
     }
     
+    @Override
+        public boolean onOptionsItemSelected(MenuItem item){
+            // same as using a normal menu
+            switch(item.getItemId()) {
+            case R.id.action_user:
+            	UserManager.getInstance(this).login(false);
+                break;
+            }
+            return true;
+        }
+
+    
+    
     private class ListViewAdapter<T> extends ArrayAdapter {
 		public ListViewAdapter(Context context, int resource) {
 			super(context, resource);
@@ -378,13 +391,17 @@ public class MainActivity extends ActionBarActivity {
     	
     }
     public void searchButton_onClick(View view){
+
     	//timePicker1.setVisibility(View.GONE);
     	resetSearch();
     	search();
     }
+    
+    /*
     public void loginButton_onClick(View view){
-    	UserManager.getInstance(this).login(false);
+    	
     }
+    */
     public void timeButton_onClick(View view){
     	mBookingPicker.setVisibility(mBookingPicker.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
     	//timePicker1.setVisibility(View.GONE);
