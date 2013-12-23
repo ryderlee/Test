@@ -85,15 +85,17 @@ public class MainActivity extends ActionBarActivity {
 			
 			@Override
 			public void onValueChange(int numOfPeople, Date date) {
-				
+
 				SearchData.getInstance(MainActivity.this).setDateTime(date);
 				SearchData.getInstance(MainActivity.this).setNumberOfReservation(numOfPeople);
+
 				
 				Button db = (Button) findViewById(R.id.dateButton);
 				String s = "Table for " + numOfPeople + " " + sdf.format(date);
 				db.setText(s);
 			}
 		});
+        
         //datePicker1.setMinDate(System.currentTimeMillis() - 1000);
         //numberPicker1.setMaxValue(12);
         //numberPicker1.setMinValue(2);
@@ -164,6 +166,8 @@ public class MainActivity extends ActionBarActivity {
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int min = cal.get(Calendar.MINUTE);
         
+        mBookingPicker.setDate(cal.getTime());
+        mBookingPicker.setNumOfReservation(2);
         /*datePicker1.updateDate(year, mon, day);
         
         timePicker1.setCurrentHour(hour);
@@ -296,6 +300,12 @@ public class MainActivity extends ActionBarActivity {
     
     public void search(){
     	mBookingPicker.setVisibility(View.GONE);
+    	
+
+    	ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
+    	
+
+    	listView.setVisibility(View.VISIBLE);
     	String str="http://10.0.2.2:8888/restaurant.json";
     	
         try{
@@ -412,6 +422,8 @@ public class MainActivity extends ActionBarActivity {
     
     public void dateButton_onClick(View view){
     	mBookingPicker.setVisibility(mBookingPicker.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
+    	ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
+    	listView.setVisibility(View.GONE);
 //    	timePicker1.setVisibility(View.GONE);
     	//datePicker1.setVisibility(View.GONE);
 //    	numberSeekBar1.setVisibility(View.GONE);
