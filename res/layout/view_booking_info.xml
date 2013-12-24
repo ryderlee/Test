@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/booking_info_border" >
+    
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_NAME"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_toLeftOf="@+id/RESTAURANT_MINI_NO_OF_PARTICIPANTS"
+        android:text="I AM A VERY LONG RESTAURANT NAME - HONG KONG ISLAND SHOP" />
+    
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_NO_OF_PARTICIPANTS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/ic_action_user"
+        android:gravity="center"
+        android:text="3" />
+    
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_DATE_TIME"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/RESTAURANT_MINI_NAME"
+        android:layout_marginTop="10dp"
+        android:text="Friday, October 11 at 13:00"
+        android:textSize="11dp" />
+
+</RelativeLayout>
