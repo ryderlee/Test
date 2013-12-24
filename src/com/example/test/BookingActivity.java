@@ -35,6 +35,9 @@ public class BookingActivity extends Activity {
 	
 	private BookingTask mBookingTask;
 	
+	private View mBookingInfoView;
+	private View mBookingInfoViewComplete;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +55,12 @@ public class BookingActivity extends Activity {
 		
 		mBookingSuccessMessage = (TextView) findViewById(R.id.bookingSuccessMessage);
 		mBookingSuccessMessage.setText((UserData.getInstance().isLogin()?UserData.getInstance().getFirstName():BookingManager.getInstance(this).getGuestFirstName())+", you're all set!");
+		
+		mBookingInfoView = (View) findViewById(R.id.bookingInfoView);
+		RestaurantManager.getInstance(this).displayMiniBlock(mBookingInfoView);
+		
+		mBookingInfoViewComplete = (View) findViewById(R.id.bookingInfoViewComplete);
+		RestaurantManager.getInstance(this).displayMiniBlock(mBookingInfoViewComplete);
 		
 		if (UserData.getInstance().isLogin()) {
 			mPhoneEditText.setText(UserData.getInstance().getPhone());

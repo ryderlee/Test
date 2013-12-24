@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 		android:layout_toLeftOf="@+id/RESTAURANT_MINI_NO_OF_PARTICIPANTS"
-        android:text="I AM A VERY LONG RESTAURANT NAME - HONG KONG ISLAND SHOP" />
+		android:layout_alignParentLeft="true" />
     
     <TextView
         android:id="@+id/RESTAURANT_MINI_NO_OF_PARTICIPANTS"
@@ -18,8 +18,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="10dp"
         android:background="@drawable/ic_action_user"
-        android:gravity="center"
-        android:text="3" />
+        android:gravity="center" />
     
     <TextView
         android:id="@+id/RESTAURANT_MINI_DATE_TIME"
@@ -27,7 +26,79 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/RESTAURANT_MINI_NAME"
         android:layout_marginTop="10dp"
-        android:text="Friday, October 11 at 13:00"
         android:textSize="11dp" />
+    
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_ADDRESS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    
+    
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_PHONE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_CUISINE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_PRICE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_HOURS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_PARKING"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_DESCRIPTION"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_MENU"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_REVIEW_OVERALL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_REVIEW_FOOD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_REVIEW_SERVICE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    
+    <TextView
+        android:id="@+id/RESTAURANT_MINI_REVIEW_AMBIENCE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    
 </RelativeLayout>

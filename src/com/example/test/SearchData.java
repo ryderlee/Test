@@ -25,7 +25,7 @@ public class SearchData {
 		setNumberOfReservation(2);
 	}
 	
-	public Date getDateTime(){
+	public Date getDate(){
 		return mSearchDate;
 	}
 	
@@ -34,7 +34,7 @@ public class SearchData {
 	}
 	
 
-	protected void setDateTime(Date d) {
+	protected void setDate(Date d) {
 		mSearchDate = d;
 	}
 

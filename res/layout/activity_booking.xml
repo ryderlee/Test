@@ -38,11 +38,12 @@
 		        android:onClick="reserveButton_onClick" />
 		    
 		    <LinearLayout
+		        android:id="@+id/bookingInfoView" 
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:layout_below="@+id/reserveButton"
 		        android:layout_marginTop="50dp" >
-		        <include android:id="@+id/bookingInfoView" layout="@layout/view_booking_info" />
+		        <include layout="@layout/view_booking_info" />
 		    </LinearLayout>
 		
 		    <TextView
@@ -106,7 +107,7 @@
 		        android:layout_marginTop="20dp" />
 		    
 		    <LinearLayout
-		        android:id="@+id/completeBookingInfoView"
+		        android:id="@+id/bookingInfoViewComplete"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:layout_below="@+id/bookingSuccessMessage"
@@ -120,7 +121,7 @@
 		        android:layout_height="wrap_content"
 		        android:layout_alignParentLeft="true"
 		        android:layout_alignParentRight="true"
-		        android:layout_below="@+id/completeBookingInfoView"
+		        android:layout_below="@+id/bookingInfoViewComplete"
 		        android:text="Add to calendar"
 		        android:layout_marginTop="30dp"
 		        android:onClick="addToCalendarButton_onClick" />

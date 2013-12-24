@@ -8,14 +8,26 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SigninOptionActivity" >
 
+    <LinearLayout
+        android:id="@+id/bookingInfoView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:visibility="gone" >
+        <include layout="@layout/view_booking_info" />
+    </LinearLayout>
+    
     <Button
         android:id="@+id/signinButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp"
+        android:layout_below="@+id/bookingInfoView"
+        android:layout_marginTop="40dp"
         android:text="Signin with Ikky"
         android:onClick="signinButton_onClick" />
 

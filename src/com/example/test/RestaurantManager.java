@@ -1,5 +1,7 @@
 package com.example.test;
 
+import java.text.SimpleDateFormat;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -79,6 +81,11 @@ public class RestaurantManager {
 		
 		RestaurantData rd = RestaurantData.getInstance();
 
+		TextView tv_BOOKING_DATE_TIME = (TextView) v.findViewById(R.id.RESTAURANT_MINI_DATE_TIME);
+		TextView tv_BOOKING_NO_OF_PARTICIPANTS = (TextView) v.findViewById(R.id.RESTAURANT_MINI_NO_OF_PARTICIPANTS);
+		tv_BOOKING_DATE_TIME.setText(new SimpleDateFormat("EEEE, MMMM dd 'at' HH:mm").format(SearchData.getInstance().getDate()));
+		tv_BOOKING_NO_OF_PARTICIPANTS.setText(Integer.toString(SearchData.getInstance().getNumberOfReservation()));
+		
 		TextView tv_RESTAURANT_NAME = (TextView) v.findViewById(R.id.RESTAURANT_MINI_NAME);
 		TextView tv_RESTAURANT_ADDRESS = (TextView) v.findViewById(R.id.RESTAURANT_MINI_ADDRESS);
 		TextView tv_RESTAURANT_PHONE= (TextView) v.findViewById(R.id.RESTAURANT_MINI_PHONE);
