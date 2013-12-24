@@ -75,6 +75,10 @@ public class RestaurantManager {
 		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 	public void displayMiniBlock(View v){
+		
+		
+		RestaurantData rd = RestaurantData.getInstance();
+
 		TextView tv_RESTAURANT_NAME = (TextView) v.findViewById(R.id.RESTAURANT_MINI_NAME);
 		TextView tv_RESTAURANT_ADDRESS = (TextView) v.findViewById(R.id.RESTAURANT_MINI_ADDRESS);
 		TextView tv_RESTAURANT_PHONE= (TextView) v.findViewById(R.id.RESTAURANT_MINI_PHONE);
