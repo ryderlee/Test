@@ -1,7 +1,5 @@
 package com.example.test;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,7 +15,7 @@ public class BookingPicker extends LinearLayout {
 
 	static final private int MAX_PEOPLE = 20;
 	
-	private NumberPicker mNumOfReservationPicker;
+	private NumberPicker mNoOfParticipantsPicker;
 	private NumberPicker mDatePicker;
 	private NumberPicker mTimePicker;
 	
@@ -34,7 +32,7 @@ public class BookingPicker extends LinearLayout {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.view_booking_picker, this, true);
 		
-		mNumOfReservationPicker = (NumberPicker) getChildAt(0);
+		mNoOfParticipantsPicker = (NumberPicker) getChildAt(0);
 		mDatePicker = (NumberPicker) getChildAt(1);
 		mTimePicker = (NumberPicker) getChildAt(2);
 		
@@ -43,16 +41,16 @@ public class BookingPicker extends LinearLayout {
 		mOnValueChangeListener = null;
 	
 		
-		String numOfReservationStrings[] = new String[MAX_PEOPLE];
-		numOfReservationStrings[0] = "1 person";
+		String noOfParticipantsStrings[] = new String[MAX_PEOPLE];
+		noOfParticipantsStrings[0] = "1 person";
 		for (int i=1; i<MAX_PEOPLE; i++) {
-			numOfReservationStrings[i] = (i+1)+" people";
+			noOfParticipantsStrings[i] = (i+1)+" people";
 		}
-		mNumOfReservationPicker.setMinValue(1);
-		mNumOfReservationPicker.setMaxValue(MAX_PEOPLE);
-		mNumOfReservationPicker.setWrapSelectorWheel(false);
-		mNumOfReservationPicker.setDisplayedValues(numOfReservationStrings);
-		mNumOfReservationPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+		mNoOfParticipantsPicker.setMinValue(1);
+		mNoOfParticipantsPicker.setMaxValue(MAX_PEOPLE);
+		mNoOfParticipantsPicker.setWrapSelectorWheel(false);
+		mNoOfParticipantsPicker.setDisplayedValues(noOfParticipantsStrings);
+		mNoOfParticipantsPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				bookingValueChanged();
@@ -138,7 +136,7 @@ public class BookingPicker extends LinearLayout {
 	
 	public void bookingValueChanged() {
 		if (mOnValueChangeListener != null) {
-			int numOfReservation = mNumOfReservationPicker.getValue();
+			int noOfParticipants = mNoOfParticipantsPicker.getValue();
 			
 			Calendar dateCal = Calendar.getInstance();
 			Calendar timeCal = Calendar.getInstance();
@@ -147,7 +145,7 @@ public class BookingPicker extends LinearLayout {
 			dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
 			dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
 			
-			mOnValueChangeListener.onValueChange(numOfReservation, dateCal.getTime());
+			mOnValueChangeListener.onValueChange(noOfParticipants, dateCal.getTime());
 		}
 	}
 	
@@ -178,7 +176,7 @@ public class BookingPicker extends LinearLayout {
 	}
 	
 	public static interface OnValueChangeListener {
-		public abstract void onValueChange(int numOfReservation, Date date);
+		public abstract void onValueChange(int noOfParticipants, Date date);
 	}
 	
 	public void setDate(Date date) {
@@ -207,13 +205,13 @@ public class BookingPicker extends LinearLayout {
 		bookingValueChanged();
 	}
 	
-	public void setNumOfReservation(int numOfReservation) {
-		mNumOfReservationPicker.setValue(numOfReservation);
+	public void setNoOfParticipants(int noOfParticipants) {
+		mNoOfParticipantsPicker.setValue(noOfParticipants);
 		bookingValueChanged();
 	}
 	
-	public int getNumOfReservation() {
-		return mNumOfReservationPicker.getValue();
+	public int getNoOfParticipants() {
+		return mNoOfParticipantsPicker.getValue();
 	}
 	
 	public Date getDate() {
