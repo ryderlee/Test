@@ -23,6 +23,8 @@ public class GuestInfoActivity extends Activity {
 		mGuestLastNameEditText = (EditText) findViewById(R.id.guestLastNameEditText);
 		mGuestEmailEditText = (EditText) findViewById(R.id.guestEmailEditText);
 		mGuestPhoneEditText = (EditText) findViewById(R.id.guestPhoneEditText);
+		
+		RestaurantManager.getInstance(this).displayMiniBlock(findViewById(R.id.bookingInfoView));
 	}
 
 	@Override

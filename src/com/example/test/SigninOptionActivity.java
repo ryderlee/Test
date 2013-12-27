@@ -21,6 +21,9 @@ public class SigninOptionActivity extends ActionBarActivity {
 //		findViewById(R.id.signupButton).setVisibility(reserve ? View.GONE : View.VISIBLE);
 		findViewById(R.id.textOR).setVisibility(reserve ? View.GONE : View.VISIBLE);
 		findViewById(R.id.guestButton).setVisibility(reserve ? View.VISIBLE : View.GONE);
+		findViewById(R.id.bookingInfoView).setVisibility(reserve ? View.VISIBLE : View.GONE);
+		
+		RestaurantManager.getInstance(this).displayMiniBlock(findViewById(R.id.bookingInfoView));
 	}
 
 	@Override

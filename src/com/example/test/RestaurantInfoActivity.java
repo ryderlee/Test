@@ -20,8 +20,8 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		
 		
 		Intent intent = getIntent();
-		
-		
+		RestaurantData rd = RestaurantData.getInstance();
+		/*
 		String RESTAURANT_ID  = intent.getStringExtra("RESTAURANT_ID");
 		String RESTAURANT_NAME  = intent.getStringExtra("RESTAURANT_NAME");
 		String RESTAURANT_ADDRESS  = intent.getStringExtra("RESTAURANT_ADDRESS");
@@ -36,10 +36,13 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		String RESTAURANT_REVIEW_FOOD = intent.getStringExtra("RESTAURANT_REVIEW_FOOD");
 		String RESTAURANT_REVIEW_SERVICE  = intent.getStringExtra("RESTAURANT_REVIEW_SERVICE");
 		String RESTAURANT_REVIEW_AMBIENCE = intent.getStringExtra("RESTAURANT_REVIEW_AMBIENCE");
+		*/
 		
 		
 		
-		String RESTAURANT_LICNO = intent.getStringExtra("RESTAURANT_LICNO");
+		
+		
+		String RESTAURANT_LICNO = rd.getRestaurantID();
 		TextView tv_RESTAURANT_NAME = (TextView) findViewById(R.id.RESTAURANT_NAME);
 		TextView tv_RESTAURANT_ADDRESS = (TextView) findViewById(R.id.RESTAURANT_ADDRESS);
 		TextView tv_RESTAURANT_PHONE= (TextView) findViewById(R.id.RESTAURANT_PHONE);
@@ -53,19 +56,19 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		TextView tv_RESTAURANT_REVIEW_FOOD = (TextView) findViewById(R.id.RESTAURANT_REVIEW_FOOD);
 		TextView tv_RESTAURANT_REVIEW_SERVICE = (TextView) findViewById(R.id.RESTAURANT_REVIEW_SERVICE);
 		TextView tv_RESTAURANT_REVIEW_AMBIENCE = (TextView) findViewById(R.id.RESTAURANT_REVIEW_AMBIENCE);
-		tv_RESTAURANT_NAME.setText(RESTAURANT_NAME);
-		tv_RESTAURANT_ADDRESS.setText(RESTAURANT_ADDRESS);
-		tv_RESTAURANT_PHONE.setText(RESTAURANT_PHONE);
-		tv_RESTAURANT_CUISINE.setText(RESTAURANT_CUISINE);
-		tv_RESTAURANT_PRICE.setText(RESTAURANT_PRICE);
-		tv_RESTAURANT_HOURS.setText(RESTAURANT_HOURS);
-		tv_RESTAURANT_PARKING.setText(RESTAURANT_PARKING);
-		tv_RESTAURANT_DESCRIPTION.setText(RESTAURANT_DESCRIPTION);
-		tv_RESTAURANT_MENU.setText(RESTAURANT_MENU);
-		tv_RESTAURANT_REVIEW_OVERALL.setText(RESTAURANT_REVIEW_OVERALL);
-		tv_RESTAURANT_REVIEW_FOOD.setText(RESTAURANT_REVIEW_FOOD);
-		tv_RESTAURANT_REVIEW_SERVICE.setText(RESTAURANT_REVIEW_SERVICE);
-		tv_RESTAURANT_REVIEW_AMBIENCE.setText(RESTAURANT_REVIEW_AMBIENCE);
+		tv_RESTAURANT_NAME.setText(rd.getRestaurantName());
+		tv_RESTAURANT_ADDRESS.setText(rd.getRestaurantAddress());
+		tv_RESTAURANT_PHONE.setText(rd.getRestaurantPhone());
+		tv_RESTAURANT_CUISINE.setText(rd.getRestaurantCuisine());
+		tv_RESTAURANT_PRICE.setText(rd.getRestaurantPrice());
+		tv_RESTAURANT_HOURS.setText(rd.getRestaurantHours());
+		tv_RESTAURANT_PARKING.setText(rd.getRestaurantParking());
+		tv_RESTAURANT_DESCRIPTION.setText(rd.getRestaurantDescription());
+		tv_RESTAURANT_MENU.setText(rd.getRestaurantMenu());
+		tv_RESTAURANT_REVIEW_OVERALL.setText(rd.getRestaurantReviewOverall());
+		tv_RESTAURANT_REVIEW_FOOD.setText(rd.getRestaurantReviewFood());
+		tv_RESTAURANT_REVIEW_SERVICE.setText(rd.getRestaurantReviewService());
+		tv_RESTAURANT_REVIEW_AMBIENCE.setText(rd.getRestaurantReviewAmbiance());
 	}
 
 	/**

@@ -83,8 +83,8 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onValueChange(int numOfPeople, Date date) {
 
-				SearchData.getInstance(MainActivity.this).setDateTime(date);
-				SearchData.getInstance(MainActivity.this).setNumberOfReservation(numOfPeople);
+				SearchData.getInstance().setDate(date);
+				SearchData.getInstance().setNumberOfReservation(numOfPeople);
 
 				
 				Button db = (Button) findViewById(R.id.dateButton);
@@ -164,7 +164,7 @@ public class MainActivity extends ActionBarActivity {
         int min = cal.get(Calendar.MINUTE);
         
         mBookingPicker.setDate(cal.getTime());
-        mBookingPicker.setNumOfReservation(2);
+        mBookingPicker.setNoOfParticipants(2);
         /*datePicker1.updateDate(year, mon, day);
         
         timePicker1.setCurrentHour(hour);
@@ -449,6 +449,15 @@ public class MainActivity extends ActionBarActivity {
             Log.d("example", "login success and show profile now");
     		UserManager.getInstance(this).showProfile();
     	}
+    }
+    
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if (keyCode == KeyEvent.KEYCODE_BACK) {
+    		moveTaskToBack(true);
+    		return true;
+    	}
+    	return super.onKeyDown(keyCode, event);
     }
     
 }
