@@ -7,3 +7,17 @@ project.properties
 gen/
 
 *.DS_Store
+
+*.DS_Store?
+
+.*.swp
+
+._*
+
+.Spotlight-V100
+
+.Transhes
+
+ehthumbs.db
+
+Thumbs.db
