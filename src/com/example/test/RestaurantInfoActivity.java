@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,6 +64,8 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
+		mAvailableTimeSlots = new ArrayList<Date>();
+		
 		mInfoView = findViewById(R.id.RESTAURANT_INFO_VIEW);
 		mProgressView = findViewById(R.id.RESTAURANT_INFO_PROGRESS);
 		
@@ -78,7 +81,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		mTimeSlotsScrollView = (HorizontalScrollView) findViewById(R.id.timeSlotsScrollView);
 		mTimeSlotsContainer = (LinearLayout) findViewById(R.id.timeSlotsContainer);
 		
-		mTargetTime = SearchData.getInstance().getDate();
+		mTargetTime = SearchData.getInstance().getSearchDate();
 		mTargetNoOfParticipants = SearchData.getInstance().getNumberOfReservation();
 		
 		mBookingPicker.setOnValueChangeListener(new OnValueChangeListener() {
@@ -100,15 +103,15 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				String timeStr = new SimpleDateFormat("h:mm aa").format(date).toLowerCase();
 				String bookingStr = "Table for " + noOfParticipants + ", " + dateStr + " at " + timeStr;
 				mPickerButton.setText(bookingStr);
+
+				SearchData.getInstance().setSearchDate(date);
+				SearchData.getInstance().setNumberOfReservation(noOfParticipants);
 			}
 		});
 		mBookingPicker.setDate(mTargetTime);
 		mBookingPicker.setNoOfParticipants(mTargetNoOfParticipants);
-		
-		
-		mRestaurantInfoRequestTask = new RestaurantInfoRequestTask();
-		mRestaurantInfoRequestTask.execute((Void) null);
 
+		
 		mRadioGroup = (RadioGroup) findViewById(R.id.RESTAURANT_INFO_TAB);
 		mRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
@@ -117,21 +120,9 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 			}
 		});
         mRadioGroup.check(R.id.infoRadioButton);
-        
-        mAvailableTimeSlots = new ArrayList<Date>();
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 8, 0, 0));
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 8, 30, 0));
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 9, 0, 0));
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 9, 30, 0));
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 10, 0, 0));
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 10, 30, 0));
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 11, 0, 0));
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 11, 30, 0));
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 12, 0, 0));
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 12, 30, 0));
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 13, 0, 0));
-        mAvailableTimeSlots.add(new Date(2013, 12, 31, 13, 30, 0));
-        displayTimeSlots();
+		
+		mRestaurantInfoRequestTask = new RestaurantInfoRequestTask();
+		mRestaurantInfoRequestTask.execute((Void) null);
 	}
 	
 	private void showView(int viewId) {
@@ -180,6 +171,21 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 			parkingView.setText(json.getString("RESTAURANT_PARKING"));
 			descriptionView.setText(json.getString("RESTAURANT_DESCRIPTION"));
 			
+			
+			JSONArray timeSlotsResult = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
+			mAvailableTimeSlots.clear();
+			for (int i=0; i<timeSlotsResult.length(); i++) {
+				String timeSlotStr = timeSlotsResult.getString(i);
+				String timeSlotArr[] = timeSlotStr.split(":");
+				Calendar timeSlot = Calendar.getInstance();
+				timeSlot.setTime(SearchData.getInstance().getSearchDate());
+				timeSlot.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSlotArr[0]));
+				timeSlot.set(Calendar.MINUTE, Integer.parseInt(timeSlotArr[1]));
+				timeSlot.set(Calendar.SECOND, 0);
+				mAvailableTimeSlots.add(timeSlot.getTime());
+			}
+	        displayTimeSlots();
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -216,9 +222,11 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			timeSlotButton.setLayoutParams(params);
 			timeSlotButton.setText(new SimpleDateFormat("h:mm aa").format(d).toLowerCase());
+			timeSlotButton.setTag(d);
 			timeSlotButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					SearchData.getInstance().setChosenDate((Date)v.getTag());
 					reserveButton_onClick(v);
 				}
 			});
@@ -227,6 +235,25 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		
 		mTimeSlotsScrollView.setVisibility(View.VISIBLE);
 		mPickerProgressBar.setVisibility(View.GONE);
+	}
+	
+	private void updateTimeSlots(JSONObject json) {
+		try {
+			JSONArray timeSlotsResult = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
+			mAvailableTimeSlots.clear();
+			for (int i=0; i<timeSlotsResult.length(); i++) {
+				String timeSlotStr = timeSlotsResult.getString(i);
+				String timeSlotArr[] = timeSlotStr.split(":");
+				Calendar timeSlot = Calendar.getInstance();
+				timeSlot.setTime(SearchData.getInstance().getSearchDate());
+				timeSlot.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSlotArr[0]));
+				timeSlot.set(Calendar.MINUTE, Integer.parseInt(timeSlotArr[1]));
+				timeSlot.set(Calendar.SECOND, 0);
+				mAvailableTimeSlots.add(timeSlot.getTime());
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -378,6 +405,15 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				return false;
+			}
+			
+			String jsonString = Utils.getJsonString("http://10.0.2.2:8888/index.php/merchants/1");
+			try {
+				JSONObject json = new JSONObject(jsonString);
+				updateTimeSlots(json);
+				return true;
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
 			
 			return true;
