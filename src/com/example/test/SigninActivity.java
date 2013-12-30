@@ -1,5 +1,8 @@
 package com.example.test;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -219,7 +222,7 @@ public class SigninActivity extends ActionBarActivity {
 				return false;
 			}
 			
-			String json = Utils.getJsonString("http://10.0.2.2:8888/login.php?username="+mEmail+"&pwd="+mPassword);
+			String json = Utils.post("http://10.0.2.2:8888/index.php/login", "username="+mEmail+"&pwd="+mPassword);
 			JSONObject jso;
 			try {
 				jso = new JSONObject(json);
