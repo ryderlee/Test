@@ -14,6 +14,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.*;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -115,6 +117,21 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 			}
 		});
         mRadioGroup.check(R.id.infoRadioButton);
+        
+        mAvailableTimeSlots = new ArrayList<Date>();
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 8, 0, 0));
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 8, 30, 0));
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 9, 0, 0));
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 9, 30, 0));
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 10, 0, 0));
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 10, 30, 0));
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 11, 0, 0));
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 11, 30, 0));
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 12, 0, 0));
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 12, 30, 0));
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 13, 0, 0));
+        mAvailableTimeSlots.add(new Date(2013, 12, 31, 13, 30, 0));
+        displayTimeSlots();
 	}
 	
 	private void showView(int viewId) {
@@ -193,6 +210,20 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 	
 	private void displayTimeSlots() {
 		mTimeSlotsContainer.removeAllViews();
+		
+		for (Date d : mAvailableTimeSlots) {
+			Button timeSlotButton = new Button(this);
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			timeSlotButton.setLayoutParams(params);
+			timeSlotButton.setText(new SimpleDateFormat("h:mm aa").format(d).toLowerCase());
+			timeSlotButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					reserveButton_onClick(v);
+				}
+			});
+			mTimeSlotsContainer.addView(timeSlotButton);
+		}
 		
 		mTimeSlotsScrollView.setVisibility(View.VISIBLE);
 		mPickerProgressBar.setVisibility(View.GONE);
