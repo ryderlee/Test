@@ -114,7 +114,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				showView(checkedId);
 			}
 		});
-        mRadioGroup.check(2);
+        mRadioGroup.check(R.id.infoRadioButton);
 	}
 	
 	private void showView(int viewId) {
@@ -123,13 +123,13 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		mReviewsView.setVisibility(View.GONE);
 		
 		switch (viewId) {
-		case 1:
+		case R.id.menuRadioButton:
 			mMenuView.setVisibility(View.VISIBLE);
 			break;
-		case 2:
+		case R.id.infoRadioButton:
 			mDetailView.setVisibility(View.VISIBLE);
 			break;
-		case 3:
+		case R.id.reviewsRadioButton:
 			mReviewsView.setVisibility(View.VISIBLE);
 			break;
 		default:
