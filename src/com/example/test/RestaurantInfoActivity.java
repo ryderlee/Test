@@ -1,5 +1,7 @@
 package com.example.test;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,27 +24,35 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.*;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.*;
 
 public class RestaurantInfoActivity extends ActionBarActivity {
 	
 	private RestaurantInfoRequestTask mRestaurantInfoRequestTask = null;
 
-	private View mInfoView;
+	private ScrollView mInfoView;
 	private View mProgressView;
 	private RadioGroup mRadioGroup;
 	
+	private View mViewWrapper;
 	private View mMenuView;
 	private View mDetailView;
 	private View mReviewsView;
 	
+	
+	private ArrayList<Date> mAvailableTimeSlots;
 	
 	private TimeSlotsRequestTask mTimeSlotsRequestTask = null;
 	private Date mTargetTime;
@@ -55,7 +65,9 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 	private HorizontalScrollView mTimeSlotsScrollView;
 	private LinearLayout mTimeSlotsContainer;
 	
-	private ArrayList<Date> mAvailableTimeSlots;
+	private ViewPager mViewPager;
+	private int mViewPagerHeight;
+	private ArrayList<String> mImageUrls;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +78,11 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		
 		mAvailableTimeSlots = new ArrayList<Date>();
 		
-		mInfoView = findViewById(R.id.RESTAURANT_INFO_VIEW);
+		
+		mInfoView = (ScrollView) findViewById(R.id.RESTAURANT_INFO_VIEW);
 		mProgressView = findViewById(R.id.RESTAURANT_INFO_PROGRESS);
+		
+		mViewWrapper = findViewById(R.id.RESTAURANT_INFO_WRAPPER);
 		
 		mMenuView = findViewById(R.id.RESTAURANT_INFO_MENU_VIEW);
 		mDetailView = findViewById(R.id.RESTAURANT_INFO_DETAIL_VIEW);
@@ -120,9 +135,31 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 			}
 		});
         mRadioGroup.check(R.id.infoRadioButton);
+        
+        mViewPager = (ViewPager) findViewById(R.id.fullScreenAlbumPager);
+		FullScreenAlbumAdapter adapter = new FullScreenAlbumAdapter();
+		mViewPager.setAdapter(adapter);
+		
+		mViewPagerHeight = mViewPager.getLayoutParams().height;
 		
 		mRestaurantInfoRequestTask = new RestaurantInfoRequestTask();
 		mRestaurantInfoRequestTask.execute((Void) null);
+	}
+	
+	private void switchFullScreen(Boolean on) {
+		getWindow().setFlags(on?WindowManager.LayoutParams.FLAG_FULLSCREEN:0, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		mInfoView.setFillViewport(on);
+		if (on) {
+			getActionBar().hide();
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			mViewPager.setLayoutParams(params);
+		} else {
+			getActionBar().show();
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, mViewPagerHeight);
+			mViewPager.setLayoutParams(params);
+		}
+		mViewWrapper.setVisibility(on?View.GONE:View.VISIBLE);
+		mViewPager.getAdapter().notifyDataSetChanged();
 	}
 	
 	private void showView(int viewId) {
@@ -290,12 +327,6 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 	public void reserveButton_onClick(View view) {
 		UserManager.getInstance(this).login(true);
 	}
-	
-	public void albumButton_onClick(View view) {
-		Intent intent = new Intent();
-		intent.setClass(this, FullScreenAlbumActivity.class);
-		startActivity(intent);
-	}
 
 	@Override
     protected void onNewIntent(Intent intent) {
@@ -431,4 +462,85 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		}
 		
 	}
+	
+	
+	
+	private class FullScreenAlbumAdapter extends PagerAdapter {
+		
+		public FullScreenAlbumAdapter() {
+	        mImageUrls = new ArrayList<String>();
+	        mImageUrls.add("http://www.foodnut.com/i/Yung-Kee-Restaurant-Hong-Kong/Yung-Kee-Restaurant-Hong-Kong-1.jpg");
+	        mImageUrls.add("http://www.12hk.com/area/Admiralty/LippoCtr_PHOT0582.jpg");
+	        mImageUrls.add("http://www.eclectic-cool.com/wp-content/uploads/2011/04/hong-kong-street-signs.jpg");
+	        mImageUrls.add("http://www.discoverhongkong.com/common/images/hotel/1315_image_COMP00050993_photo_1.jpg");
+	        mImageUrls.add("http://annatam.com/wp-content/uploads/2013/12/cf7434fef207fe283c95be624f5db1b5.jpg");
+	        mImageUrls.add("http://therakeonline.com/wp-content/uploads/2012/09/Where-The-Rake-Stays-Upper-House-Hong-Kong-Semi-private-booth.jpg");
+	        mImageUrls.add("http://farm4.staticflickr.com/3255/2460544629_e3fa24bb40_o.jpg");
+	        mImageUrls.add("http://www.yuantravel.com/wp-content/gallery/general-about-hong-kong/hongkong_2141.jpg");
+	        mImageUrls.add("https://pbs.twimg.com/media/BbZpkd6CEAAB2GL.jpg");
+	        mImageUrls.add("https://pbs.twimg.com/media/BbhSydpCAAAU-J5.jpg");
+	        mImageUrls.add("http://fc04.deviantart.net/fs51/i/2009/307/a/3/Hong_Kong__Tallest_Building_by_thehardheadedsavior.jpg");
+	    }
+
+		@Override
+		public int getCount() {
+			return mImageUrls.size();
+		}
+ 
+		@Override
+		public boolean isViewFromObject(View view, Object object) {
+			return view == (RelativeLayout) object;
+		}
+		
+		@Override
+	    public Object instantiateItem(ViewGroup container, int position) {
+	        PhotoView photoView;
+	  
+	        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	        View viewLayout = inflater.inflate(R.layout.view_fullscreen_image, container, false);
+	        
+	        photoView = (PhotoView) viewLayout.findViewById(R.id.fullScreenImagePhotoView);
+	        
+			try {
+				URL imageUrl = new URL(mImageUrls.get(position));
+				photoView.setImageURL(imageUrl, true, null);
+			}
+			catch(MalformedURLException mfe){}
+			
+			viewLayout.findViewById(R.id.fullScreenImageCloseButton).setVisibility((getWindow().getAttributes().flags&WindowManager.LayoutParams.FLAG_FULLSCREEN)==0?View.GONE:View.VISIBLE);
+			viewLayout.findViewById(R.id.fullScreenImageCloseButton).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					switchFullScreen(false);
+				}
+			});
+			
+			photoView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					WindowManager.LayoutParams params = getWindow().getAttributes();
+					if ((params.flags&WindowManager.LayoutParams.FLAG_FULLSCREEN) == 0) {
+						switchFullScreen(true);
+					}
+				}
+			});
+	  
+	        ((ViewPager) container).addView(viewLayout);
+	  
+	        return viewLayout;
+		}
+		
+		@Override
+	    public void destroyItem(ViewGroup container, int position, Object object) {
+			((ViewPager) container).removeView((RelativeLayout) object);
+		}
+		
+		@Override
+		public int getItemPosition(Object object) {
+		    return POSITION_NONE;
+		}
+		
+	}
+	
+	
 }
