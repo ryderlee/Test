@@ -98,6 +98,14 @@ public class BookingPicker extends LinearLayout {
 				bookingValueChanged();
 			}
 		});
+		mDatePicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
+			@Override
+			public void onScrollStateChange(NumberPicker view, int scrollState) {
+				if (scrollState == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+					validateDateTime();
+				}
+			}
+		});
 
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 0);

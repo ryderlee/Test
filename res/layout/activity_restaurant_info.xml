@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,105 +6,278 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".RestaurantInfoActivity" >
-     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/RESTAURANT_NAME"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_ADDRESS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_PHONE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_CUISINE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_PRICE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_HOURS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_PARKING"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_DESCRIPTION"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_MENU"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_REVIEW_OVERALL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_REVIEW_FOOD"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_REVIEW_SERVICE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_REVIEW_AMBIENCE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+    android:orientation="vertical"
+    tools:context=".RestaurantInfoActivity">
     
-    <Button
-        android:id="@+id/RESTAURANT_RESERVE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="I am time slot"
-        android:onClick="reserveButton_onClick" />
-
-    <Button
-        android:id="@+id/RESTAURANT_ALBUM"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show album"
-        android:onClick="albumButton_onClick" />
-    
+<ScrollView 
+	    android:id="@+id/RESTAURANT_INFO_VIEW"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:visibility="gone">
+	        
+    	<LinearLayout
+    	    android:layout_width="match_parent"
+    	    android:layout_height="wrap_content"
+    	    android:orientation="vertical">
+    	    
+			<RelativeLayout 
+				android:layout_width="match_parent"
+		   		android:layout_height="wrap_content"
+		   		android:layout_marginBottom="20dp">
+		
+				<Button
+					android:id="@+id/RESTAURANT_ALBUM_BUTTON"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Show album"
+			        android:layout_alignParentTop="true"
+			        android:layout_alignParentLeft="true"
+			        android:layout_alignParentRight="true"
+					android:onClick="albumButton_onClick" />
+				
+			    <TextView 
+			        android:id="@+id/RESTAURANT_INFO_NAME"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_below="@+id/RESTAURANT_ALBUM_BUTTON"
+			        android:layout_marginTop="10dp"
+			        android:gravity="center_horizontal"
+			        android:textSize="24sp"
+			        android:textStyle="bold" />
+			    
+			    <RadioGroup
+			        android:id="@+id/RESTAURANT_INFO_TAB"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_below="@+id/RESTAURANT_INFO_NAME"
+			        android:layout_marginTop="10dp"
+			        android:orientation="horizontal" >
+			        <RadioButton 
+			            style="?android:attr/listSeparatorTextViewStyle"
+			            android:button="@null"
+			            android:background="@drawable/tab_indicator"
+			            android:gravity="center"
+			            android:layout_weight="1"
+			            android:text="Menu" />
+			        <RadioButton
+			            style="?android:attr/listSeparatorTextViewStyle"
+			            android:button="@null"
+			            android:background="@drawable/tab_indicator"
+			            android:gravity="center"
+			            android:layout_weight="1" 
+			            android:text="Info" />
+			        <RadioButton 
+			            style="?android:attr/listSeparatorTextViewStyle"
+			            android:button="@null"
+			            android:background="@drawable/tab_indicator"
+			            android:gravity="center"
+			            android:layout_weight="1"
+			            android:text="Reviews" />
+			    </RadioGroup>
+			    
+			</RelativeLayout>
+			
+			<LinearLayout
+			    android:id="@+id/RESTAURANT_INFO_DETAIL_VIEW"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical"
+			    android:visibility="gone">
+			    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="20dp"
+			        android:layout_marginBottom="10dp"
+			        android:textColor="#444444"
+			    	android:text="BOOK A TABLE" />
+			    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
+			    <Button 
+			        android:id="@+id/pickerButton"
+			        android:background="@null"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:textColor="#444444"
+			        android:textSize="14sp"
+			        android:gravity="left|center_vertical"
+			        android:onClick="pickerButton_onClick" />
+			    <com.example.test.BookingPicker
+			    	android:id="@+id/bookingPicker"
+			    	android:layout_width="match_parent"
+			    	android:layout_height="wrap_content"
+			    	android:visibility="gone" />
+			    <LinearLayout
+			        android:id="@+id/timeSlotsView"
+			        android:orientation="vertical"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content" >
+				    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
+				    <ProgressBar
+				        android:id="@+id/pickerProgressBar"
+				        style="?android:attr/progressBarStyle"
+				       	android:layout_width="wrap_content"
+				       	android:layout_height="wrap_content"
+				       	android:layout_gravity="center"
+				       	android:visibility="gone" />
+				    <HorizontalScrollView
+				        android:id="@+id/timeSlotsScrollView"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content">
+				        <LinearLayout
+				            android:id="@+id/timeSlotsContainer"
+				            android:orientation="horizontal"
+				            android:layout_width="wrap_content"
+				        	android:layout_height="wrap_content">
+				        </LinearLayout>
+				    </HorizontalScrollView>
+			    </LinearLayout>
+			    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="20dp"
+			        android:layout_marginBottom="10dp"
+			        android:textColor="#444444"
+			    	android:text="DETAILS" />
+			    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="4dp"
+			        android:textColor="#888888"
+			        android:text="Address" />
+			    <TextView
+			        android:id="@+id/RESTAURANT_INFO_ADDRESS"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="4dp"
+			        android:layout_marginBottom="5dp" />
+			    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="4dp"
+			        android:textColor="#888888"
+			        android:text="Phone" />
+			    <TextView
+			        android:id="@+id/RESTAURANT_INFO_PHONE"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="4dp"
+			        android:layout_marginBottom="5dp" />
+			    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textColor="#888888"
+			        android:text="Cuisine"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="4dp"
+			         />
+			    <TextView
+			        android:id="@+id/RESTAURANT_INFO_CUSINE"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="4dp"
+			        android:layout_marginBottom="5dp" />
+			    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textColor="#888888"
+			        android:text="Price"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="4dp" />
+			    <TextView
+			        android:id="@+id/RESTAURANT_INFO_PRICE"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="4dp"
+			        android:layout_marginBottom="5dp" />
+			    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textColor="#888888"
+			        android:text="Hours"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="4dp" />
+			    <TextView
+			        android:id="@+id/RESTAURANT_INFO_HOURS"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="4dp"
+			        android:layout_marginBottom="5dp" />
+			    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textColor="#888888"
+			        android:text="Parking"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="4dp" />
+			    <TextView
+			        android:id="@+id/RESTAURANT_INFO_PARKING"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="4dp" />
+			    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textColor="#888888"
+			        android:text="Description"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="4dp" />
+			    <TextView
+			        android:id="@+id/RESTAURANT_INFO_DESCRIPTION"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="4dp"
+			        android:layout_marginBottom="5dp" />
+			</LinearLayout>
+	
+			<RelativeLayout
+			    android:id="@+id/RESTAURANT_INFO_MENU_VIEW"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:visibility="gone">
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="Don't have menu yet." />
+			</RelativeLayout>
+	
+			<RelativeLayout
+			    android:id="@+id/RESTAURANT_INFO_REVIEWS_VIEW"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:visibility="gone">
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="Don't have reviews yet." />
+			</RelativeLayout>
+	
+		</LinearLayout>
+		
+	</ScrollView>
+	
+	<LinearLayout
+	    android:id="@+id/RESTAURANT_INFO_PROGRESS"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:gravity="center"
+	    android:orientation="horizontal" >
+	
+	    <ProgressBar
+	        style="?android:attr/progressBarStyleLarge"
+	       	android:layout_width="wrap_content"
+	       	android:layout_height="wrap_content" />
+	
 	</LinearLayout>
-</RelativeLayout>
+
+</LinearLayout>
