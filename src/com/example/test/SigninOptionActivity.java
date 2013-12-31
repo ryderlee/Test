@@ -45,7 +45,10 @@ public class SigninOptionActivity extends ActionBarActivity {
 	}
 	
 	public void signupButton_onClick(View view) {
-		
+		Intent intent = new Intent();
+		intent.setClass(this, SignupActivity.class);
+		this.startActivity(intent);
+		this.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 	
 	public void guestButton_onClick(View view) {

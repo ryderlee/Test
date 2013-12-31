@@ -75,6 +75,11 @@
             android:label="@string/title_activity_full_screen_album"
             android:theme="@android:style/Theme.Holo.NoActionBar" >
         </activity>
+        <activity
+            android:name="com.example.test.SignupActivity"
+            android:label="@string/title_activity_signup"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
     </application>
 
 </manifest>
