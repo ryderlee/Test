@@ -171,7 +171,7 @@ public class BookingActivity extends Activity {
 			params.put("userID", userId);
 			params.put("merchantID", restaurantId);
 			params.put("numberOfParticipant", noOfParticipant);
-			params.put("datatime", datetime);
+			params.put("datetime", datetime);
 			params.put("specialRequest", specialRequest);
 			
 			String jsonString = Utils.post("http://10.0.2.2:8888/index.php/reservations", params);
