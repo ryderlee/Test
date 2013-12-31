@@ -83,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onValueChange(int numOfPeople, Date date) {
 
-				SearchData.getInstance().setDate(date);
+				SearchData.getInstance().setSearchDate(date);
 				SearchData.getInstance().setNumberOfReservation(numOfPeople);
 
 				

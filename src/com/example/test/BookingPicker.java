@@ -98,6 +98,14 @@ public class BookingPicker extends LinearLayout {
 				bookingValueChanged();
 			}
 		});
+		mDatePicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
+			@Override
+			public void onScrollStateChange(NumberPicker view, int scrollState) {
+				if (scrollState == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+					validateDateTime();
+				}
+			}
+		});
 
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -162,7 +170,7 @@ public class BookingPicker extends LinearLayout {
 			for (int i=0; i<mTimes.size(); i++) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(mTimes.get(i));
-				if (cal.get(Calendar.HOUR_OF_DAY) > now.get(Calendar.HOUR_OF_DAY) || (cal.get(Calendar.HOUR_OF_DAY) == now.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.MINUTE) > now.get(Calendar.MINUTE))) {
+				if (cal.get(Calendar.HOUR_OF_DAY) > now.get(Calendar.HOUR_OF_DAY) || (cal.get(Calendar.HOUR_OF_DAY) == now.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.MINUTE) >= now.get(Calendar.MINUTE))) {
 					mTimePicker.setValue(i);
 					bookingValueChanged();
 					break;
@@ -185,7 +193,7 @@ public class BookingPicker extends LinearLayout {
 		for (int i=0; i<mTimes.size(); i++) {
 			Calendar timeCal = Calendar.getInstance();
 			timeCal.setTime(mTimes.get(i));
-			if (timeCal.get(Calendar.HOUR_OF_DAY) > cal.get(Calendar.HOUR_OF_DAY) || (timeCal.get(Calendar.HOUR_OF_DAY) == cal.get(Calendar.HOUR_OF_DAY) && timeCal.get(Calendar.MINUTE) > cal.get(Calendar.MINUTE))) {
+			if (timeCal.get(Calendar.HOUR_OF_DAY) > cal.get(Calendar.HOUR_OF_DAY) || (timeCal.get(Calendar.HOUR_OF_DAY) == cal.get(Calendar.HOUR_OF_DAY) && timeCal.get(Calendar.MINUTE) >= cal.get(Calendar.MINUTE))) {
 				mTimePicker.setValue(i);
 				break;
 			}

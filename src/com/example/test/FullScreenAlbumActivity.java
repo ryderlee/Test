@@ -39,7 +39,6 @@ public class FullScreenAlbumActivity extends Activity {
 	}
 	
 	
-	
 	private class FullScreenAlbumAdapter extends PagerAdapter {
 		
 		ArrayList<String> mImageUrls;
