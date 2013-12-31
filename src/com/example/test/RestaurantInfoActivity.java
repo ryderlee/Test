@@ -41,7 +41,7 @@ import android.support.v7.app.*;
 public class RestaurantInfoActivity extends ActionBarActivity {
 	
 	private RestaurantInfoRequestTask mRestaurantInfoRequestTask = null;
-
+	
 	private ScrollView mInfoView;
 	private View mProgressView;
 	private RadioGroup mRadioGroup;
@@ -189,30 +189,31 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		return true;
 	}
 	
-	private void updateRestaurantInfo(JSONObject json) {
-		try {
-			TextView nameView = (TextView) findViewById(R.id.RESTAURANT_INFO_NAME);
-			TextView addressView = (TextView) findViewById(R.id.RESTAURANT_INFO_ADDRESS);
-			TextView phoneView = (TextView) findViewById(R.id.RESTAURANT_INFO_PHONE);
-			TextView cuisineView = (TextView) findViewById(R.id.RESTAURANT_INFO_CUSINE);
-			TextView priceView = (TextView) findViewById(R.id.RESTAURANT_INFO_PRICE);
-			TextView hoursView = (TextView) findViewById(R.id.RESTAURANT_INFO_HOURS);
-			TextView parkingView = (TextView) findViewById(R.id.RESTAURANT_INFO_PARKING);
-			TextView descriptionView = (TextView) findViewById(R.id.RESTAURANT_INFO_DESCRIPTION);
-			nameView.setText(json.getString("RESTAURANT_NAME"));
-			addressView.setText(json.getString("RESTAURANT_ADDRESS"));
-			phoneView.setText(json.getString("RESTAURANT_PHONE"));
-			cuisineView.setText(json.getString("RESTAURANT_CUISINE"));
-			priceView.setText(json.getString("RESTAURANT_PRICE"));
-			hoursView.setText(json.getString("RESTAURANT_HOURS"));
-			parkingView.setText(json.getString("RESTAURANT_PARKING"));
-			descriptionView.setText(json.getString("RESTAURANT_DESCRIPTION"));
-			
-			
-			JSONArray timeSlotsResult = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
-			mAvailableTimeSlots.clear();
-			for (int i=0; i<timeSlotsResult.length(); i++) {
-				String timeSlotStr = timeSlotsResult.getString(i);
+	private void updateRestaurantInfo(JSONArray timeSlots) {
+		TextView nameView = (TextView) findViewById(R.id.RESTAURANT_INFO_NAME);
+		TextView addressView = (TextView) findViewById(R.id.RESTAURANT_INFO_ADDRESS);
+		TextView phoneView = (TextView) findViewById(R.id.RESTAURANT_INFO_PHONE);
+		TextView cuisineView = (TextView) findViewById(R.id.RESTAURANT_INFO_CUSINE);
+		TextView priceView = (TextView) findViewById(R.id.RESTAURANT_INFO_PRICE);
+		TextView hoursView = (TextView) findViewById(R.id.RESTAURANT_INFO_HOURS);
+		TextView parkingView = (TextView) findViewById(R.id.RESTAURANT_INFO_PARKING);
+		TextView descriptionView = (TextView) findViewById(R.id.RESTAURANT_INFO_DESCRIPTION);
+
+		RestaurantData rd = RestaurantData.getInstance();
+		
+		nameView.setText(rd.getRestaurantName());
+		addressView.setText(rd.getRestaurantAddress());
+		phoneView.setText(rd.getRestaurantPhone());
+		cuisineView.setText(rd.getRestaurantCuisine());
+		priceView.setText(rd.getRestaurantPrice());
+		hoursView.setText(rd.getRestaurantHours());
+		parkingView.setText(rd.getRestaurantParking());
+		descriptionView.setText(rd.getRestaurantDescription());
+		
+		mAvailableTimeSlots.clear();
+		for (int i=0; i<timeSlots.length(); i++) {
+			try {
+				String timeSlotStr = timeSlots.getString(i);
 				String timeSlotArr[] = timeSlotStr.split(":");
 				Calendar timeSlot = Calendar.getInstance();
 				timeSlot.setTime(SearchData.getInstance().getSearchDate());
@@ -220,12 +221,11 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				timeSlot.set(Calendar.MINUTE, Integer.parseInt(timeSlotArr[1]));
 				timeSlot.set(Calendar.SECOND, 0);
 				mAvailableTimeSlots.add(timeSlot.getTime());
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
-	        displayTimeSlots();
-			
-		} catch (JSONException e) {
-			e.printStackTrace();
 		}
+        displayTimeSlots();
 	}
 	
 	public void pickerButton_onClick(View view) {
@@ -384,48 +384,63 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		}
 	}
 	
-	
 	private class RestaurantInfoRequestTask extends AsyncTask<Void, Void, Boolean> {
-		
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-
+		// TODO: attempt authentication against a network service.
 			try {
 				// Simulate network access.
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				return false;
 			}
-			
-			String jsonString = Utils.getJsonString("http://10.0.2.2:8888/index.php/merchants/1");
+		
+			String jsonString = Utils.getJsonString("http://10.0.2.2:8888/index.php/merchants/"+RestaurantData.getInstance().getRestaurantID());
 			try {
 				JSONObject json = new JSONObject(jsonString);
-				updateRestaurantInfo(json);
+				
+				RestaurantData rd = RestaurantData.getInstance();
+				
+				rd.setName(json.getString("RESTAURANT_NAME"));
+				rd.setAddress(json.getString("RESTAURANT_ADDRESS"));
+				rd.setPhone(json.getString("RESTAURANT_PHONE"));
+				rd.setCuisine(json.getString("RESTAURANT_CUISINE"));
+				rd.setPrice(json.getString("RESTAURANT_PRICE"));
+				rd.setHours(json.getString("RESTAURANT_HOURS"));
+				rd.setParking(json.getString("RESTAURANT_PARKING"));
+				rd.setDescription(json.getString("RESTAURANT_DESCRIPTION"));
+				rd.setMenu(json.getString("RESTAURANT_MENU"));
+				rd.setReviewOverall(json.getString("RESTAURANT_REVIEW_OVERALL"));
+				rd.setReviewFood(json.getString("RESTAURANT_REVIEW_FOOD"));
+				rd.setReviewService(json.getString("RESTAURANT_REVIEW_SERVICE"));
+				rd.setReviewAmbiance(json.getString("RESTAURANT_REVIEW_AMBIANCE"));
+				rd.setReviews(json.getString("RESTAURANT_REVIEWS"));
+				
+				updateRestaurantInfo(json.getJSONArray("RESTAURANT_BOOKING_SLOTS"));
+				
 				return true;
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			
-			return false;
+	return false;
 		}
-
+		
 		@Override
 		protected void onPostExecute(final Boolean success) {
 			mRestaurantInfoRequestTask = null;
-
 			if (success) {
 				hideProgress();
 			} else {
 			}
 		}
-
+		
 		@Override
 		protected void onCancelled() {
 			mRestaurantInfoRequestTask = null;
 			hideProgress();
 		}
 	}
+
 	
 	private class TimeSlotsRequestTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -438,7 +453,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				return false;
 			}
 			
-			String jsonString = Utils.getJsonString("http://10.0.2.2:8888/index.php/merchants/1");
+			String jsonString = Utils.getJsonString("http://10.0.2.2:8888/index.php/merchants/" + RestaurantData.getInstance().getRestaurantID());
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				updateTimeSlots(json);

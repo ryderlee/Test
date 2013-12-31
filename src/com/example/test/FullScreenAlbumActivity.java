@@ -39,7 +39,6 @@ public class FullScreenAlbumActivity extends Activity {
 	}
 	
 	
-	
 	private class FullScreenAlbumAdapter extends PagerAdapter {
 		
 		ArrayList<String> mImageUrls;
@@ -77,7 +76,7 @@ public class FullScreenAlbumActivity extends Activity {
 	        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	        View viewLayout = inflater.inflate(R.layout.view_fullscreen_image, container, false);
 	        
-//	        btnClose = (Button) viewLayout.findViewById(R.id.fullScreenImageCloseButton);
+	        btnClose = (Button) viewLayout.findViewById(R.id.fullScreenImageCloseButton);
 	        photoView = (PhotoView) viewLayout.findViewById(R.id.fullScreenImagePhotoView);
 	        
 			try {
@@ -88,12 +87,12 @@ public class FullScreenAlbumActivity extends Activity {
 		    catch(IOException ioe){}
 	         
 	        // close button click event
-//	        btnClose.setOnClickListener(new View.OnClickListener() {
-//	            @Override
-//	            public void onClick(View v) {
-//	                finish();
-//	            }
-//	        });
+	        btnClose.setOnClickListener(new View.OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	                finish();
+	            }
+	        });
 	  
 	        ((ViewPager) container).addView(viewLayout);
 	  

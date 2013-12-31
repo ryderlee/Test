@@ -24,6 +24,8 @@
 			
 			<LinearLayout
 			    android:id="@+id/RESTAURANT_INFO_WRAPPER"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+				android:paddingRight="@dimen/activity_horizontal_margin"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:orientation="vertical">
@@ -81,8 +83,6 @@
 				    android:id="@+id/RESTAURANT_INFO_DETAIL_VIEW"
 				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
-				    android:paddingLeft="@dimen/activity_horizontal_margin"
-				    android:paddingRight="@dimen/activity_horizontal_margin"
 				    android:orientation="vertical"
 				    android:visibility="gone">
 				    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
