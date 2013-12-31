@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.DatePicker.*;
 import android.graphics.*;
@@ -61,7 +62,8 @@ public class MainActivity extends ActionBarActivity {
 	Date bookingDateTime;
 	
 	ListView mListView;
-	ProgressBar mSearchProgressBar;
+	
+	LinearLayout mListViewFooter;
 	
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/M 'at' kk:mm");
     @Override
@@ -82,8 +84,6 @@ public class MainActivity extends ActionBarActivity {
         
 //        vflipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 //        vflipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
-        
-        mSearchProgressBar = (ProgressBar) findViewById(R.id.searchProgressBar);
         
         mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
         
@@ -190,6 +190,15 @@ public class MainActivity extends ActionBarActivity {
 		mListView = (ListView)this.findViewById(R.id.searchResultListView); 
 		mListView.setAdapter(adapter);
 		mListView.setOnScrollListener(new ScrollListener());
+		
+		
+		ProgressBar progressFooter = new ProgressBar(this, null, android.R.attr.progressBarStyle);
+		LinearLayout.LayoutParams footerParam = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		progressFooter.setLayoutParams(footerParam);
+		
+		mListViewFooter = new LinearLayout(this);
+		mListViewFooter.setGravity(Gravity.CENTER);
+		mListViewFooter.addView(progressFooter);
     }
 
     private class RestaurantResultItem {
@@ -293,6 +302,7 @@ public class MainActivity extends ActionBarActivity {
     }
     
     public void search(Boolean cleanUp) {
+    	mListView.addFooterView(mListViewFooter);
     	if (mSearchRestaurantTask != null) {
     		mSearchRestaurantTask.cancel(true);
     	}
@@ -302,7 +312,6 @@ public class MainActivity extends ActionBarActivity {
     		mKeyword = "";
     		adapter.clear();
         	adapter.notifyDataSetChanged();
-        	mSearchProgressBar.setVisibility(View.VISIBLE);
     	} else {
     		mPage++;
     	}
@@ -479,7 +488,7 @@ public class MainActivity extends ActionBarActivity {
 			mSearchRestaurantTask = null;
 			mLoading = false;
 			if (success) {
-				mSearchProgressBar.setVisibility(View.GONE);
+				mListView.removeFooterView(mListViewFooter);
 				adapter.addAll(results);
 				adapter.notifyDataSetChanged();
 			} else {
