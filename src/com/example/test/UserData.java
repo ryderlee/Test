@@ -49,7 +49,7 @@ public class UserData {
 	}
 	
 	protected String getUserId() {
-		return mPrefs.getString(USERDATA_FIRSTNAME, "");
+		return mPrefs.getString(USERDATA_USERID, "");
 	}
 	
 	protected void setUserId(String userId) {
