@@ -2,6 +2,7 @@ package com.example.test;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -222,7 +223,11 @@ public class SigninActivity extends ActionBarActivity {
 				return false;
 			}
 			
-			String json = Utils.post("http://10.0.2.2:8888/index.php/login", "username="+mEmail+"&pwd="+mPassword);
+			HashMap<String, String> postParams = new HashMap<String, String>();
+			postParams.put("username", mEmail);
+			postParams.put("pwd", mPassword);
+			
+			String json = Utils.post("http://10.0.2.2:8888/index.php/login", postParams);
 			JSONObject jso;
 			try {
 				jso = new JSONObject(json);

@@ -1,6 +1,12 @@
 package com.example.test;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -154,6 +160,28 @@ public class BookingActivity extends Activity {
 			} catch (InterruptedException e) {
 				return false;
 			}
+			
+			String userId = UserData.getInstance().isLogin()?UserData.getInstance().getUserId():"0";
+			String restaurantId = RestaurantData.getInstance().getRestaurantID();
+			String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(SearchData.getInstance().getChosenDate());
+			String noOfParticipant = Integer.toString(SearchData.getInstance().getNumberOfReservation());
+			String specialRequest = mSpecialRequestEditText.getText().toString();
+			
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("userID", userId);
+			params.put("merchantID", restaurantId);
+			params.put("numberOfParticipant", noOfParticipant);
+			params.put("datatime", datetime);
+			params.put("specialRequest", specialRequest);
+			
+			String jsonString = Utils.post("http://10.0.2.2:8888/index.php/reservations", params);
+			try {
+				JSONObject json = new JSONObject(jsonString);
+				return true;
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
 			return true;
 		}
 		
