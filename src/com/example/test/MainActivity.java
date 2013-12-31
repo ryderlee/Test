@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.content.Context;
@@ -31,6 +32,13 @@ import android.view.*;
 import android.view.animation.AnimationUtils;
 
 public class MainActivity extends ActionBarActivity {
+	
+	SearchRestaurantTask mSearchRestaurantTask = null;
+	
+	private int mPage;
+	private String mKeyword;
+	private int mListViewVisibleThreshold = 0;
+    private boolean mLoading;
 
 	Button dateButton;
 	Button timeButton;
@@ -52,29 +60,30 @@ public class MainActivity extends ActionBarActivity {
 	ListViewAdapter<RestaurantResultItem> adapter;
 	Date bookingDateTime;
 	
+	ListView mListView;
+	ProgressBar mSearchProgressBar;
+	
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/M 'at' kk:mm");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        dateText = (EditText) findViewById(R.id.dateText1);
-        timeText = (EditText) findViewById(R.id.timeText1);
+//        dateText = (EditText) findViewById(R.id.dateText1);
+//        timeText = (EditText) findViewById(R.id.timeText1);
         dateButton = (Button) findViewById(R.id.dateButton);
         //timeButton = (Button) findViewById(R.id.timeButton);
         //numberButton = (Button) findViewById(R.id.numberButton);
         //datePicker1= (DatePicker) findViewById(R.id.datePicker1);
         //timePicker1= (TimePicker) findViewById(R.id.timePicker1);
-        numberPicker1= (NumberPicker) findViewById(R.id.numberPicker1);
-        numberSeekBar1= (SeekBar) findViewById(R.id.numberSeekBar1);
-        vflipper = (ViewFlipper) findViewById(R.id.masterViewFlipper);
+//        numberPicker1= (NumberPicker) findViewById(R.id.numberPicker1);
+//        numberSeekBar1= (SeekBar) findViewById(R.id.numberSeekBar1);
+//        vflipper = (ViewFlipper) findViewById(R.id.masterViewFlipper);
         
-        vflipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
-        vflipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
+//        vflipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+//        vflipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
         
-        
-
-        
+        mSearchProgressBar = (ProgressBar) findViewById(R.id.searchProgressBar);
         
         mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
         
@@ -178,9 +187,9 @@ public class MainActivity extends ActionBarActivity {
 		//numberSeekBar1.setProgress(2 * 5);
 		*/
 		adapter = new ListViewAdapter<RestaurantResultItem>(this, R.layout.restaurant_search_result_tablerow);
-        ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
-        listView.setAdapter(adapter);
-        listView.setOnScrollListener(new ScrollListener());
+		mListView = (ListView)this.findViewById(R.id.searchResultListView); 
+		mListView.setAdapter(adapter);
+		mListView.setOnScrollListener(new ScrollListener());
     }
 
     private class RestaurantResultItem {
@@ -269,23 +278,11 @@ public class MainActivity extends ActionBarActivity {
     
     private class ScrollListener implements OnScrollListener {
     	
-    	private int visibleThreshold = 0;
-        private int currentPage = 0;
-        private int previousTotal = 0;
-        private boolean loading = true;
-        
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-			if (loading) {
-                if (totalItemCount > previousTotal) {
-                    loading = false;
-                    previousTotal = totalItemCount;
-                    currentPage++;
-                }
-            }
-            if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-            	search();
-                loading = true;
+			Log.d("com.example.test", "onScroll: "+firstVisibleItem+","+visibleItemCount+","+totalItemCount+"|"+mLoading);
+            if (!mLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + mListViewVisibleThreshold) && adapter.getCount() > 0) {
+            	search(false);
             }
 		}
 
@@ -295,38 +292,22 @@ public class MainActivity extends ActionBarActivity {
     	
     }
     
-    public void search(){
-    	mBookingPicker.setVisibility(View.GONE);
-    	
-
-    	ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
-    	
-
-    	listView.setVisibility(View.VISIBLE);
-    	String str="http://10.0.2.2:8888/restaurant.json";
-    	
-        try{
-            ArrayList<RestaurantResultItem> results = new ArrayList<RestaurantResultItem>();
-        	String s = Utils.getJsonString(str);
-	        JSONArray jsa=new JSONArray(s);
-            for(int i=0;i<jsa.length();i++) {
-               		JSONObject jo=(JSONObject)jsa.get(i);
-               		RestaurantResultItem item = new RestaurantResultItem();
-               		item.licno = jo.getString("LICNO");
-               		item.type = jo.getString("TYPE");
-           			item.dist = jo.getString("DIST");
-           			item.ss = jo.getString("SS");
-           			item.adr = jo.getString("ADR");
-           			item.img = jo.getString("IMAGE");
-           			item.rating = 1;
-           			results.add(item);
-	        }
-            adapter.addAll(results);
-        }
-        catch(Exception e){
-        	Log.d("exception", e.getMessage());
-        }
-    	
+    public void search(Boolean cleanUp) {
+    	if (mSearchRestaurantTask != null) {
+    		mSearchRestaurantTask.cancel(true);
+    	}
+    	mLoading = true;
+    	if (cleanUp) {
+    		mPage = 0;
+    		mKeyword = "";
+    		adapter.clear();
+        	adapter.notifyDataSetChanged();
+        	mSearchProgressBar.setVisibility(View.VISIBLE);
+    	} else {
+    		mPage++;
+    	}
+    	mSearchRestaurantTask = new SearchRestaurantTask();
+    	mSearchRestaurantTask.execute((Void) null);
     }
     
     Bitmap mIcon;
@@ -394,21 +375,13 @@ public class MainActivity extends ActionBarActivity {
     	
     }
     */
-    public void resetSearch(){
-    	
-    }
+    
     public void searchButton_onClick(View view){
-
     	//timePicker1.setVisibility(View.GONE);
-    	resetSearch();
-    	search();
+    	
+    	search(true);
     }
     
-    /*
-    public void loginButton_onClick(View view){
-    	
-    }
-    */
     public void timeButton_onClick(View view){
     	mBookingPicker.setVisibility(mBookingPicker.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
     	//timePicker1.setVisibility(View.GONE);
@@ -418,9 +391,9 @@ public class MainActivity extends ActionBarActivity {
     }
     
     public void dateButton_onClick(View view){
+    	adapter.clear();
+    	adapter.notifyDataSetChanged();
     	mBookingPicker.setVisibility(mBookingPicker.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
-    	ListView listView = (ListView)this.findViewById(R.id.searchResultListView); 
-    	listView.setVisibility(View.GONE);
 //    	timePicker1.setVisibility(View.GONE);
     	//datePicker1.setVisibility(View.GONE);
 //    	numberSeekBar1.setVisibility(View.GONE);
@@ -459,5 +432,60 @@ public class MainActivity extends ActionBarActivity {
     	}
     	return super.onKeyDown(keyCode, event);
     }
+    
+    
+    
+    private class SearchRestaurantTask extends AsyncTask<Void, Void, Boolean> {
+
+    	private ArrayList<RestaurantResultItem> results;
+    	
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			try {
+				// Simulate network access.
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				return false;
+			}
+			
+	    	results = new ArrayList<RestaurantResultItem>();
+        	String s = Utils.getJsonString("http://10.0.2.2:8888/index.php/restaurant?p="+mPage);
+        	
+	        try{
+		        JSONArray jsa=new JSONArray(s);
+	            for(int i=0;i<jsa.length();i++) {
+	               		JSONObject jo=(JSONObject)jsa.get(i);
+	               		RestaurantResultItem item = new RestaurantResultItem();
+	               		item.licno = jo.getString("LICNO");
+	               		item.type = jo.getString("TYPE");
+	           			item.dist = jo.getString("DIST");
+	           			item.ss = jo.getString("SS");
+	           			item.adr = jo.getString("ADR");
+	           			item.img = "http://giverny.org/hotels/corniche/piscine2.jpg"; //jo.getString("IMAGE");
+	           			item.rating = 1;
+	           			results.add(item);
+		        }
+	        }
+	        catch(Exception e){
+	        	Log.d("exception", e.getMessage());
+	        }
+			
+			return true;
+		}
+		
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			mSearchRestaurantTask = null;
+			mLoading = false;
+			if (success) {
+				mSearchProgressBar.setVisibility(View.GONE);
+				adapter.addAll(results);
+				adapter.notifyDataSetChanged();
+			} else {
+			}
+		}
+		
+	}
     
 }
