@@ -110,14 +110,14 @@
 			android:id="@+id/searchResultListView"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
-		    android:layout_below="@+id/bookingPicker"
-		    android:layout_weight="1" />
+		    android:layout_below="@+id/bookingPicker" />
 		
 		<ProgressBar
 		    android:id="@+id/searchProgressBar"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:visibility="gone" />
         
     <!-- </ViewFlipper> -->
