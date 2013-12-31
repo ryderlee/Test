@@ -6,15 +6,26 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import android.util.Log;
 
 public class Utils {
 
-	static public String post(String url, String body) {
+	static public String post(String url, HashMap<String, String> params) {
 		URL r; 
     	try {
 	    	r = new URL (url);
+	    	String body = "";
+	    	Iterator<Entry<String, String>> iter = params.entrySet().iterator();
+	    	while (iter.hasNext()) {
+				Entry<String, String> entry = iter.next();
+				body += entry.getKey()+"="+URLEncoder.encode(entry.getValue(), "UTF-8")+(iter.hasNext()?"&":"");
+			}
+	    	Log.d("com.example.test", "Post body: "+body);
 	    	return Utils.post(r, body);
     	}catch (Exception e){}
     	return "";
@@ -27,7 +38,7 @@ public class Utils {
     		HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
     		
     		urlc.setRequestMethod("POST");
-//    		urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+    		urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
     		urlc.setRequestProperty("Content-Length", ""+ body.length());
     		DataOutputStream dos = new DataOutputStream(urlc.getOutputStream());
     		dos.writeBytes(body);
