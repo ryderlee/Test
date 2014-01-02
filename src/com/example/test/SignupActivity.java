@@ -280,7 +280,7 @@ public class SignupActivity extends Activity {
 			}
 
 			// TODO: register the new account here.
-			return true;
+			return false;
 		}
 
 		@Override
