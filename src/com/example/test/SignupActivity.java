@@ -1,5 +1,10 @@
 package com.example.test;
 
+import java.util.HashMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -14,6 +19,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SignupActivity extends Activity {
 	private UserLoginTask mAuthTask = null;
@@ -216,12 +222,23 @@ public class SignupActivity extends Activity {
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
+	
+	public void loginDone(JSONObject userJson) {
+		UserManager.getInstance(this).loginSuccess(userJson);
+	}
+	
+	public void signupFailed() {
+		Toast.makeText(getApplicationContext(), "Signup failed, please try again", Toast.LENGTH_LONG).show();
+	}
 
 	/**
 	 * Represents an asynchronous login/registration task used to authenticate
 	 * the user.
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+		
+		private JSONObject userJson;
+		
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// TODO: attempt authentication against a network service.
@@ -231,6 +248,35 @@ public class SignupActivity extends Activity {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				return false;
+			}
+			
+			HashMap<String, String> postParams = new HashMap<String, String>();
+			postParams.put("firstName", mFirstName);
+			postParams.put("lastName", mLastName);
+			postParams.put("email", mEmail);
+			postParams.put("phone", mPhone);
+			postParams.put("password", mPassword);
+			
+			String json = Utils.post("http://10.0.2.2:8888/index.php/users", postParams);
+			JSONObject jso;
+			try {
+				jso = new JSONObject(json);
+				if (jso.getBoolean("result")) {
+					String userId = jso.getJSONObject("values").getString("userID");
+					String token = jso.getJSONObject("values").getString("token");
+					
+					userJson = new JSONObject();
+					userJson.put("user_id", userId);
+					userJson.put("first_name", mFirstName);
+					userJson.put("last_name", mLastName);
+					userJson.put("email", mEmail);
+					userJson.put("phone", mPhone);
+					userJson.put("token", token);
+					
+					return true;
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
 
 			// TODO: register the new account here.
@@ -243,8 +289,9 @@ public class SignupActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
-				finish();
+				loginDone(userJson);
 			} else {
+				signupFailed();
 			}
 		}
 
