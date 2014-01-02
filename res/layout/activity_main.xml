@@ -12,6 +12,8 @@
 	    android:id="@+id/searchView"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+	    android:paddingTop="5dp"
+	    android:paddingBottom="15dp"
 	    android:background="@drawable/search_view_background"
 	    android:visibility="gone" >
 	    
