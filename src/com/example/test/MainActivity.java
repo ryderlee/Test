@@ -289,7 +289,7 @@ public class MainActivity extends ActionBarActivity {
 	           			item.dist = jo.getString("DIST");
 	           			item.ss = jo.getString("SS");
 	           			item.adr = jo.getString("ADR");
-	           			item.img = "http://giverny.org/hotels/corniche/piscine2.jpg"; //jo.getString("IMAGE");
+	           			item.img = jo.getString("IMAGE");
 	           			item.rating = 1;
 	           			results.add(item);
 		        }
