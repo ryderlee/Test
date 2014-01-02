@@ -37,11 +37,12 @@ public class UserManager {
 	protected void loginSuccess(JSONObject userJson) {
 		UserData.getInstance().setLogin(true);
 		try {
-			UserData.getInstance().setUserId(userJson.getString("uid"));
+			UserData.getInstance().setUserId(userJson.getString("user_id"));
 			UserData.getInstance().setFirstName(userJson.getString("first_name"));
             UserData.getInstance().setLastName(userJson.getString("last_name"));
             UserData.getInstance().setEmail(userJson.getString("email"));
             UserData.getInstance().setPhone(userJson.getString("phone"));
+            UserData.getInstance().setToken(userJson.getString("token"));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
