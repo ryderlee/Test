@@ -245,7 +245,7 @@ public class SignupActivity extends Activity {
 
 			try {
 				// Simulate network access.
-				Thread.sleep(2000);
+				Thread.sleep(600);
 			} catch (InterruptedException e) {
 				return false;
 			}
