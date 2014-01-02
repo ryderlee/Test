@@ -289,7 +289,7 @@ public class MainActivity extends ActionBarActivity {
     	
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-			Log.d("com.example.test", "onScroll: "+firstVisibleItem+","+visibleItemCount+","+totalItemCount+"|"+mLoading);
+//			Log.d("com.example.test", "onScroll: "+firstVisibleItem+","+visibleItemCount+","+totalItemCount+"|"+mLoading);
             if (!mLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + mListViewVisibleThreshold) && adapter.getCount() > 0) {
             	search(false);
             }
