@@ -55,7 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/bookingPicker"
             android:hint="Find a restaurant"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:singleLine="true" />
         
 	</RelativeLayout>
 	
