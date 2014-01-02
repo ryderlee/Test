@@ -102,30 +102,11 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		mBookingPicker.setOnValueChangeListener(new OnValueChangeListener() {
 			@Override
 			public void onValueChange(int noOfParticipants, Date date) {
-				Calendar target = Calendar.getInstance();
-				target.setTime(date);
-				Calendar today = Calendar.getInstance();
-				Calendar tmr = Calendar.getInstance();
-				tmr.add(Calendar.DATE, 1);
-				String dateStr = "";
-				if (today.get(Calendar.YEAR) == target.get(Calendar.YEAR) && today.get(Calendar.MONTH) == target.get(Calendar.MONTH) && today.get(Calendar.DATE) == target.get(Calendar.DATE)) {
-					dateStr = "today";
-				} else if (tmr.get(Calendar.YEAR) == target.get(Calendar.YEAR) && tmr.get(Calendar.MONTH) == target.get(Calendar.MONTH) && tmr.get(Calendar.DATE) == target.get(Calendar.DATE)) {
-					dateStr = "tomorrow";
-				} else {
-					dateStr = new SimpleDateFormat("EEE, d MMM").format(date);
-				}
-				String timeStr = new SimpleDateFormat("h:mm aa").format(date).toLowerCase();
-				String bookingStr = "Table for " + noOfParticipants + ", " + dateStr + " at " + timeStr;
-				mPickerButton.setText(bookingStr);
-
-				SearchData.getInstance().setSearchDate(date);
 				SearchData.getInstance().setNumberOfReservation(noOfParticipants);
+				SearchData.getInstance().setSearchDate(date);
+				mPickerButton.setText(Utils.getLongBookingInfo());
 			}
 		});
-		mBookingPicker.setDate(mTargetTime);
-		mBookingPicker.setNoOfParticipants(mTargetNoOfParticipants);
-
 		
 		mRadioGroup = (RadioGroup) findViewById(R.id.RESTAURANT_INFO_TAB);
 		mRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -390,7 +371,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		// TODO: attempt authentication against a network service.
 			try {
 				// Simulate network access.
-				Thread.sleep(2000);
+				Thread.sleep(600);
 			} catch (InterruptedException e) {
 				return false;
 			}
@@ -448,7 +429,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		protected Boolean doInBackground(Void... params) {
 			try {
 				// Simulate network access.
-				Thread.sleep(2000);
+				Thread.sleep(600);
 			} catch (InterruptedException e) {
 				return false;
 			}

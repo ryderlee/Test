@@ -136,23 +136,27 @@ public class BookingPicker extends LinearLayout {
 				}
 			}
 		});
+		
+		setDate(SearchData.getInstance().getSearchDate());
+		setNoOfParticipants(SearchData.getInstance().getNumberOfReservation());
 	}
 	
 	public void setOnValueChangeListener(OnValueChangeListener listener) {
 		mOnValueChangeListener = listener;
+		bookingValueChanged();
 	}
 	
 	public void bookingValueChanged() {
+		int noOfParticipants = mNoOfParticipantsPicker.getValue();
+		
+		Calendar dateCal = Calendar.getInstance();
+		Calendar timeCal = Calendar.getInstance();
+		dateCal.setTime(mDates.get(mDatePicker.getValue()));
+		timeCal.setTime(mTimes.get(mTimePicker.getValue()));
+		dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
+		dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
+		
 		if (mOnValueChangeListener != null) {
-			int noOfParticipants = mNoOfParticipantsPicker.getValue();
-			
-			Calendar dateCal = Calendar.getInstance();
-			Calendar timeCal = Calendar.getInstance();
-			dateCal.setTime(mDates.get(mDatePicker.getValue()));
-			timeCal.setTime(mTimes.get(mTimePicker.getValue()));
-			dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
-			dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
-			
 			mOnValueChangeListener.onValueChange(noOfParticipants, dateCal.getTime());
 		}
 	}

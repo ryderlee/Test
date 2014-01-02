@@ -45,9 +45,7 @@ public class MainActivity extends ActionBarActivity {
 	
 	private int mPage;
 	private String mKeyword;
-	private String mShowSearchButtonStr;
 	
-	private final int mDefaultNoOfParticipants = 2;
 	private final int mPageSize = 10;
     
     @Override
@@ -64,35 +62,12 @@ public class MainActivity extends ActionBarActivity {
         mBookingPicker.setOnValueChangeListener(new BookingPicker.OnValueChangeListener() {
 			@Override
 			public void onValueChange(int numOfPeople, Date date) {
-				SearchData.getInstance().setSearchDate(date);
 				SearchData.getInstance().setNumberOfReservation(numOfPeople);
-				Calendar today = Calendar.getInstance();
-				Calendar tmr = Calendar.getInstance();
-				Calendar oneWeek = Calendar.getInstance();
-				tmr.add(Calendar.DATE, 1);
-				oneWeek.add(Calendar.DATE, 7);
-				Calendar targetDate = Calendar.getInstance();
-				targetDate.setTime(date);
-				
-				String dateStr = new SimpleDateFormat("EEE, d MMM").format(date);
-				mShowSearchButtonStr = new SimpleDateFormat("', on' d MMM").format(date);
-				if (targetDate.get(Calendar.DATE) == today.get(Calendar.DATE)) {
-					dateStr = "today";
-					mShowSearchButtonStr = " today";
-				} else if (targetDate.get(Calendar.DATE) == tmr.get(Calendar.DATE)) {
-					dateStr = "tomorrow";
-					mShowSearchButtonStr = " tomorrow";
-				} else if (oneWeek.get(Calendar.DATE) - targetDate.get(Calendar.DATE) > 0) {
-					dateStr = new SimpleDateFormat("EEEEEEE").format(date);
-					mShowSearchButtonStr = new SimpleDateFormat("', on' EEE").format(date);
-				}
-				mBookingPickerButton.setText("Table for " + numOfPeople + ", " + dateStr + " at " + new SimpleDateFormat("h:mm aa").format(date).toLowerCase());
+				SearchData.getInstance().setSearchDate(date);
+				mBookingPickerButton.setText(Utils.getLongBookingInfo());
 			}
 		});
-        mBookingPicker.setDate(Calendar.getInstance().getTime());
-        mBookingPicker.setNoOfParticipants(mDefaultNoOfParticipants);
-        
-        mShowSearchButton.setText("Table for " + mDefaultNoOfParticipants + " today");
+        mShowSearchButton.setText(Utils.getShortBookingInfo());
 
         ProgressBar progressFooter = new ProgressBar(this, null, android.R.attr.progressBarStyle);
 		LinearLayout.LayoutParams footerParam = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -107,7 +82,6 @@ public class MainActivity extends ActionBarActivity {
 		mListView.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//				Log.d("com.example.test", "onScroll: "+firstVisibleItem+","+visibleItemCount+","+totalItemCount+"|"+mLoading);
 	            if (!mLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + mListViewVisibleThreshold) && mAdapter.getCount() > 0 && mMoreToLoad) {
 	            	search(false);
 	            }				
@@ -183,14 +157,13 @@ public class MainActivity extends ActionBarActivity {
 			}
 			
 			TextView nameTextView = (TextView) convertView.findViewById(R.id.restaurantResult_nameTextView);
-	    	TextView typeTextView = (TextView) convertView.findViewById(R.id.restaurantResult_typeTextView);
-	    	TextView ratingTextView = (TextView) convertView.findViewById(R.id.restaurantResult_ratingTextView);
+			TextView addressTextView = (TextView) convertView.findViewById(R.id.restaurantResult_addressTextView);
 	    	TextView slotTextView = (TextView) convertView.findViewById(R.id.restaurantResult_slotTextView);
 	    	
 	    	RestaurantResultItem item = (RestaurantResultItem)this.getItem(position);
 	    	nameTextView.setText(item.ss);
-	    	typeTextView.setText(item.licno);
-//	    	ratingTextView.setText("" + item.rating);
+	    	addressTextView.setText(item.adr);
+	    	convertView.setTag(item.licno);
 	    	
 	    	PhotoView pv = ((PhotoView) convertView.findViewById(R.id.restaurantResult_thumbnailImageView));
 	    	try{
@@ -202,8 +175,7 @@ public class MainActivity extends ActionBarActivity {
 	    	convertView.setOnClickListener((new View.OnClickListener(){
 	    		@Override
 	    		public void onClick(View v){
-	    			TextView typeTextView = (TextView) v.findViewById(R.id.restaurantResult_typeTextView);
-	    			RestaurantManager.getInstance(MainActivity.this).showMain(typeTextView.getText().toString());
+	    			RestaurantManager.getInstance(MainActivity.this).showMain((String)v.getTag());
 	    		}
 	    	}));
 			return convertView;
@@ -222,7 +194,7 @@ public class MainActivity extends ActionBarActivity {
     public void searchButton_onClick(View view) {
     	mSearchView.setVisibility(View.GONE);
     	mShowSearchButton.setVisibility(View.VISIBLE);
-    	mShowSearchButton.setText("Table for " + mBookingPicker.getNoOfParticipants() + mShowSearchButtonStr);
+    	mShowSearchButton.setText(Utils.getShortBookingInfo());
     	mKeyword = mKeywordEditText.getText().toString();
     	search(true);
     }
@@ -263,7 +235,7 @@ public class MainActivity extends ActionBarActivity {
 		protected Boolean doInBackground(Void... params) {
 			try {
 				// Simulate network access.
-				Thread.sleep(2000);
+				Thread.sleep(600);
 			} catch (InterruptedException e) {
 				return false;
 			}
