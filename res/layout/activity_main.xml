@@ -7,111 +7,69 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
-
-	<!-- <ViewFlipper 
-	    android:id="@+id/masterViewFlipper"
+    
+	<RelativeLayout
+	    android:id="@+id/searchView"
 	    android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" > -->
-
-		<Button
-			android:id="@+id/dateButton"
-			android:background="@null"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-			android:onClick="dateButton_onClick"/>
-		
-	<!--  
-            <Button
-                android:id="@+id/timeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Button" 
-                android.visibility="gone"
-                android:onClick="timeButton_onClick"/>
-
-            <Button
-                android:id="@+id/numberButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Button" 
-                android.visibility="gone"
-                android:onClick="numberButton_onClick"/>
- 	-->           
-		<Button
+	    android:layout_height="wrap_content"
+	    android:background="@drawable/search_view_background"
+	    android:visibility="gone" >
+	    
+	    <Button
 			android:id="@+id/searchButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Search"
 			android:layout_alignParentRight="true"
-			android:onClick="searchButton_onClick"/>
+			android:onClick="searchButton_onClick" />
+		
+		<Button
+			android:id="@+id/cancelButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Cancel"
+			android:layout_alignParentLeft="true"
+			android:onClick="cancelButton_onClick" />
 
+		<Button
+			android:id="@+id/bookingPickerButton"
+			android:background="@null"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_below="@+id/searchButton"
+			android:onClick="bookingPickerButton_onClick" />
+		
         <com.example.test.BookingPicker
             android:id="@+id/bookingPicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/searchButton"
-            android:visibility="gone" />
-
-	<!-- 
-        <TimePicker
-            android:id="@+id/timePicker1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            android:visibility="gone" />
-
-        <DatePicker
-            android:id="@+id/datePicker1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" 
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            android:calendarViewShown="false"/>
-
-        <NumberPicker
-            android:id="@+id/numberPicker1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_below="@+id/bookingPickerButton"
             android:visibility="gone" />
         
-        <SeekBar
-	        android:id="@+id/numberSeekBar1"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentBottom="true"
-	        android:layout_alignParentLeft="true"
-	        android:progress="20"
-	        android:secondaryProgress="5"
-	        android:visibility="gone" />
-	        
         <EditText
-            android:id="@+id/dateText1"
-            android:layout_width="wrap_content"
+            android:id="@+id/keywordEditText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:visibility="gone" />
-            
-        <EditText
-            android:id="@+id/timeText1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:visibility="gone" />
-            
-		<include layout="@layout/restaurant_info" />
-	-->
-
-		<ListView
+            android:layout_below="@+id/bookingPicker"
+            android:hint="Find a restaurant"
+            android:maxLines="1" />
+        
+	</RelativeLayout>
+	
+	<Button
+		android:id="@+id/showSearchButton"
+		android:background="@null"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:onClick="showSearchButton_onClick"/>
+	
+	<ListView
 			android:id="@+id/searchResultListView"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
-		    android:layout_below="@+id/bookingPicker" />
-        
-    <!-- </ViewFlipper> -->
+		    android:layout_below="@+id/showSearchButton" />
+	
 
 </RelativeLayout>
