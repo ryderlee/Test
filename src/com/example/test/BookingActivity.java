@@ -163,7 +163,7 @@ public class BookingActivity extends Activity {
 			
 			String userId = UserData.getInstance().isLogin()?UserData.getInstance().getUserId():"0";
 			String restaurantId = RestaurantData.getInstance().getRestaurantID();
-			String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(SearchData.getInstance().getChosenDate());
+			String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(SearchData.getInstance().getChosenDate());
 			String noOfParticipant = Integer.toString(SearchData.getInstance().getNumberOfReservation());
 			String specialRequest = mSpecialRequestEditText.getText().toString();
 			
