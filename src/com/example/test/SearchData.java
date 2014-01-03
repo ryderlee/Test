@@ -3,6 +3,8 @@ package com.example.test;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.util.Log;
+
 public class SearchData {
 
 	private static SearchData sInstance;
@@ -16,6 +18,7 @@ public class SearchData {
 	public static synchronized SearchData getInstance() {
 		if (sInstance == null) {
 			sInstance = new SearchData();
+			sInstance.clearAll();
 		}
 		return sInstance;
 	}
@@ -24,7 +27,7 @@ public class SearchData {
 		// Set to default values
 		mSearchDate = Calendar.getInstance().getTime();
 		mChosenDate = Calendar.getInstance().getTime();
-		setNumberOfReservation(2);
+		mNoOfParticipants = 2;
 	}
 	
 	public Date getSearchDate(){
@@ -41,6 +44,7 @@ public class SearchData {
 	
 
 	protected void setSearchDate(Date d) {
+		Log.d("com.example.test", "set search date");
 		mSearchDate = d;
 		mChosenDate = d;
 	}

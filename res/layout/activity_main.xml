@@ -22,7 +22,14 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Search"
+			android:background="@drawable/common_button_background"
 			android:layout_alignParentRight="true"
+			android:layout_marginRight="5dp"
+			android:minHeight="1dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:paddingTop="6dp"
+			android:paddingBottom="6dp"
 			android:onClick="searchButton_onClick" />
 		
 		<Button
@@ -30,7 +37,14 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Cancel"
+			android:background="@drawable/common_button_background"
 			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="5dp"
+			android:minHeight="1dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:paddingTop="6dp"
+			android:paddingBottom="6dp"
 			android:onClick="cancelButton_onClick" />
 
 		<Button
@@ -55,7 +69,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/bookingPicker"
             android:hint="Find a restaurant"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:singleLine="true" />
         
 	</RelativeLayout>
 	

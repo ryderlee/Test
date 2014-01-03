@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.zip.Inflater;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +38,7 @@ import android.support.v4.app.*;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.*;
+import android.text.Layout;
 
 public class RestaurantInfoActivity extends ActionBarActivity {
 	
@@ -102,30 +104,11 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		mBookingPicker.setOnValueChangeListener(new OnValueChangeListener() {
 			@Override
 			public void onValueChange(int noOfParticipants, Date date) {
-				Calendar target = Calendar.getInstance();
-				target.setTime(date);
-				Calendar today = Calendar.getInstance();
-				Calendar tmr = Calendar.getInstance();
-				tmr.add(Calendar.DATE, 1);
-				String dateStr = "";
-				if (today.get(Calendar.YEAR) == target.get(Calendar.YEAR) && today.get(Calendar.MONTH) == target.get(Calendar.MONTH) && today.get(Calendar.DATE) == target.get(Calendar.DATE)) {
-					dateStr = "today";
-				} else if (tmr.get(Calendar.YEAR) == target.get(Calendar.YEAR) && tmr.get(Calendar.MONTH) == target.get(Calendar.MONTH) && tmr.get(Calendar.DATE) == target.get(Calendar.DATE)) {
-					dateStr = "tomorrow";
-				} else {
-					dateStr = new SimpleDateFormat("EEE, d MMM").format(date);
-				}
-				String timeStr = new SimpleDateFormat("h:mm aa").format(date).toLowerCase();
-				String bookingStr = "Table for " + noOfParticipants + ", " + dateStr + " at " + timeStr;
-				mPickerButton.setText(bookingStr);
-
-				SearchData.getInstance().setSearchDate(date);
 				SearchData.getInstance().setNumberOfReservation(noOfParticipants);
+				SearchData.getInstance().setSearchDate(date);
+				mPickerButton.setText(Utils.getLongBookingInfo());
 			}
 		});
-		mBookingPicker.setDate(mTargetTime);
-		mBookingPicker.setNoOfParticipants(mTargetNoOfParticipants);
-
 		
 		mRadioGroup = (RadioGroup) findViewById(R.id.RESTAURANT_INFO_TAB);
 		mRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -254,10 +237,15 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 	private void displayTimeSlots() {
 		mTimeSlotsContainer.removeAllViews();
 		
-		for (Date d : mAvailableTimeSlots) {
-			Button timeSlotButton = new Button(this);
+		for (int i=0; i<mAvailableTimeSlots.size(); i++) {
+			Date d = mAvailableTimeSlots.get(i);
+			LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			inflater.inflate(R.layout.view_common_button, mTimeSlotsContainer, true);
+			Button timeSlotButton = (Button) mTimeSlotsContainer.getChildAt(i);
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			params.setMargins(5, 14, 5, 14);
 			timeSlotButton.setLayoutParams(params);
+			timeSlotButton.setBackgroundResource(R.drawable.common_button_background);
 			timeSlotButton.setText(new SimpleDateFormat("h:mm aa").format(d).toLowerCase());
 			timeSlotButton.setTag(d);
 			timeSlotButton.setOnClickListener(new OnClickListener() {
@@ -267,7 +255,6 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 					reserveButton_onClick(v);
 				}
 			});
-			mTimeSlotsContainer.addView(timeSlotButton);
 		}
 		
 		mTimeSlotsScrollView.setVisibility(View.VISIBLE);
@@ -390,7 +377,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		// TODO: attempt authentication against a network service.
 			try {
 				// Simulate network access.
-				Thread.sleep(2000);
+				Thread.sleep(400);
 			} catch (InterruptedException e) {
 				return false;
 			}
@@ -448,7 +435,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		protected Boolean doInBackground(Void... params) {
 			try {
 				// Simulate network access.
-				Thread.sleep(2000);
+				Thread.sleep(400);
 			} catch (InterruptedException e) {
 				return false;
 			}

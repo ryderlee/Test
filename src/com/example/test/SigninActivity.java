@@ -218,7 +218,7 @@ public class SigninActivity extends ActionBarActivity {
 
 			try {
 				// Simulate network access.
-				Thread.sleep(2000);
+				Thread.sleep(400);
 			} catch (InterruptedException e) {
 				return false;
 			}

@@ -24,6 +24,9 @@ public class BookingPicker extends LinearLayout {
 	
 	private OnValueChangeListener mOnValueChangeListener;
 	
+	private Boolean mDatePickerScrolling = false;
+	private Boolean mTimePickerScrolling = false;
+	
 	public BookingPicker(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
@@ -96,13 +99,19 @@ public class BookingPicker extends LinearLayout {
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				bookingValueChanged();
+				if (!mDatePickerScrolling) {
+					validateDateTime();
+				}
 			}
 		});
 		mDatePicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
 			@Override
 			public void onScrollStateChange(NumberPicker view, int scrollState) {
 				if (scrollState == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+					mDatePickerScrolling = false;
 					validateDateTime();
+				} else {
+					mDatePickerScrolling = true;
 				}
 			}
 		});
@@ -126,33 +135,43 @@ public class BookingPicker extends LinearLayout {
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				bookingValueChanged();
+				if (!mTimePickerScrolling) {
+					validateDateTime();
+				}
 			}
 		});
 		mTimePicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
 			@Override
 			public void onScrollStateChange(NumberPicker view, int scrollState) {
 				if (scrollState == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+					mTimePickerScrolling = false;
 					validateDateTime();
+				} else {
+					mTimePickerScrolling = true;
 				}
 			}
 		});
+		
+		setDate(SearchData.getInstance().getSearchDate());
+		setNoOfParticipants(SearchData.getInstance().getNumberOfReservation());
 	}
 	
 	public void setOnValueChangeListener(OnValueChangeListener listener) {
 		mOnValueChangeListener = listener;
+		bookingValueChanged();
 	}
 	
 	public void bookingValueChanged() {
+		int noOfParticipants = mNoOfParticipantsPicker.getValue();
+		
+		Calendar dateCal = Calendar.getInstance();
+		Calendar timeCal = Calendar.getInstance();
+		dateCal.setTime(mDates.get(mDatePicker.getValue()));
+		timeCal.setTime(mTimes.get(mTimePicker.getValue()));
+		dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
+		dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
+		
 		if (mOnValueChangeListener != null) {
-			int noOfParticipants = mNoOfParticipantsPicker.getValue();
-			
-			Calendar dateCal = Calendar.getInstance();
-			Calendar timeCal = Calendar.getInstance();
-			dateCal.setTime(mDates.get(mDatePicker.getValue()));
-			timeCal.setTime(mTimes.get(mTimePicker.getValue()));
-			dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
-			dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
-			
 			mOnValueChangeListener.onValueChange(noOfParticipants, dateCal.getTime());
 		}
 	}

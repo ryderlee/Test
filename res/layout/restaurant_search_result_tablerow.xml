@@ -12,7 +12,7 @@
                 	
                 	<TableLayout
                 	    android:layout_width="match_parent"
-                	    android:layout_height="wrap_content"
+                	    android:layout_height="match_parent"
                 	    android:layout_margin="2dp">
                 	    	<TableRow 
                 	    	    android:layout_width="wrap_content"
@@ -22,34 +22,20 @@
                 	    		    android:id="@+id/restaurantResult_nameTextView"
                 	    		    android:layout_width="wrap_content"
                 	    		    android:layout_height="wrap_content"
-                	    		    android:text="name"
                 	    		    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 	    	</TableRow>
                 	    	<TableRow 
-                	    	    android:id="@+id/tableRow1_sampleTypeRow"
+                	    	    android:id="@+id/tableRow1_addressRow"
                 	    	    android:layout_width="wrap_content"
                 	    	    android:layout_height="wrap_content">
 
                 	    		<TextView
-                	    		    android:id="@+id/restaurantResult_typeTextView"
+                	    		    android:id="@+id/restaurantResult_addressTextView"
                 	    		    android:layout_width="wrap_content"
                 	    		    android:layout_height="wrap_content"
-                	    		    android:text="type"
-                	    		    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                	    	</TableRow>
-                	    	<TableRow 
-                	    	    android:id="@+id/tableRow1_sampleRatingRow"
-                	    	    android:layout_width="wrap_content"
-                	    	    android:layout_height="wrap_content">
-
-                	    		<TextView
-                	    		    android:id="@+id/restaurantResult_ratingTextView"
-                	    		    android:layout_width="wrap_content"
-                	    		    android:layout_height="wrap_content"
-                	    		    android:text="rating"
-                	    		    android:textAppearance="?android:attr/textAppearanceSmall" />
+                	    		    android:textColor="#555555"
+                	    		    android:textSize="10sp" />
 
 							</TableRow>
                 	    	<TableRow 
@@ -62,7 +48,7 @@
                 	    		    android:layout_width="wrap_content"
                 	    		    android:layout_height="wrap_content"
                 	    		    android:text="19:00 19:15 19:30"
-                	    		    android:textAppearance="?android:attr/textAppearanceSmall" />
+                	    		    android:textSize="12sp" />
 
 							</TableRow>
                 	    
