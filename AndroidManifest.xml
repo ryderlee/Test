@@ -14,7 +14,7 @@
         android:name="com.example.test.CustomApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="ikky demo"
+        android:label="ikky"
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name="com.example.test.MainActivity"
