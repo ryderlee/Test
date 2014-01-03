@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:name="com.example.test.RestaurantInfoActivity"
-            android:label=""
+            android:label="Information"
             android:parentActivityName="com.example.test.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -35,7 +35,7 @@
         </activity>
         <activity
             android:name="com.example.test.SigninOptionActivity"
-            android:label="Signin" >
+            android:label="User" >
         </activity>
         <activity
             android:name="com.example.test.SigninActivity"
@@ -48,11 +48,11 @@
         </activity>
         <activity
             android:name="com.example.test.BookingActivity"
-            android:label="Booking" >
+            android:label="Last Step" >
         </activity>
         <activity
             android:name="com.example.test.GuestInfoActivity"
-            android:label="Information" >
+            android:label="Step 2" >
         </activity>
         <activity
             android:name="com.example.test.FullScreenAlbumActivity"

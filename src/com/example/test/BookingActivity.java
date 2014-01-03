@@ -32,7 +32,7 @@ import android.widget.TextView;
 
 public class BookingActivity extends Activity {
 	
-	private EditText mPhoneEditText;
+//	private EditText mPhoneEditText;
 	private EditText mSpecialRequestEditText;
 	
 	private View mBookingView;
@@ -53,7 +53,7 @@ public class BookingActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_booking);
 		
-		mPhoneEditText = (EditText) findViewById(R.id.phoneEditText);
+//		mPhoneEditText = (EditText) findViewById(R.id.phoneEditText);
 		mSpecialRequestEditText = (EditText) findViewById(R.id.specialRequestEditText);
 		
 		mBookingView = findViewById(R.id.bookingView);
@@ -72,11 +72,11 @@ public class BookingActivity extends Activity {
 		mBookingInfoViewComplete = (View) findViewById(R.id.bookingInfoViewComplete);
 		RestaurantManager.getInstance(this).displayMiniBlock(mBookingInfoViewComplete);
 		
-		if (UserData.getInstance().isLogin()) {
-			mPhoneEditText.setText(UserData.getInstance().getPhone());
-		} else {
-			mPhoneEditText.setText(BookingManager.getInstance(this).getGuestPhone());
-		}
+//		if (UserData.getInstance().isLogin()) {
+//			mPhoneEditText.setText(UserData.getInstance().getPhone());
+//		} else {
+//			mPhoneEditText.setText(BookingManager.getInstance(this).getGuestPhone());
+//		}
 	}
 
 	@Override
@@ -91,19 +91,17 @@ public class BookingActivity extends Activity {
 	}
 	
 	public void reserveButton_onClick(View view) {
-		String phoneNumber = mPhoneEditText.getText().toString();
-		// Check for a valid phone.
-		if (TextUtils.isEmpty(phoneNumber) || phoneNumber.length() < 8) {
-			mPhoneEditText.setError(TextUtils.isEmpty(phoneNumber)?getString(R.string.error_field_required):"Please enter a valid phone");
-			mPhoneEditText.requestFocus();
-			return;
-		}
+//		String phoneNumber = mPhoneEditText.getText().toString();
+//		// Check for a valid phone.
+//		if (TextUtils.isEmpty(phoneNumber) || phoneNumber.length() < 8) {
+//			mPhoneEditText.setError(TextUtils.isEmpty(phoneNumber)?getString(R.string.error_field_required):"Please enter a valid phone");
+//			mPhoneEditText.requestFocus();
+//			return;
+//		}
 		
 		showProgress(true);
 		mBookingTask = new BookingTask();
 		mBookingTask.execute((Void) null);
-
-		Log.d("example", "You are all set!");
 	}
 	
 	public void closeButton_onClick(View view) {
@@ -249,6 +247,8 @@ public class BookingActivity extends Activity {
 			showProgress(false);
 			mBookingFormView.setVisibility(success?View.GONE:View.VISIBLE);
 			mBookingCompleteView.setVisibility(success?View.VISIBLE:View.GONE);
+			
+			setTitle("Booking Confirmed");
 		}
 
 		@Override

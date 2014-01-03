@@ -184,8 +184,6 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 
 		RestaurantData rd = RestaurantData.getInstance();
 		
-		setTitle(rd.getRestaurantName());
-		
 		nameView.setText(rd.getRestaurantName());
 		addressView.setText(rd.getRestaurantAddress());
 		phoneView.setText(rd.getRestaurantPhone());
