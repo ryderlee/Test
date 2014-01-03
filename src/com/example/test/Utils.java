@@ -18,6 +18,46 @@ import android.util.Log;
 
 public class Utils {
 
+	static public String put(String url, HashMap<String, String> params) {
+		URL r; 
+    	try {
+	    	r = new URL (url);
+	    	String body = "";
+	    	Iterator<Entry<String, String>> iter = params.entrySet().iterator();
+	    	while (iter.hasNext()) {
+				Entry<String, String> entry = iter.next();
+				body += entry.getKey()+"="+URLEncoder.encode(entry.getValue(), "UTF-8")+(iter.hasNext()?"&":"");
+			}
+	    	Log.d("com.example.test", "Put body: "+body);
+	    	return Utils.put(r, body);
+    	}catch (Exception e){}
+    	return "";
+	}
+	
+	static public String put(URL url, String body) {
+		String line;
+		StringBuilder sb = new StringBuilder();
+    	try{
+    		HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
+    		
+    		urlc.setRequestMethod("PUT");
+    		urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+    		urlc.setRequestProperty("Content-Length", ""+ body.length());
+    		DataOutputStream dos = new DataOutputStream(urlc.getOutputStream());
+    		dos.writeBytes(body);
+    		dos.flush();
+    		dos.close();
+    		
+            BufferedReader bfr=new BufferedReader(new InputStreamReader(urlc.getInputStream()));
+            while((line=bfr.readLine())!=null) {
+            	sb.append(line + "\n");
+            }
+    	} catch(Exception e){
+        	Log.d("exception", e.getMessage());
+        }
+		return sb.toString();
+	}
+	
 	static public String post(String url, HashMap<String, String> params) {
 		URL r; 
     	try {
