@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.zip.Inflater;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +38,7 @@ import android.support.v4.app.*;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.*;
+import android.text.Layout;
 
 public class RestaurantInfoActivity extends ActionBarActivity {
 	
@@ -235,10 +237,15 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 	private void displayTimeSlots() {
 		mTimeSlotsContainer.removeAllViews();
 		
-		for (Date d : mAvailableTimeSlots) {
-			Button timeSlotButton = new Button(this);
+		for (int i=0; i<mAvailableTimeSlots.size(); i++) {
+			Date d = mAvailableTimeSlots.get(i);
+			LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			inflater.inflate(R.layout.view_common_button, mTimeSlotsContainer, true);
+			Button timeSlotButton = (Button) mTimeSlotsContainer.getChildAt(i);
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			params.setMargins(5, 14, 5, 14);
 			timeSlotButton.setLayoutParams(params);
+			timeSlotButton.setBackgroundResource(R.drawable.common_button_background);
 			timeSlotButton.setText(new SimpleDateFormat("h:mm aa").format(d).toLowerCase());
 			timeSlotButton.setTag(d);
 			timeSlotButton.setOnClickListener(new OnClickListener() {
@@ -248,7 +255,6 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 					reserveButton_onClick(v);
 				}
 			});
-			mTimeSlotsContainer.addView(timeSlotButton);
 		}
 		
 		mTimeSlotsScrollView.setVisibility(View.VISIBLE);
