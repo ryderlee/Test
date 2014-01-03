@@ -31,6 +31,7 @@
 		    android:layout_alignParentLeft="true"
 		    android:layout_alignParentRight="true"
 		    android:text="About Ikky"
+		    android:background="@drawable/common_button_background"
 		    android:onClick="aboutButton_onClick" />
    
 		<Button
@@ -42,6 +43,7 @@
 		    android:layout_alignParentLeft="true"
 		    android:layout_alignParentRight="true"
 		    android:text="Sign out"
+		    android:background="@drawable/common_button_background"
 		    android:onClick="signoutButton_onClick" />
 
 	</RelativeLayout>
