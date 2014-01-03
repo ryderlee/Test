@@ -230,6 +230,7 @@ public class UserProfileActivity extends ActionBarActivity {
 				mAdapter.addAll(results);
 				mAdapter.notifyDataSetChanged();
 				mBookingListView.setVisibility(View.VISIBLE);
+				mBookingListView.setSelection(0);
 				mProgressBar.setVisibility(View.GONE);
 			} else {
 			}
