@@ -235,7 +235,7 @@ public class MainActivity extends ActionBarActivity {
 		protected Boolean doInBackground(Void... params) {
 			try {
 				// Simulate network access.
-				Thread.sleep(600);
+				Thread.sleep(400);
 			} catch (InterruptedException e) {
 				return false;
 			}
