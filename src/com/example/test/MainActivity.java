@@ -142,9 +142,13 @@ public class MainActivity extends ActionBarActivity {
     
     @Override
     protected void onNewIntent(Intent intent) {
-    	if(intent.hasExtra("bookingID") && intent.getStringExtra("bookingID") != null){
+    	if(intent.hasExtra("source") && intent.getStringExtra("source").equals("notification")
+    			&& intent.hasExtra("notificationType") && intent.getStringExtra("notificationType").equals("bookingNotification")
+    			&& intent.hasExtra("bookingID") && intent.getStringExtra("bookingID") != null
+    	){
 	    	String bookingID = intent.getStringExtra("bookingID");
 		    Log.d("onNewIntent- bookingID", bookingID);
+	    	UserManager.getInstance(this).showBookings(bookingID);
     	}else{
     		Log.d("onNewIntent", "no intent");
     	}

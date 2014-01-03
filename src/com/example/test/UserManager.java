@@ -53,6 +53,13 @@ public class UserManager {
 		this.backToTopActivity(Constants.ACTION_BOOK_AS_GUEST);
 	}
 	
+	protected void showBookings(String bookingID) {
+		Intent intent = new Intent();
+		intent.setClass(this.mActivity, UserProfileActivity.class);
+		this.mActivity.startActivity(intent);
+		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+	}
+	
 	protected void showProfile() {
 		Intent intent = new Intent();
 		intent.setClass(this.mActivity, UserProfileActivity.class);

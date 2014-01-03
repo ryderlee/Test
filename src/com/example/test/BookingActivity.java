@@ -196,14 +196,18 @@ public class BookingActivity extends Activity {
 
 		        //Some simple code to define time of notification:
 		        Calendar cal = Calendar.getInstance();
-		        /*
+		        /* for production
 		        cal.setTime(SearchData.getInstance().getChosenDate());
 		        cal.add(Calendar.MINUTE, -15);
 		        */
-		        
-		        
+		        /*
+		         * <forTesting>
+		         */
 		        cal.setTime(new Date());
 		        cal.add(Calendar.MINUTE, 1);
+		        /*
+		         * </forTesting>
+		         */
 		        
 		        Date stamp =  cal.getTime();
 		        /*
