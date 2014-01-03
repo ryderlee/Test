@@ -26,6 +26,12 @@
 		        android:layout_alignParentLeft="true"
 		        android:layout_alignParentTop="true"
 		        android:text="Cancel"
+		        android:background="@drawable/common_button_background"
+		        android:minHeight="1dp"
+		        android:paddingLeft="10dp"
+		        android:paddingRight="10dp"
+		        android:paddingTop="6dp"
+		        android:paddingBottom="6dp"
 		        android:onClick="cancelButton_onClick" />
 		
 		    <Button
@@ -35,6 +41,12 @@
 		        android:layout_alignParentRight="true"
 		        android:layout_alignParentTop="true"
 		        android:text="Reserve"
+		        android:background="@drawable/common_button_background"
+		        android:minHeight="1dp"
+		        android:paddingLeft="10dp"
+		        android:paddingRight="10dp"
+		        android:paddingTop="6dp"
+		        android:paddingBottom="6dp"
 		        android:onClick="reserveButton_onClick" />
 		    
 		    <LinearLayout
@@ -94,6 +106,12 @@
 		        android:layout_alignParentRight="true"
 		        android:layout_alignParentTop="true"
 		        android:text="Close"
+		        android:background="@drawable/common_button_background"
+		        android:minHeight="1dp"
+		        android:paddingLeft="10dp"
+		        android:paddingRight="10dp"
+		        android:paddingTop="6dp"
+		        android:paddingBottom="6dp"
 		        android:onClick="closeButton_onClick" />
 		    
 		    <TextView
@@ -123,6 +141,7 @@
 		        android:layout_alignParentRight="true"
 		        android:layout_below="@+id/bookingInfoViewComplete"
 		        android:text="Add to calendar"
+		        android:background="@drawable/common_button_background"
 		        android:layout_marginTop="30dp"
 		        android:onClick="addToCalendarButton_onClick" />
 		    
@@ -134,6 +153,7 @@
 		        android:layout_alignParentRight="true"
 		        android:layout_below="@+id/addToCalendarButton"
 		        android:text="Email friends"
+		        android:background="@drawable/common_button_background"
 		        android:layout_marginTop="10dp"
 		        android:onClick="emailFriendsButton_onClick" />
 		    
@@ -145,6 +165,7 @@
 		        android:layout_alignParentRight="true"
 		        android:layout_below="@+id/emailFriendsButton"
 		        android:text="Directions to there"
+		        android:background="@drawable/common_button_background"
 		        android:layout_marginTop="10dp"
 		        android:onClick="directionsToThereButton_onClick" />
 		        	        
