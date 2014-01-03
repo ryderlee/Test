@@ -14,11 +14,11 @@
         android:name="com.example.test.CustomApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="ikky demo"
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name="com.example.test.MainActivity"
-            android:label="@string/app_name" >
+            android:label="ikky" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,24 +26,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.test.ResturantInfoActivity"
-            android:label="@string/title_activity_resturant_info"
-            android:parentActivityName="com.example.test.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.test.MainActivity" />
-        </activity>
-        <activity
-            android:name="com.example.test.RestaurantInfo"
-            android:label="@string/title_activity_restaurant_info"
-            android:parentActivityName="com.example.test.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.test.MainActivity" />
-        </activity>
-        <activity
             android:name="com.example.test.RestaurantInfoActivity"
-            android:label="@string/title_activity_restaurant_info"
+            android:label=""
             android:parentActivityName="com.example.test.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -51,24 +35,24 @@
         </activity>
         <activity
             android:name="com.example.test.SigninOptionActivity"
-            android:label="@string/title_activity_signin_option" >
+            android:label="Signin" >
         </activity>
         <activity
             android:name="com.example.test.SigninActivity"
-            android:label="@string/title_activity_signin"
+            android:label="Signin"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
             android:name="com.example.test.UserProfileActivity"
-            android:label="@string/title_activity_user_profile" >
+            android:label="Profile" >
         </activity>
         <activity
             android:name="com.example.test.BookingActivity"
-            android:label="@string/title_activity_booking" >
+            android:label="Booking" >
         </activity>
         <activity
             android:name="com.example.test.GuestInfoActivity"
-            android:label="@string/title_activity_guest_info" >
+            android:label="Information" >
         </activity>
         <activity
             android:name="com.example.test.FullScreenAlbumActivity"
@@ -77,7 +61,7 @@
         </activity>
         <activity
             android:name="com.example.test.SignupActivity"
-            android:label="@string/title_activity_signup"
+            android:label="Signup"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <receiver android:name=".AlarmReceiver" >

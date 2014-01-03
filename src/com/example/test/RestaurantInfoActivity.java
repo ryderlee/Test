@@ -184,6 +184,8 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 
 		RestaurantData rd = RestaurantData.getInstance();
 		
+		setTitle(rd.getRestaurantName());
+		
 		nameView.setText(rd.getRestaurantName());
 		addressView.setText(rd.getRestaurantAddress());
 		phoneView.setText(rd.getRestaurantPhone());
@@ -372,6 +374,9 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 	}
 	
 	private class RestaurantInfoRequestTask extends AsyncTask<Void, Void, Boolean> {
+		
+		JSONArray mBookingSlots;
+		
 		@Override
 		protected Boolean doInBackground(Void... params) {
 		// TODO: attempt authentication against a network service.
@@ -403,7 +408,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				rd.setReviewAmbiance(json.getString("RESTAURANT_REVIEW_AMBIANCE"));
 				rd.setReviews(json.getString("RESTAURANT_REVIEWS"));
 				
-				updateRestaurantInfo(json.getJSONArray("RESTAURANT_BOOKING_SLOTS"));
+				mBookingSlots = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
 				
 				return true;
 			} catch (JSONException e) {
@@ -416,6 +421,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 		protected void onPostExecute(final Boolean success) {
 			mRestaurantInfoRequestTask = null;
 			if (success) {
+				updateRestaurantInfo(mBookingSlots);
 				hideProgress();
 			} else {
 			}
