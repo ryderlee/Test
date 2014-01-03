@@ -54,7 +54,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+        if(getIntent() != null)
+	        onNewIntent(getIntent());
         mShowSearchButton = (Button) findViewById(R.id.showSearchButton);
         mSearchView = findViewById(R.id.searchView);
         mBookingPickerButton = (Button) findViewById(R.id.bookingPickerButton);
@@ -121,7 +122,6 @@ public class MainActivity extends ActionBarActivity {
 //		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //        StrictMode.setThreadPolicy(policy);
     }
-    
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         // same as using a normal menu
@@ -142,10 +142,18 @@ public class MainActivity extends ActionBarActivity {
     
     @Override
     protected void onNewIntent(Intent intent) {
-        String action = intent.getStringExtra("ACTION");
-    	if (action.equals(Constants.ACTION_LOGIN_SUCCESS)) {
-            Log.d("example", "login success and show profile now");
-    		UserManager.getInstance(this).showProfile();
+    	if(intent.hasExtra("bookingID") && intent.getStringExtra("bookingID") != null){
+	    	String bookingID = intent.getStringExtra("bookingID");
+		    Log.d("onNewIntent- bookingID", bookingID);
+    	}else{
+    		Log.d("onNewIntent", "no intent");
+    	}
+    	if(intent.hasExtra("ACTION")){
+	        String action = intent.getStringExtra("ACTION");
+	    	if (action.equals(Constants.ACTION_LOGIN_SUCCESS)) {
+	            Log.d("example", "login success and show profile now");
+	    		UserManager.getInstance(this).showProfile();
+	    	}
     	}
     }
     

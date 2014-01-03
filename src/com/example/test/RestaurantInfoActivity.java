@@ -395,7 +395,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				return false;
 			}
 		
-			String jsonString = Utils.getJsonString("http://10.0.2.2:8888/index.php/merchants/"+RestaurantData.getInstance().getRestaurantID());
+			String jsonString = Utils.getJsonString("http://10.0.2.2:8888/merchants/"+RestaurantData.getInstance().getRestaurantID());
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				
@@ -453,7 +453,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				return false;
 			}
 			
-			String jsonString = Utils.getJsonString("http://10.0.2.2:8888/index.php/merchants/" + RestaurantData.getInstance().getRestaurantID());
+			String jsonString = Utils.getJsonString("http://10.0.2.2:8888/merchants/" + RestaurantData.getInstance().getRestaurantID());
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				updateTimeSlots(json);

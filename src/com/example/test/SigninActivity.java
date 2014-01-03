@@ -227,7 +227,7 @@ public class SigninActivity extends ActionBarActivity {
 			postParams.put("action", "login");
 			postParams.put("password", mPassword);
 			
-			String json = Utils.post("http://10.0.2.2:8888/index.php/users/session/"+mEmail, postParams);
+			String json = Utils.post("http://10.0.2.2:8888/users/session/"+mEmail, postParams);
 			JSONObject jso;
 			try {
 				jso = new JSONObject(json);

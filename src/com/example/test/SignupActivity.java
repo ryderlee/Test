@@ -257,7 +257,7 @@ public class SignupActivity extends Activity {
 			postParams.put("phone", mPhone);
 			postParams.put("password", mPassword);
 			
-			String json = Utils.post("http://10.0.2.2:8888/index.php/users", postParams);
+			String json = Utils.post("http://10.0.2.2:8888/users", postParams);
 			JSONObject jso;
 			try {
 				jso = new JSONObject(json);

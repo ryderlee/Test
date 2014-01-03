@@ -80,6 +80,8 @@
             android:label="@string/title_activity_signup"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
+        <receiver android:name=".AlarmReceiver" >
+        </receiver>
     </application>
 
 </manifest>

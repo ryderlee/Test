@@ -2,6 +2,7 @@ package com.example.test;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
@@ -174,9 +178,57 @@ public class BookingActivity extends Activity {
 			params.put("datetime", datetime);
 			params.put("specialRequest", specialRequest);
 			
-			String jsonString = Utils.post("http://10.0.2.2:8888/index.php/reservations", params);
+			String jsonString = Utils.post("http://10.0.2.2:8888/reservations", params);
 			try {
 				JSONObject json = new JSONObject(jsonString);
+				
+				
+				//Start : for notification
+				AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		        
+		        Intent intent = new Intent(CustomApplication.getContext(), AlarmReceiver.class);
+		        intent.putExtra("bookingID", json.getString("bookingID"));
+		        // PendingIntent for AlarmManager 
+		        PendingIntent pendingIntent = PendingIntent.getBroadcast(CustomApplication.getContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT );
+		        // Just in case we have already set up AlarmManager,
+		        // we do cancel.
+		        am.cancel(pendingIntent);
+
+		        //Some simple code to define time of notification:
+		        Calendar cal = Calendar.getInstance();
+		        /*
+		        cal.setTime(SearchData.getInstance().getChosenDate());
+		        cal.add(Calendar.MINUTE, -15);
+		        */
+		        
+		        
+		        cal.setTime(new Date());
+		        cal.add(Calendar.MINUTE, 1);
+		        
+		        Date stamp =  cal.getTime();
+		        /*
+		        int pos = notifyTime.indexOf(":");
+		        int hour = Integer.parseInt(notifyTime.substring(0, pos));
+		        int minute = Integer.parseInt(notifyTime.substring(pos+1));
+		        stamp.setHours(hour);
+		        stamp.setMinutes(minute);
+		        stamp.setSeconds(0);
+				*/
+		        
+		        
+		        // In case it's too late notify user today
+		        if(stamp.getTime() < System.currentTimeMillis())
+		            stamp.setTime(stamp.getTime() + AlarmManager.INTERVAL_DAY);
+		                
+		        // Set one-time alarm
+		        am.set(AlarmManager.RTC_WAKEUP, stamp.getTime(), pendingIntent);
+		        Log.i("client notification", "alarm set");
+				
+				
+				
+				
+				
+				
 				return true;
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -187,6 +239,8 @@ public class BookingActivity extends Activity {
 		
 		@Override
 		protected void onPostExecute(final Boolean success) {
+			
+	        
 			mBookingTask = null;
 			showProgress(false);
 			mBookingFormView.setVisibility(success?View.GONE:View.VISIBLE);
