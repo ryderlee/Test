@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configs>
+    <api>
+        <version>0.1</version>
+        <uri>http://10.0.2.2:8888</uri>
+        <resource name="search">
+            <uri>/restaurant</uri>
+            <method>GET</method>
+        </resource>
+        <resource name="merchant-detail">
+            <uri>/merchants/:mid</uri>
+            <method>GET</method>
+        </resource>
+        <resource name="timeslot">
+            <uri>/merchants/:mid</uri>
+            <method>GET</method>
+        </resource>
+        <resource name="signup">
+            <uri>/users</uri>
+            <method>POST</method>
+        </resource>
+        <resource name="login">
+            <uri>/users/session/:email</uri>
+            <method>POST</method>
+        </resource>
+        <resource name="book">
+            <uri>/reservations</uri>
+            <method>POST</method>
+        </resource>
+        <resource name="booking-list">
+            <uri>/reservations</uri>
+            <method>GET</method>
+        </resource>
+        <resource name="booking-update">
+            <uri>/reservations/:bid</uri>
+            <method>PUT</method>
+        </resource>
+    </api>
+</configs>

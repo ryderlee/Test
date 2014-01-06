@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +22,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -176,7 +174,7 @@ public class BookingActivity extends Activity {
 			params.put("datetime", datetime);
 			params.put("specialRequest", specialRequest);
 			
-			String jsonString = Utils.post("http://10.0.2.2:8888/reservations", params);
+			String jsonString = ServerUtils.submit("book", params);
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				

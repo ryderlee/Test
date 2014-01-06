@@ -1,6 +1,5 @@
 package com.example.test;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -84,7 +83,6 @@ public class FullScreenAlbumActivity extends Activity {
 				photoView.setImageURL(imageUrl, true, null);
 			}
 			catch(MalformedURLException mfe){}
-		    catch(IOException ioe){}
 	         
 	        // close button click event
 	        btnClose.setOnClickListener(new View.OnClickListener() {

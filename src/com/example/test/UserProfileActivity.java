@@ -2,7 +2,6 @@ package com.example.test;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -24,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
@@ -31,6 +31,7 @@ import android.widget.TextView;
 public class UserProfileActivity extends ActionBarActivity {
 
 	private RadioGroup mTab;
+	private RadioButton mBookingsRadioButton;
 	private ListView mBookingListView;
 	private ProgressBar mProgressBar;
 	private TextView mEmptyTextView;
@@ -55,6 +56,8 @@ public class UserProfileActivity extends ActionBarActivity {
 		mBookingListView = (ListView) findViewById(R.id.bookingsListView);
 		mBookingListView.setAdapter(mAdapter);
 		
+		mBookingsRadioButton = (RadioButton) findViewById(R.id.bookingsRadioButton);
+		
 		mTab = (RadioGroup) findViewById(R.id.userProfileTab);
 		mTab.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
@@ -74,7 +77,7 @@ public class UserProfileActivity extends ActionBarActivity {
 				}
 			}
 		});
-		mTab.check(R.id.bookingsRadioButton);
+		mBookingsRadioButton.setChecked(true);
 	}
 
 	@Override
@@ -199,8 +202,11 @@ public class UserProfileActivity extends ActionBarActivity {
 			}
 			
 	    	results = new ArrayList<BookingItem>();
-	    	String url = "http://10.0.2.2:8888/reservations?userID="+UserData.getInstance().getUserId();
-        	String s = Utils.getJsonString(url);
+	    	
+	    	HashMap<String, String> apiParams = new HashMap<String, String>();
+			apiParams.put("userID", UserData.getInstance().getUserId());
+        	String s = ServerUtils.submit("booking-list", apiParams);
+        	
 	        try{
 		        JSONArray jsa=new JSONArray(s);
 	            for (int i=0;i<jsa.length();i++) {
@@ -250,10 +256,10 @@ public class UserProfileActivity extends ActionBarActivity {
 		
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			HashMap<String, String> postParams = new HashMap<String, String>();
-			postParams.put("status", Integer.toString(mStatus));
-			String url = "http://10.0.2.2:8888/reservations/"+mBookingId;
-			Utils.put(url, postParams);
+			HashMap<String, String> apiParams = new HashMap<String, String>();
+			apiParams.put("status", Integer.toString(mStatus));
+			apiParams.put("bid", Integer.toString(mBookingId));
+        	ServerUtils.submit("booking-update", apiParams);
 			return true;
 		}
 		

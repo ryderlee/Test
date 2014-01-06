@@ -11,11 +11,14 @@ public class CustomApplication extends Application {
 		CustomApplication.mContext = this.getApplicationContext();
 		initSingletons();
 	}
+	
 	public static Context getContext(){
 		return mContext;
 	}
+	
 	protected void initSingletons() {
 		UserData.init(getApplicationContext());
+		AppConfigsHelper.init(getApplicationContext());
 	}
 	
 }

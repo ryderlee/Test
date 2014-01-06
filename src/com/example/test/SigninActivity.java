@@ -1,7 +1,5 @@
 package com.example.test;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 
 import org.json.JSONException;
@@ -10,7 +8,6 @@ import org.json.JSONObject;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,18 +26,6 @@ import android.support.v7.app.*;
  * well.
  */
 public class SigninActivity extends ActionBarActivity {
-	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"foo@example.com:hello", "bar@example.com:world" };
-
-	/**
-	 * The default email to populate the email field with.
-	 */
-	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
-
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
@@ -64,7 +49,6 @@ public class SigninActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_signin);
 
 		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
 		mEmailView.setText(mEmail);
 
@@ -223,14 +207,14 @@ public class SigninActivity extends ActionBarActivity {
 				return false;
 			}
 			
-			HashMap<String, String> postParams = new HashMap<String, String>();
-			postParams.put("action", "login");
-			postParams.put("password", mPassword);
-			
-			String json = Utils.post("http://10.0.2.2:8888/users/session/"+mEmail, postParams);
+			HashMap<String, String> apiParams = new HashMap<String, String>();
+			apiParams.put("action", "login");
+			apiParams.put("password", mPassword);
+			apiParams.put("email", mEmail);
+        	String jsonString = ServerUtils.submit("login", apiParams);
 			JSONObject jso;
 			try {
-				jso = new JSONObject(json);
+				jso = new JSONObject(jsonString);
 				if (jso.getBoolean("result")) {
 					userJson = jso.getJSONObject("user");
 					return true;
