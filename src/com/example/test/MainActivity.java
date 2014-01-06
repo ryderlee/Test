@@ -1,7 +1,7 @@
 package com.example.test;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -253,12 +253,13 @@ public class MainActivity extends ActionBarActivity {
 			}
 			
 	    	results = new ArrayList<RestaurantResultItem>();
-	    	String url = "http://10.0.2.2:8888/index.php/restaurant?p="+mPage;
+        	
+	    	HashMap<String, String> apiParams = new HashMap<String, String>();
+	    	apiParams.put("p", Integer.toString(mPage));
 	    	if (!TextUtils.isEmpty(mKeyword)) {
-        		url += "&k=" + mKeyword;
+        		apiParams.put("k", mKeyword);
         	}
-	    	Log.d("com.example.test", "Url: "+url);
-        	String s = Utils.getJsonString(url);
+        	String s = ServerUtils.submit("search", apiParams);
         	Log.d("com.example.test", "Result: "+s);
 	        try{
 		        JSONArray jsa=new JSONArray(s);

@@ -2,9 +2,6 @@ package com.example.test;
 
 import java.text.SimpleDateFormat;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;

@@ -1,7 +1,5 @@
 package com.example.test;
 
-import org.json.JSONArray;
-
 public class RestaurantData {
 
 	private String restaurantName;

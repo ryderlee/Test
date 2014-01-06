@@ -13,10 +13,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -250,17 +248,16 @@ public class SignupActivity extends Activity {
 				return false;
 			}
 			
-			HashMap<String, String> postParams = new HashMap<String, String>();
-			postParams.put("firstName", mFirstName);
-			postParams.put("lastName", mLastName);
-			postParams.put("email", mEmail);
-			postParams.put("phone", mPhone);
-			postParams.put("password", mPassword);
-			
-			String json = Utils.post("http://10.0.2.2:8888/users", postParams);
+			HashMap<String, String> apiParams = new HashMap<String, String>();
+			apiParams.put("firstName", mFirstName);
+			apiParams.put("lastName", mLastName);
+			apiParams.put("email", mEmail);
+			apiParams.put("phone", mPhone);
+			apiParams.put("password", mPassword);
+        	String jsonString = ServerUtils.submit("signup", apiParams);
 			JSONObject jso;
 			try {
-				jso = new JSONObject(json);
+				jso = new JSONObject(jsonString);
 				if (jso.getBoolean("result")) {
 					String userId = jso.getJSONObject("values").getString("userID");
 					String token = jso.getJSONObject("values").getString("token");

@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.zip.Inflater;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +38,6 @@ import android.support.v4.app.*;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.*;
-import android.text.Layout;
 
 public class RestaurantInfoActivity extends ActionBarActivity {
 	
@@ -385,7 +384,9 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				return false;
 			}
 		
-			String jsonString = Utils.getJsonString("http://10.0.2.2:8888/merchants/"+RestaurantData.getInstance().getRestaurantID());
+			HashMap<String, String> apiParams = new HashMap<String, String>();
+	    	apiParams.put("mid", RestaurantData.getInstance().getRestaurantID());
+        	String jsonString = ServerUtils.submit("merchant-detail", apiParams);
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				
@@ -444,7 +445,9 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				return false;
 			}
 			
-			String jsonString = Utils.getJsonString("http://10.0.2.2:8888/merchants/" + RestaurantData.getInstance().getRestaurantID());
+			HashMap<String, String> apiParams = new HashMap<String, String>();
+	    	apiParams.put("mid", RestaurantData.getInstance().getRestaurantID());
+        	String jsonString = ServerUtils.submit("timeslot", apiParams);
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				updateTimeSlots(json);
