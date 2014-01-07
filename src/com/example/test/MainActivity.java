@@ -1,7 +1,6 @@
 package com.example.test;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.LinearLayout.LayoutParams;
-import android.text.TextUtils;
 import android.util.Log;
 
 import java.net.*;
@@ -254,12 +252,7 @@ public class MainActivity extends ActionBarActivity {
 			
 	    	results = new ArrayList<RestaurantResultItem>();
         	
-	    	HashMap<String, String> apiParams = new HashMap<String, String>();
-	    	apiParams.put("p", Integer.toString(mPage));
-	    	if (!TextUtils.isEmpty(mKeyword)) {
-        		apiParams.put("k", mKeyword);
-        	}
-        	String s = ServerUtils.submit("search", apiParams);
+        	String s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword);
         	Log.d("com.example.test", "Result: "+s);
 	        try{
 		        JSONArray jsa=new JSONArray(s);

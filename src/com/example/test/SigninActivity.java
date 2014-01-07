@@ -1,7 +1,5 @@
 package com.example.test;
 
-import java.util.HashMap;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -207,11 +205,7 @@ public class SigninActivity extends ActionBarActivity {
 				return false;
 			}
 			
-			HashMap<String, String> apiParams = new HashMap<String, String>();
-			apiParams.put("action", "login");
-			apiParams.put("password", mPassword);
-			apiParams.put("email", mEmail);
-        	String jsonString = ServerUtils.submit("login", apiParams);
+        	String jsonString = ServerUtils.submitRequest("userLogin", "action=login", "password="+mPassword, "email="+mEmail);
 			JSONObject jso;
 			try {
 				jso = new JSONObject(jsonString);

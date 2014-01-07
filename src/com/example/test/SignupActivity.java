@@ -1,7 +1,5 @@
 package com.example.test;
 
-import java.util.HashMap;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -248,13 +246,7 @@ public class SignupActivity extends Activity {
 				return false;
 			}
 			
-			HashMap<String, String> apiParams = new HashMap<String, String>();
-			apiParams.put("firstName", mFirstName);
-			apiParams.put("lastName", mLastName);
-			apiParams.put("email", mEmail);
-			apiParams.put("phone", mPhone);
-			apiParams.put("password", mPassword);
-        	String jsonString = ServerUtils.submit("signup", apiParams);
+        	String jsonString = ServerUtils.submitRequest("userSignup", "firstName="+mFirstName, "lastName="+mLastName, "email="+mEmail, "phone="+mPhone, "password="+mPassword);
 			JSONObject jso;
 			try {
 				jso = new JSONObject(jsonString);

@@ -18,7 +18,10 @@ public class AppConfigsHelper {
 	static private AppConfigsHelper sInstance;
 	static private AssetManager sAssetManager;
 	
-	private ApiConfigs mApiConfigs;
+	private HashMap<String, ApiConfigs> mApiConfigs;
+	private String mEnvironment;
+	private String mApiVersion;
+	
 	private String mNamespace;
 	
 	
@@ -41,11 +44,11 @@ public class AppConfigsHelper {
 	}
 	
 	public ApiConfigs getApiConfigs() {
-		return mApiConfigs;
+		return mApiConfigs.get(mApiVersion);
 	}
 	
 	private void parseXml() throws XmlPullParserException, IOException {
-		mApiConfigs = new ApiConfigs();
+		mApiConfigs = new HashMap<String, ApiConfigs>();
 		XmlPullParser parser = Xml.newPullParser();
 		parser.setInput(sAssetManager.open("configs/app.xml"), null);
 		parser.nextTag();
@@ -57,29 +60,60 @@ public class AppConfigsHelper {
 			String name = parser.getName();
 			if (name.equals("api")) {
 				readApi(parser);
+			} else if (name.equals("core")) {
+				readCore(parser);
 			} else {
 				skip(parser);
 			}
 		}
 	}
 	
-	private void readApi(XmlPullParser parser) throws XmlPullParserException, IOException {
-		parser.require(XmlPullParser.START_TAG, mNamespace, "api");
+	private void readCore(XmlPullParser parser) throws XmlPullParserException, IOException {
+		parser.require(XmlPullParser.START_TAG, mNamespace, "core");
 		while (parser.next() != XmlPullParser.END_TAG) {
 			if (parser.getEventType() != XmlPullParser.START_TAG) {
 				continue;
 			}
 			String name = parser.getName();
-			if (name.equals("version")) {
-				mApiConfigs.setApiVersion(readText(parser, name));
-			} else if (name.equals("uri")) {
-				mApiConfigs.setApiServerUri(readText(parser, name));
+			if (name.equals("api-version")) {
+				mApiVersion = readText(parser, name);
+			} else if (name.equals("environment")) {
+				mEnvironment = readText(parser, name);
+			}
+		}
+	}
+	
+	private void readApi(XmlPullParser parser) throws XmlPullParserException, IOException {
+		parser.require(XmlPullParser.START_TAG, mNamespace, "api");
+		ApiConfigs apiConfigs = new ApiConfigs();
+		String apiVersion = parser.getAttributeValue(mNamespace, "version");
+		while (parser.next() != XmlPullParser.END_TAG) {
+			if (parser.getEventType() != XmlPullParser.START_TAG) {
+				continue;
+			}
+			String name = parser.getName();
+			if (name.equals("uri")) {
+				apiConfigs.setApiServerUris(readApiServerUris(parser));
 			} else if (name.equals("resource")) {
-				mApiConfigs.getApiResources().put(parser.getAttributeValue(mNamespace, "name"), readApiResource(parser));
+				apiConfigs.getApiResources().put(parser.getAttributeValue(mNamespace, "name"), readApiResource(parser));
 			} else {
 				skip(parser);
 			}
 		}
+		mApiConfigs.put(apiVersion, apiConfigs);
+	}
+	
+	private HashMap<String, String> readApiServerUris(XmlPullParser parser) throws XmlPullParserException, IOException {
+		parser.require(XmlPullParser.START_TAG, mNamespace, "uri");
+		HashMap<String, String> apiServerUris = new HashMap<String, String>();
+		while (parser.next() != XmlPullParser.END_TAG) {
+			if (parser.getEventType() != XmlPullParser.START_TAG) {
+				continue;
+			}
+			String name = parser.getName();
+			apiServerUris.put(name, readText(parser, name));
+		}
+		return apiServerUris;
 	}
 	
 	private ApiResource readApiResource(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -133,23 +167,16 @@ public class AppConfigsHelper {
 	
 	//	Api Data Objects
 	public class ApiConfigs {
-		private String mApiVersion;
-		private String mApiServerUri;
+		private HashMap<String, String> mApiServerUris;
 		private HashMap<String, ApiResource> mApiResources;
 		public ApiConfigs() {
 			mApiResources = new HashMap<String, ApiResource>();
 		}
-		public String getApiVersion() {
-			return mApiVersion;
-		}
-		private void setApiVersion(String mApiVersion) {
-			this.mApiVersion = mApiVersion;
-		}
 		public String getApiServerUri() {
-			return mApiServerUri;
+			return mApiServerUris.get(mEnvironment);
 		}
-		private void setApiServerUri(String mApiServerUri) {
-			this.mApiServerUri = mApiServerUri;
+		private void setApiServerUris(HashMap<String, String> mApiServerUris) {
+			this.mApiServerUris = mApiServerUris;
 		}
 		public HashMap<String, ApiResource> getApiResources() {
 			return mApiResources;
