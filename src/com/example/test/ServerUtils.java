@@ -1,85 +1,102 @@
 package com.example.test;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.example.test.AppConfigsHelper.ApiConfigs;
 import com.example.test.AppConfigsHelper.ApiResource;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 public class ServerUtils {
 
-	static public String submit(String apiName, HashMap<String, String> params) {
+	static public String submitRequest(String apiName, String... keyValuePairs) {
 		ApiConfigs apiConfigs = AppConfigsHelper.getInstance().getApiConfigs();
 		HashMap<String, ApiResource> apiResources = apiConfigs.getApiResources();
 		if (apiResources.containsKey(apiName)) {
 			ApiResource apiResource = apiResources.get(apiName);
-			try {
-				String uriStr = apiConfigs.getApiServerUri()+apiResource.getUri();
-		    	Iterator<Entry<String, String>> iter = params.entrySet().iterator();
-		    	String body = "";
-		    	while (iter.hasNext()) {
-					Entry<String, String> entry = iter.next();
-					if (apiResource.getUriParameters().contains(entry.getKey())) {
-						uriStr = uriStr.replace(":"+entry.getKey(), entry.getValue());
+			String uri = apiConfigs.getApiServerUri()+apiResource.getUri();
+			String body = "";
+			for (String keyValuePair : keyValuePairs) {
+				String[] arr = keyValuePair.split("=", 2);
+				if (arr.length > 1 && !TextUtils.isEmpty(arr[1]) && !arr[1].equals("null")) {
+					if (apiResource.getUriParameters().contains(arr[0])) {
+						uri = uri.replace(":"+arr[0], arr[1]);
 					} else {
-						body += entry.getKey()+"="+URLEncoder.encode(entry.getValue(), "UTF-8")+(iter.hasNext()?"&":"");
+						body += keyValuePair+"&";
 					}
 				}
-		    	if (apiResource.getMethod().equals("GET") && !body.isEmpty()) {
-		    		uriStr += "?" + body;
-		    	}
-		    	URL uri = new URL(uriStr);
-		    	Log.d("ServerUtils", String.format("Api:%s, Method:%s, Submit to: %s", apiName, apiResource.getMethod(), uriStr));
-		    	return ServerUtils.submit(uri, apiResource.getMethod(), body);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
 			}
-			
+			if (apiResource.getMethod().equals("GET") && !TextUtils.isEmpty(body)) {
+	    		uri += "?" + body;
+	    	}
+			Log.d("ServerUtils", String.format("Api Name: %s, Method: %s, Uri: %s", apiName, apiResource.getMethod(), uri));
+	    	return ServerUtils.submit(uri, apiResource.getMethod(), body);
 		}
 		return "";
 	}
 	
-	static private String submit(URL url, String method, String body) {
-		String line;
-		StringBuilder sb = new StringBuilder();
+	static private String submit(String uri, String method, String body) {
 		try {
-    		HttpURLConnection urlc;
-    		
-			urlc = (HttpURLConnection) url.openConnection();
-    		urlc.setRequestMethod(method);
-    		urlc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-    		
-    		if (!method.equals("GET")) {
-    			Log.d("ServerUtils", "body: " + body);
-				urlc.setRequestProperty("Content-Length", ""+ body.length());
-				DataOutputStream dos = new DataOutputStream(urlc.getOutputStream());
-	    		dos.writeBytes(body);
-	    		dos.flush();
-	    		dos.close();
-    		}
-    		
-            BufferedReader bfr=new BufferedReader(new InputStreamReader(urlc.getInputStream()));
-            while((line=bfr.readLine())!=null) {
-            	sb.append(line + "\n");
-            }
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpRequestBase requestBase = null;
+			if (method.equals("GET")) {
+				requestBase = new HttpGet(uri);
+			} else if (method.equals("POST")) {
+				requestBase = new HttpPost(uri);
+				((HttpPost) requestBase).setEntity(new StringEntity(body, "UTF8"));
+				requestBase.addHeader("Content-Type", "application/x-www-form-urlencoded");
+			} else if (method.equals("PUT")) {
+				requestBase = new HttpPut(uri);
+				((HttpPut) requestBase).setEntity(new StringEntity(body, "UTF8"));
+				requestBase.addHeader("Content-Type", "application/x-www-form-urlencoded");
+			}
+			HttpResponse response = httpClient.execute(requestBase);
+			String responseBody = ServerUtils.convertToString(response.getEntity().getContent());
+			Log.d("ServerUtils", String.format("Response Status: %s", response.getStatusLine().toString()));
+			Log.v("ServerUtils", String.format("Response Body:%s", responseBody));
+			return responseBody;
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return sb.toString();
+		return "";
+	}
+	
+	static private String convertToString(InputStream is) {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+	    StringBuilder sb = new StringBuilder();
+
+	    String line = null;
+	    try {
+	        while ((line = reader.readLine()) != null) {
+	            sb.append(line + "\n");
+	        }
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            is.close();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return sb.toString();
 	}
 	
 }

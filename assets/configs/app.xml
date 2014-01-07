@@ -1,37 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configs>
-    <api>
-        <version>0.1</version>
-        <uri>http://10.0.2.2:8888</uri>
-        <resource name="search">
+    <core>
+        <api-version>0.1</api-version>
+        <environment>prod</environment>
+    </core>
+    <api version="0.1">
+        <uri>
+            <dev>http://10.0.2.2:8888</dev>
+            <prod>http://default-environment-df6t4xdxq7.elasticbeanstalk.com</prod>
+        </uri>
+        <resource name="getRestaurantList">
             <uri>/restaurant</uri>
             <method>GET</method>
         </resource>
-        <resource name="merchant-detail">
+        <resource name="getMerchantDetail">
             <uri>/merchants/:mid</uri>
             <method>GET</method>
         </resource>
-        <resource name="timeslot">
+        <resource name="getAvailableTimeslots">
             <uri>/merchants/:mid</uri>
             <method>GET</method>
         </resource>
-        <resource name="signup">
+        <resource name="userSignup">
             <uri>/users</uri>
             <method>POST</method>
         </resource>
-        <resource name="login">
+        <resource name="userLogin">
             <uri>/users/session/:email</uri>
             <method>POST</method>
         </resource>
-        <resource name="book">
+        <resource name="makeBooking">
             <uri>/reservations</uri>
             <method>POST</method>
         </resource>
-        <resource name="booking-list">
+        <resource name="getBookingList">
             <uri>/reservations</uri>
             <method>GET</method>
         </resource>
-        <resource name="booking-update">
+        <resource name="updateBooking">
             <uri>/reservations/:bid</uri>
             <method>PUT</method>
         </resource>

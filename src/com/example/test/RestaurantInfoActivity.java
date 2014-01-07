@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -384,9 +383,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				return false;
 			}
 		
-			HashMap<String, String> apiParams = new HashMap<String, String>();
-	    	apiParams.put("mid", RestaurantData.getInstance().getRestaurantID());
-        	String jsonString = ServerUtils.submit("merchant-detail", apiParams);
+        	String jsonString = ServerUtils.submitRequest("getMerchantDetail", "mid="+RestaurantData.getInstance().getRestaurantID());
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				
@@ -445,9 +442,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 				return false;
 			}
 			
-			HashMap<String, String> apiParams = new HashMap<String, String>();
-	    	apiParams.put("mid", RestaurantData.getInstance().getRestaurantID());
-        	String jsonString = ServerUtils.submit("timeslot", apiParams);
+        	String jsonString = ServerUtils.submitRequest("getAvailableTimeslots", "mid="+RestaurantData.getInstance().getRestaurantID());
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				updateTimeSlots(json);

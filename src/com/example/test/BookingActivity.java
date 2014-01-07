@@ -3,7 +3,6 @@ package com.example.test;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -167,14 +166,7 @@ public class BookingActivity extends Activity {
 			String noOfParticipant = Integer.toString(SearchData.getInstance().getNumberOfReservation());
 			String specialRequest = mSpecialRequestEditText.getText().toString();
 			
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("userID", userId);
-			params.put("merchantID", restaurantId);
-			params.put("numberOfParticipant", noOfParticipant);
-			params.put("datetime", datetime);
-			params.put("specialRequest", specialRequest);
-			
-			String jsonString = ServerUtils.submit("book", params);
+			String jsonString = ServerUtils.submitRequest("makeBooking", "userID="+userId, "merchantID="+restaurantId, "numberOfParticipant="+noOfParticipant, "datetime"+datetime, "specialRequest="+specialRequest);
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				

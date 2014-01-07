@@ -3,7 +3,6 @@ package com.example.test;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -203,9 +202,7 @@ public class UserProfileActivity extends ActionBarActivity {
 			
 	    	results = new ArrayList<BookingItem>();
 	    	
-	    	HashMap<String, String> apiParams = new HashMap<String, String>();
-			apiParams.put("userID", UserData.getInstance().getUserId());
-        	String s = ServerUtils.submit("booking-list", apiParams);
+        	String s = ServerUtils.submitRequest("getBookingList", "userID="+UserData.getInstance().getUserId());
         	
 	        try{
 		        JSONArray jsa=new JSONArray(s);
@@ -256,10 +253,7 @@ public class UserProfileActivity extends ActionBarActivity {
 		
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			HashMap<String, String> apiParams = new HashMap<String, String>();
-			apiParams.put("status", Integer.toString(mStatus));
-			apiParams.put("bid", Integer.toString(mBookingId));
-        	ServerUtils.submit("booking-update", apiParams);
+        	ServerUtils.submitRequest("updateBooking", "status="+mStatus, "bid="+mBookingId);
 			return true;
 		}
 		
