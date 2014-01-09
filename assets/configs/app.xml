@@ -7,7 +7,7 @@
     <api version="0.1">
         <uri>
             <dev>http://10.0.2.2:8888</dev>
-            <prod>http://default-environment-df6t4xdxq7.elasticbeanstalk.com</prod>
+            <prod>http://ikky-phpapp-env.elasticbeanstalk.com/</prod>
         </uri>
         <resource name="getRestaurantList">
             <uri>/restaurant</uri>
