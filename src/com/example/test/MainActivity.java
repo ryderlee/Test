@@ -170,10 +170,14 @@ public class MainActivity extends ActionBarActivity {
 			TextView addressTextView = (TextView) convertView.findViewById(R.id.restaurantResult_addressTextView);
 	    	TextView slotTextView = (TextView) convertView.findViewById(R.id.restaurantResult_slotTextView);
 	    	
+	    	TextView licnoTextView = (TextView) convertView.findViewById(R.id.restaurantResult_licnoTextView);
+	    	
 	    	RestaurantResultItem item = (RestaurantResultItem)this.getItem(position);
 	    	nameTextView.setText(item.ss);
 	    	addressTextView.setText(item.adr);
 	    	convertView.setTag(item.licno);
+	    	
+	    	licnoTextView.setText(item.licno);
 	    	
 	    	PhotoView pv = ((PhotoView) convertView.findViewById(R.id.restaurantResult_thumbnailImageView));
 	    	try{
