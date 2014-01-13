@@ -155,7 +155,7 @@ public class BookingActivity extends Activity {
 		protected Boolean doInBackground(Void... arg0) {
 			try {
 				// Simulate network access.
-				Thread.sleep(400);
+				Thread.sleep(0);
 			} catch (InterruptedException e) {
 				return false;
 			}
