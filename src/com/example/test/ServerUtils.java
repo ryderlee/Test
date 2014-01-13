@@ -51,6 +51,7 @@ public class ServerUtils {
 	}
 	
 	static private String submit(String uri, String method, String body) {
+		Log.d("ServerUtils", String.format("Request Body: %s", body));
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpRequestBase requestBase = null;

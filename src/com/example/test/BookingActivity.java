@@ -166,7 +166,7 @@ public class BookingActivity extends Activity {
 			String noOfParticipant = Integer.toString(SearchData.getInstance().getNumberOfReservation());
 			String specialRequest = mSpecialRequestEditText.getText().toString();
 			
-			String jsonString = ServerUtils.submitRequest("makeBooking", "userID="+userId, "merchantID="+restaurantId, "numberOfParticipant="+noOfParticipant, "datetime"+datetime, "specialRequest="+specialRequest);
+			String jsonString = ServerUtils.submitRequest("makeBooking", "userID="+userId, "merchantID="+restaurantId, "numberOfParticipant="+noOfParticipant, "datetime="+datetime, "specialRequest="+specialRequest);
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				
