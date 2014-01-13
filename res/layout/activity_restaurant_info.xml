@@ -58,6 +58,7 @@
 				            android:background="@drawable/tab_indicator"
 				            android:gravity="center"
 				            android:layout_weight="1"
+				            android:layout_height="20dp"
 				            android:text="Menu" />
 				        <RadioButton
 				            android:id="@+id/infoRadioButton"
@@ -65,7 +66,8 @@
 				            android:button="@null"
 				            android:background="@drawable/tab_indicator"
 				            android:gravity="center"
-				            android:layout_weight="1" 
+				            android:layout_weight="1"
+				            android:layout_height="20dp" 
 				            android:text="Info" />
 				        <RadioButton 
 				            android:id="@+id/reviewsRadioButton"
@@ -74,6 +76,7 @@
 				            android:background="@drawable/tab_indicator"
 				            android:gravity="center"
 				            android:layout_weight="1"
+				            android:layout_height="20dp"
 				            android:text="Reviews" />
 				    </RadioGroup>
 				    

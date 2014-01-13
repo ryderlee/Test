@@ -76,7 +76,8 @@ public class MainActivity extends ActionBarActivity {
 		mListViewFooter.addView(progressFooter);
 
 		mAdapter = new ListViewAdapter<RestaurantResultItem>(this, R.layout.restaurant_search_result_tablerow);
-		mListView = (ListView)this.findViewById(R.id.searchResultListView); 
+		mListView = (ListView)this.findViewById(R.id.searchResultListView);
+		mListView.addFooterView(mListViewFooter);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnScrollListener(new OnScrollListener() {
 			@Override
@@ -222,7 +223,7 @@ public class MainActivity extends ActionBarActivity {
     
     
     public void search(Boolean cleanup) {
-    	if (!mListViewFooter.isShown()) {
+    	if (mListView.getFooterViewsCount() == 0) {
     		mListView.addFooterView(mListViewFooter);
     	}
     	if (mSearchRestaurantTask != null) {
