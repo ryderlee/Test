@@ -16,56 +16,90 @@
         android:icon="@drawable/ic_launcher"
         android:label="ikky"
         android:theme="@style/Theme.AppCompat.Light" >
+        
         <activity
             android:name="com.example.test.MainActivity"
-            android:label="ikky" >
+            android:label="ikky"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name="com.example.test.RestaurantInfoActivity"
             android:label="Information"
+            android:launchMode="singleTop"
             android:parentActivityName="com.example.test.MainActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.test.MainActivity" />
         </activity>
+        
+        <activity
+            android:name="com.example.test.BookingActivity"
+            android:label="Last Step"
+            android:parentActivityName="com.example.test.RestaurantInfoActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.test.RestaurantInfoActivity" />
+        </activity>
+        
+        <activity
+            android:name="com.example.test.UserProfileActivity"
+            android:label="Profile"
+            android:parentActivityName="com.example.test.MainActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.test.MainActivity" />
+        </activity>
+        
         <activity
             android:name="com.example.test.SigninOptionActivity"
+            android:launchMode="singleTop"
             android:label="User" >
         </activity>
+        
         <activity
             android:name="com.example.test.SigninActivity"
             android:label="Signin"
+            android:parentActivityName="com.example.test.SigninOptionActivity"
             android:windowSoftInputMode="adjustResize|stateVisible" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.test.SigninOptionActivity" />
         </activity>
-        <activity
-            android:name="com.example.test.UserProfileActivity"
-            android:label="Profile" >
-        </activity>
-        <activity
-            android:name="com.example.test.BookingActivity"
-            android:label="Last Step" >
-        </activity>
-        <activity
-            android:name="com.example.test.GuestInfoActivity"
-            android:label="Step 2" >
-        </activity>
-        <activity
-            android:name="com.example.test.FullScreenAlbumActivity"
-            android:label="@string/title_activity_full_screen_album"
-            android:theme="@android:style/Theme.Holo.NoActionBar" >
-        </activity>
+        
         <activity
             android:name="com.example.test.SignupActivity"
             android:label="Signup"
+            android:parentActivityName="com.example.test.SigninOptionActivity"
             android:windowSoftInputMode="adjustResize|stateVisible" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.test.SigninOptionActivity" />
         </activity>
+        
+        <activity
+            android:name="com.example.test.GuestInfoActivity"
+            android:label="Step 2"
+            android:parentActivityName="com.example.test.SigninOptionActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.test.SigninOptionActivity" />
+        </activity>
+        
+        
         <receiver android:name=".AlarmReceiver" >
         </receiver>
+        
     </application>
 
 </manifest>

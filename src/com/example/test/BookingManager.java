@@ -55,7 +55,7 @@ public class BookingManager {
 		Intent intent = new Intent();
 		intent.setClass(mActivity, BookingActivity.class);
 		mActivity.startActivity(intent);
-		mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//		mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 	
 	protected void bookAsGuest(int numOfPeople, int timeSlotId) {
@@ -64,7 +64,7 @@ public class BookingManager {
 		Intent intent = new Intent();
 		intent.setClass(mActivity, GuestInfoActivity.class);
 		mActivity.startActivity(intent);
-		mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//		mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 	
 	protected void setBookingInfo(int numOfPeople, int timeSlotId) {
@@ -83,7 +83,7 @@ public class BookingManager {
 		Intent intent = new Intent();
 		intent.setClass(mActivity, BookingActivity.class);
 		mActivity.startActivity(intent);
-		mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//		mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 		mActivity.finish();
 	}
 	
