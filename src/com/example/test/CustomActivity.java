@@ -28,7 +28,7 @@ public class CustomActivity extends ActionBarActivity {
 			public boolean onSingleTapUp(MotionEvent e) {
 				Log.d("CustomActivity", "onSingleTapUp");
 				hideSoftKeyboard();
-				return false;
+				return true;
 			}
 		});
 	    //Set up touch listener for non-text box views to hide keyboard.
