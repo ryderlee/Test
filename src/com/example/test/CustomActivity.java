@@ -11,6 +11,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ListView;
 
 public class CustomActivity extends ActionBarActivity {
 
@@ -28,11 +29,12 @@ public class CustomActivity extends ActionBarActivity {
 			public boolean onSingleTapUp(MotionEvent e) {
 				Log.d("CustomActivity", "onSingleTapUp");
 				hideSoftKeyboard();
-				return true;
+				return false;
 			}
 		});
 	    //Set up touch listener for non-text box views to hide keyboard.
-	    if (!(EditText.class.isInstance(view))) {
+		view.setClickable(true);
+	    if (!EditText.class.isInstance(view)) {
 	    	view.setOnTouchListener(new OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent event) {
@@ -54,7 +56,7 @@ public class CustomActivity extends ActionBarActivity {
 	    }
 
 	    //If a layout container, iterate over children and seed recursion.
-	    if (ViewGroup.class.isInstance(view)) {
+	    if (ViewGroup.class.isInstance(view) && !ListView.class.isInstance(view)) {
 	        for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
 	            View innerView = ((ViewGroup) view).getChildAt(i);
 	            setupUI(innerView);
