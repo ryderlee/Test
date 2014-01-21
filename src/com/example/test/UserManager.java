@@ -30,7 +30,7 @@ public class UserManager {
 			intent.setClass(this.mActivity, SigninOptionActivity.class);
 			intent.putExtra("RESERVE", reserve);
 			this.mActivity.startActivity(intent);
-			this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//			this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 		}
 	}
 	
@@ -57,14 +57,14 @@ public class UserManager {
 		Intent intent = new Intent();
 		intent.setClass(this.mActivity, UserProfileActivity.class);
 		this.mActivity.startActivity(intent);
-		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 	
 	protected void showProfile() {
 		Intent intent = new Intent();
 		intent.setClass(this.mActivity, UserProfileActivity.class);
 		this.mActivity.startActivity(intent);
-		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 	
 	protected void logout() {
@@ -78,7 +78,7 @@ public class UserManager {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		intent.putExtra("ACTION", action);
 		this.mActivity.startActivity(intent);
-		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 	
 }

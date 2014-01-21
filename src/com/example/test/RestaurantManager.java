@@ -29,7 +29,7 @@ public class RestaurantManager {
 		intent.setClass(this.mActivity, RestaurantInfoActivity.class);
 		intent.putExtra("ACTION", "SHOWBOOKING");
 		this.mActivity.startActivity(intent);
-		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 
 	public void displayMiniBlock(View v){
@@ -75,7 +75,7 @@ public class RestaurantManager {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		intent.putExtra("ACTION", action);
 		this.mActivity.startActivity(intent);
-		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//		this.mActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 	
 }
