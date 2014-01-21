@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class SigninOptionActivity extends ActionBarActivity {
+public class SigninOptionActivity extends CustomActivity {
 	
 	Boolean mReserve;
 

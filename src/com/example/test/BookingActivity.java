@@ -27,7 +27,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class BookingActivity extends Activity {
+public class BookingActivity extends CustomActivity {
 	
 //	private EditText mPhoneEditText;
 	private EditText mSpecialRequestEditText;

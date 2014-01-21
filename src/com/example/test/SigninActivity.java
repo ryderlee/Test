@@ -23,7 +23,7 @@ import android.support.v7.app.*;
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class SigninActivity extends ActionBarActivity {
+public class SigninActivity extends CustomActivity {
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */

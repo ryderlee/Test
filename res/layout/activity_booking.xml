@@ -58,26 +58,6 @@
 		        <include layout="@layout/view_booking_info" />
 		    </LinearLayout>
 		
-		    <!-- <TextView
-		        android:id="@+id/phoneTextView"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignLeft="@+id/cancelButton"
-		        android:layout_centerVertical="true"
-		        android:text="Phone number" /> -->
-		    
-		    <!-- <EditText
-		        android:id="@+id/phoneEditText"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignRight="@+id/reserveButton"
-		        android:layout_centerVertical="true"
-		        android:hint="00000000"
-		        android:inputType="number"
-		        android:maxLength="8"
-		        android:gravity="right"
-		        android:ems="8" /> -->
-		
 		    <EditText
 		        android:id="@+id/specialRequestEditText"
 		        android:layout_width="wrap_content"
@@ -86,10 +66,11 @@
 		        android:layout_alignParentRight="true"
 		        android:layout_below="@+id/bookingInfoView"
 		        android:layout_marginTop="60dp"
-		        android:ems="10"
+		        android:inputType="text|textMultiLine"
 		        android:hint="Add a special request"
-		        android:gravity="top"
-		        android:inputType="textMultiLine" />
+		        android:gravity="top" >
+		        <requestFocus />
+	        </EditText>
 	    
 	    </RelativeLayout>
 	    

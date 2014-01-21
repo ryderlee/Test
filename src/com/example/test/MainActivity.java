@@ -24,7 +24,7 @@ import java.util.*;
 
 import android.view.*;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends CustomActivity {
 	
 	private Button mShowSearchButton;
 	private View mSearchView;

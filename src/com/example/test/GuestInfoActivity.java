@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 
-public class GuestInfoActivity extends Activity {
+public class GuestInfoActivity extends CustomActivity {
 
 	private EditText mGuestFirstNameEditText;
 	private EditText mGuestLastNameEditText;

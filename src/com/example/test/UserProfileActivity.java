@@ -27,7 +27,7 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
-public class UserProfileActivity extends ActionBarActivity {
+public class UserProfileActivity extends CustomActivity {
 
 	private RadioGroup mTab;
 	private RadioButton mBookingsRadioButton;
