@@ -70,6 +70,24 @@
         
 	</RelativeLayout>
 	
+		<RelativeLayout
+	    android:id="@+id/mapSearchView"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="5dp"
+	    android:paddingBottom="15dp"
+	    android:background="@drawable/search_view_background"
+	    android:visibility="gone" >
+	</RelativeLayout>
+	
+	<Button
+		android:id="@+id/showMapButton"
+		android:background="@null"
+			android:text="Map"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:onClick="showMapButton_onClick"/>
 	<Button
 		android:id="@+id/showSearchButton"
 		android:background="@null"
@@ -84,5 +102,20 @@
 		    android:layout_height="match_parent"
 		    android:layout_below="@+id/showSearchButton" />
 	
-
+        <LinearLayout
+        android:id="@+id/gmapLinearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:visibility="gone" >
+         <fragment
+          android:id="@+id/gmap"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:name="com.google.android.gms.maps.MapFragment"/>
+		</LinearLayout>
+		
+	   
 </RelativeLayout>

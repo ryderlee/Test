@@ -2,6 +2,10 @@ package com.example.test;
 
 import java.util.Date;
 
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Context;
@@ -19,6 +23,10 @@ import android.support.v7.app.*;
 
 import com.example.test.PhotoView;
 import com.example.test.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.*;
 
@@ -28,11 +36,15 @@ public class MainActivity extends ActionBarActivity {
 	
 	private Button mShowSearchButton;
 	private View mSearchView;
+	private View mMapSearchView;
+	private LinearLayout gmapLinearLayout1;
 	private Button mBookingPickerButton;
 	private BookingPicker mBookingPicker;
 	private EditText mKeywordEditText;
 	private ListView mListView;
 	private LinearLayout mListViewFooter;
+	private GoogleMap googleMap;
+
 	
 	private ListViewAdapter<RestaurantResultItem> mAdapter;
 
@@ -42,9 +54,12 @@ public class MainActivity extends ActionBarActivity {
     private boolean mMoreToLoad;
 	
 	private int mPage;
+	private int mapZoom = 15;
 	private String mKeyword;
 	
 	private final int mPageSize = 10;
+	
+	private LocationManager locationManager;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +69,11 @@ public class MainActivity extends ActionBarActivity {
 	        onNewIntent(getIntent());
         mShowSearchButton = (Button) findViewById(R.id.showSearchButton);
         mSearchView = findViewById(R.id.searchView);
+        mMapSearchView = findViewById(R.id.mapSearchView);
         mBookingPickerButton = (Button) findViewById(R.id.bookingPickerButton);
         mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
         mKeywordEditText = (EditText) findViewById(R.id.keywordEditText);
+        gmapLinearLayout1= (LinearLayout) findViewById(R.id.gmapLinearLayout1);
         
         mBookingPicker.setOnValueChangeListener(new BookingPicker.OnValueChangeListener() {
 			@Override
@@ -89,7 +106,13 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {}
 		});
-		
+		try {
+            // Loading map
+            initilizeMap();
+ 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 		search(true);
 		
 //		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -105,7 +128,19 @@ public class MainActivity extends ActionBarActivity {
         }
         return true;
     }
-    
+    private void initilizeMap() {
+        if (googleMap == null) {
+            googleMap = ((MapFragment) getFragmentManager().findFragmentById( R.id.gmap)).getMap();
+            googleMap.setBuildingsEnabled(true);
+            
+            // check if map is created successfully or not
+            if (googleMap == null) {
+                Toast.makeText(getApplicationContext(),
+                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -196,6 +231,67 @@ public class MainActivity extends ActionBarActivity {
 			return convertView;
 		}
     }
+    
+    /* <!-- for google map--> */
+    
+    public void showMapButton_onClick(View view) {
+    	//mMapSearchView.setVisibility(View.VISIBLE);
+    	gmapLinearLayout1.setVisibility(View.VISIBLE);
+    	getLastLocation();
+    	//mMapSearchView.bringToFront();
+    	
+    }
+    
+    public void getLastLocation(){
+    	locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    	
+    	LocationListener locationListener = new LocationListener() {
+    		   
+    		   @Override
+    		   public void onStatusChanged(String provider, int status, Bundle extras) {
+    		    // TODO Auto-generated method stub
+    		    
+    		   }
+    		   
+    		   @Override
+    		   public void onProviderEnabled(String provider) {
+    		    // TODO Auto-generated method stub
+    		    
+    		   }
+    		   
+    		   @Override
+    		   public void onProviderDisabled(String provider) {
+    		    // TODO Auto-generated method stub
+    		    
+    		   }
+    		   
+    		   @Override
+    		   public void onLocationChanged(Location location) {
+    			   Log.i("map","onLocationChanged");
+    		    // TODO Auto-generated method stub
+    		    double latti = location.getLatitude();
+    		    double longi = location.getLongitude();
+    		    
+    		    
+    		    //text.setText("latti :"+latti+"\n"+"longi :"+longi);
+    		    
+                    setCurrentLocation(latti, longi);
+    		   }
+    		   
+      };
+      Criteria crit = new Criteria();
+      crit.setAccuracy(Criteria.ACCURACY_FINE);
+      locationManager.requestLocationUpdates(locationManager.getBestProvider(crit, false), 0, 1, locationListener);
+      Log.w("map", "listener enabled");
+    	
+    }
+    public void setCurrentLocation(double currLatitude, double currLongitude){
+    	googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currLatitude, currLongitude), 10));
+    	//googleMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+    }
+    
+    /* <!-- /for google map--> */
+    
     
     
     public void showSearchButton_onClick(View view) {
