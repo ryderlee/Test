@@ -20,9 +20,13 @@ public class GuestInfoActivity extends Activity {
 		setContentView(R.layout.activity_guest_info);
 		
 		mGuestFirstNameEditText = (EditText) findViewById(R.id.guestFirstNameEditText);
+		mGuestFirstNameEditText.setText(UserData.getInstance().getFirstName());
 		mGuestLastNameEditText = (EditText) findViewById(R.id.guestLastNameEditText);
+		mGuestLastNameEditText.setText(UserData.getInstance().getLastName());
 		mGuestEmailEditText = (EditText) findViewById(R.id.guestEmailEditText);
+		mGuestEmailEditText.setText(UserData.getInstance().getEmail());
 		mGuestPhoneEditText = (EditText) findViewById(R.id.guestPhoneEditText);
+		mGuestPhoneEditText.setText(UserData.getInstance().getPhone());
 		
 		RestaurantManager.getInstance(this).displayMiniBlock(findViewById(R.id.bookingInfoView));
 	}

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 import org.apache.http.HttpResponse;
@@ -13,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -37,7 +40,11 @@ public class ServerUtils {
 					if (apiResource.getUriParameters().contains(arr[0])) {
 						uri = uri.replace(":"+arr[0], arr[1]);
 					} else {
-						body += keyValuePair+"&";
+						try {
+							body += arr[0]+"="+URLEncoder.encode(arr[1], "UTF8")+"&";
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}

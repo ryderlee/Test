@@ -18,6 +18,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +46,8 @@ public class BookingActivity extends Activity {
 	private View mBookingInfoView;
 	private View mBookingInfoViewComplete;
 	
+	private Boolean mCreateGuestUser;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,13 +64,25 @@ public class BookingActivity extends Activity {
 		mBookingStatusView = findViewById(R.id.bookingStatusView);
 		
 		mBookingSuccessMessage = (TextView) findViewById(R.id.bookingSuccessMessage);
-		mBookingSuccessMessage.setText((UserData.getInstance().isLogin()?UserData.getInstance().getFirstName():BookingManager.getInstance(this).getGuestFirstName())+", you're all set!");
 		
 		mBookingInfoView = (View) findViewById(R.id.bookingInfoView);
 		RestaurantManager.getInstance(this).displayMiniBlock(mBookingInfoView);
 		
 		mBookingInfoViewComplete = (View) findViewById(R.id.bookingInfoViewComplete);
 		RestaurantManager.getInstance(this).displayMiniBlock(mBookingInfoViewComplete);
+
+		BookingManager bm = BookingManager.getInstance(this);
+		UserData ud = UserData.getInstance();
+		mCreateGuestUser = false;
+		if (!ud.isLogin() && (!bm.getGuestEmail().equals(ud.getEmail()) || !bm.getGuestFirstName().equals(ud.getFirstName()) || !bm.getGuestLastName().equals(ud.getLastName()) || !bm.getGuestPhone().equals(ud.getPhone()))) {
+			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+			dialog.setMessage("Guest information is being updated, booking history will be erased once this booking is confirmed, cancel if you wish to keep the history.");
+			dialog.setTitle("Warning");
+			dialog.setPositiveButton("OK", null);
+			dialog.setCancelable(true);
+			dialog.create().show();
+			mCreateGuestUser = true;
+		}
 		
 //		if (UserData.getInstance().isLogin()) {
 //			mPhoneEditText.setText(UserData.getInstance().getPhone());
@@ -95,6 +110,16 @@ public class BookingActivity extends Activity {
 //			mPhoneEditText.requestFocus();
 //			return;
 //		}
+		
+		UserData ud = UserData.getInstance();
+		if (mCreateGuestUser) {
+			BookingManager bm = BookingManager.getInstance(this);
+			ud.setEmail(bm.getGuestEmail());
+			ud.setFirstName(bm.getGuestFirstName());
+			ud.setLastName(bm.getGuestLastName());
+			ud.setPhone(bm.getGuestPhone());
+		}
+		mBookingSuccessMessage.setText(ud.getFirstName()+", you're all set!");
 		
 		showProgress(true);
 		mBookingTask = new BookingTask();
@@ -165,11 +190,19 @@ public class BookingActivity extends Activity {
 			String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(SearchData.getInstance().getChosenDate());
 			String noOfParticipant = Integer.toString(SearchData.getInstance().getNumberOfReservation());
 			String specialRequest = mSpecialRequestEditText.getText().toString();
-			
-			String jsonString = ServerUtils.submitRequest("makeBooking", "userID="+userId, "merchantID="+restaurantId, "numberOfParticipant="+noOfParticipant, "datetime="+datetime, "specialRequest="+specialRequest);
+
+			UserData ud = UserData.getInstance();
+			String jsonString;
+			if (mCreateGuestUser) {
+				jsonString = ServerUtils.submitRequest("makeBooking", "email="+ud.getEmail(), "firstName="+ud.getFirstName(), "lastName="+ud.getLastName(), "phone="+ud.getPhone(), "merchantID="+restaurantId, "numberOfParticipant="+noOfParticipant, "datetime="+datetime, "specialRequest="+specialRequest);
+			} else {
+				jsonString = ServerUtils.submitRequest("makeBooking", "userID="+userId, "merchantID="+restaurantId, "numberOfParticipant="+noOfParticipant, "datetime="+datetime, "specialRequest="+specialRequest);
+			}
 			try {
 				JSONObject json = new JSONObject(jsonString);
-				
+				if (json.getBoolean("result")) {
+					ud.setUserId(json.getJSONObject("values").getString("userID"));
+				}
 				
 				//Start : for notification
 				AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
