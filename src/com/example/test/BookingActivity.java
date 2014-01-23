@@ -16,7 +16,6 @@ import android.provider.CalendarContract.Events;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -108,14 +107,15 @@ public class BookingActivity extends CustomActivity {
 	public void addToCalendarButton_onClick(View view) {
 		Intent intent = new Intent(Intent.ACTION_INSERT);
 		intent.setType("vnd.android.cursor.item/event");
-		intent.putExtra(Events.TITLE, "Reservation at ...");
-		intent.putExtra(Events.EVENT_LOCATION, "BiBo");
+		intent.putExtra(Events.TITLE, "Reservation at " + RestaurantData.getInstance().getRestaurantName());
+		intent.putExtra(Events.EVENT_LOCATION, RestaurantData.getInstance().getRestaurantName());
 		intent.putExtra(Events.DESCRIPTION, "Lunch with ...");
 		intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-		Calendar now = Calendar.getInstance();
-		intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, now.getTimeInMillis());
-		now.add(Calendar.HOUR, 2);
-		intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, now.getTimeInMillis());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(SearchData.getInstance().getChosenDate());
+		intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, cal.getTimeInMillis());
+		cal.add(Calendar.HOUR, 2);
+		intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, cal.getTimeInMillis());
 		intent.setData(CalendarContract.Events.CONTENT_URI);
 		if (intent.resolveActivity(getPackageManager()) != null) {
 		    startActivity(intent);
@@ -125,8 +125,8 @@ public class BookingActivity extends CustomActivity {
 	public void emailFriendsButton_onClick(View view) {
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/html");
-		intent.putExtra(Intent.EXTRA_SUBJECT, "Reservation at ......");
-		intent.putExtra(Intent.EXTRA_TEXT, "Let's eat! I reserved a table for ......");
+		intent.putExtra(Intent.EXTRA_SUBJECT, "Reservation at " + RestaurantData.getInstance().getRestaurantName());
+		intent.putExtra(Intent.EXTRA_TEXT, "Let's eat! I reserved a table for "+SearchData.getInstance().getNumberOfReservation()+"......");
 		
 		if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(Intent.createChooser(intent, "Send Email"));
