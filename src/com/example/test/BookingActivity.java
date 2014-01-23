@@ -46,12 +46,17 @@ public class BookingActivity extends Activity {
 	private View mBookingInfoView;
 	private View mBookingInfoViewComplete;
 	
-	private Boolean mCreateGuestUser;
+	private Boolean mNewSession;
+	
+	private AlertDialog.Builder mAlertBuilder;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_booking);
+		
+		BookingManager bm = BookingManager.getInstance(this);
+		UserData ud = UserData.getInstance();
 		
 //		mPhoneEditText = (EditText) findViewById(R.id.phoneEditText);
 		mSpecialRequestEditText = (EditText) findViewById(R.id.specialRequestEditText);
@@ -64,31 +69,27 @@ public class BookingActivity extends Activity {
 		mBookingStatusView = findViewById(R.id.bookingStatusView);
 		
 		mBookingSuccessMessage = (TextView) findViewById(R.id.bookingSuccessMessage);
+		mBookingSuccessMessage.setText((ud.isLogin()?ud.getFirstName():BookingManager.getInstance(this).getGuestFirstName())+", you're all set!");
 		
 		mBookingInfoView = (View) findViewById(R.id.bookingInfoView);
 		RestaurantManager.getInstance(this).displayMiniBlock(mBookingInfoView);
 		
 		mBookingInfoViewComplete = (View) findViewById(R.id.bookingInfoViewComplete);
 		RestaurantManager.getInstance(this).displayMiniBlock(mBookingInfoViewComplete);
-
-		BookingManager bm = BookingManager.getInstance(this);
-		UserData ud = UserData.getInstance();
-		mCreateGuestUser = false;
-		if (!ud.isLogin() && (!bm.getGuestEmail().equals(ud.getEmail()) || !bm.getGuestFirstName().equals(ud.getFirstName()) || !bm.getGuestLastName().equals(ud.getLastName()) || !bm.getGuestPhone().equals(ud.getPhone()))) {
-			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-			dialog.setMessage("Guest information is being updated, booking history will be erased once this booking is confirmed, cancel if you wish to keep the history.");
-			dialog.setTitle("Warning");
-			dialog.setPositiveButton("OK", null);
-			dialog.setCancelable(true);
-			dialog.create().show();
-			mCreateGuestUser = true;
-		}
 		
-//		if (UserData.getInstance().isLogin()) {
-//			mPhoneEditText.setText(UserData.getInstance().getPhone());
-//		} else {
-//			mPhoneEditText.setText(BookingManager.getInstance(this).getGuestPhone());
-//		}
+		mAlertBuilder = new AlertDialog.Builder(this);
+		
+		mNewSession = false;
+		if (!ud.isLogin() && !ud.getEmail().equals(bm.getGuestEmail())) {
+			mNewSession = true;
+			if (!ud.getEmail().isEmpty()) {
+				mAlertBuilder.setMessage("Email is changed, you can never see your current booking history again once this booking is being submitted, cancel if you want to keep your history.");
+				mAlertBuilder.setTitle("Warning");
+				mAlertBuilder.setPositiveButton("OK", null);
+				mAlertBuilder.setCancelable(true);
+				mAlertBuilder.create().show();
+			}
+		}
 	}
 
 	@Override
@@ -111,15 +112,17 @@ public class BookingActivity extends Activity {
 //			return;
 //		}
 		
-		UserData ud = UserData.getInstance();
-		if (mCreateGuestUser) {
+		if (!UserData.getInstance().isLogin()) {
 			BookingManager bm = BookingManager.getInstance(this);
+			UserData ud = UserData.getInstance();
 			ud.setEmail(bm.getGuestEmail());
 			ud.setFirstName(bm.getGuestFirstName());
 			ud.setLastName(bm.getGuestLastName());
 			ud.setPhone(bm.getGuestPhone());
+			if (mNewSession) {
+				UserData.getInstance().newSessionId();
+			}
 		}
-		mBookingSuccessMessage.setText(ud.getFirstName()+", you're all set!");
 		
 		showProgress(true);
 		mBookingTask = new BookingTask();
@@ -184,94 +187,100 @@ public class BookingActivity extends Activity {
 			} catch (InterruptedException e) {
 				return false;
 			}
-			
+
+			int type = UserData.getInstance().isLogin()?1:2;
 			String userId = UserData.getInstance().isLogin()?UserData.getInstance().getUserId():"0";
+			String email = UserData.getInstance().getEmail();
+			String firstName = UserData.getInstance().getFirstName();
+			String lastName = UserData.getInstance().getLastName();
+			String phone = UserData.getInstance().getPhone();
+			
 			String restaurantId = RestaurantData.getInstance().getRestaurantID();
 			String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(SearchData.getInstance().getChosenDate());
 			String noOfParticipant = Integer.toString(SearchData.getInstance().getNumberOfReservation());
 			String specialRequest = mSpecialRequestEditText.getText().toString();
+			String sessionID = UserData.getInstance().getSessionId();
 
-			UserData ud = UserData.getInstance();
 			String jsonString;
-			if (mCreateGuestUser) {
-				jsonString = ServerUtils.submitRequest("makeBooking", "email="+ud.getEmail(), "firstName="+ud.getFirstName(), "lastName="+ud.getLastName(), "phone="+ud.getPhone(), "merchantID="+restaurantId, "numberOfParticipant="+noOfParticipant, "datetime="+datetime, "specialRequest="+specialRequest);
-			} else {
-				jsonString = ServerUtils.submitRequest("makeBooking", "userID="+userId, "merchantID="+restaurantId, "numberOfParticipant="+noOfParticipant, "datetime="+datetime, "specialRequest="+specialRequest);
-			}
+			jsonString = ServerUtils.submitRequest("makeBooking", "type="+type, "userID="+userId, "email="+email, "firstName="+firstName, "lastName="+lastName, "phone="+phone, "sessionID="+sessionID, "merchantID="+restaurantId, "numberOfParticipant="+noOfParticipant, "datetime="+datetime, "specialRequest="+specialRequest);
 			try {
 				JSONObject json = new JSONObject(jsonString);
+				
 				if (json.getBoolean("result")) {
-					ud.setUserId(json.getJSONObject("values").getString("userID"));
+					//Start : for notification
+					AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+			        
+			        Intent intent = new Intent(CustomApplication.getContext(), AlarmReceiver.class);
+			        intent.putExtra("bookingID", json.getString("bookingID"));
+			        // PendingIntent for AlarmManager 
+			        PendingIntent pendingIntent = PendingIntent.getBroadcast(CustomApplication.getContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT );
+			        // Just in case we have already set up AlarmManager,
+			        // we do cancel.
+			        am.cancel(pendingIntent);
+
+			        //Some simple code to define time of notification:
+			        Calendar cal = Calendar.getInstance();
+			        /* for production
+			        cal.setTime(SearchData.getInstance().getChosenDate());
+			        cal.add(Calendar.MINUTE, -15);
+			        */
+			        /*
+			         * <forTesting>
+			         */
+			        cal.setTime(new Date());
+			        cal.add(Calendar.MINUTE, 1);
+			        /*
+			         * </forTesting>
+			         */
+			        
+			        Date stamp =  cal.getTime();
+			        /*
+			        int pos = notifyTime.indexOf(":");
+			        int hour = Integer.parseInt(notifyTime.substring(0, pos));
+			        int minute = Integer.parseInt(notifyTime.substring(pos+1));
+			        stamp.setHours(hour);
+			        stamp.setMinutes(minute);
+			        stamp.setSeconds(0);
+					*/
+			        
+			        
+			        // In case it's too late notify user today
+			        if(stamp.getTime() < System.currentTimeMillis())
+			            stamp.setTime(stamp.getTime() + AlarmManager.INTERVAL_DAY);
+			                
+			        // Set one-time alarm
+			        am.set(AlarmManager.RTC_WAKEUP, stamp.getTime(), pendingIntent);
+			        Log.i("client notification", "alarm set");
+					
+					return true;
 				}
 				
-				//Start : for notification
-				AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		        
-		        Intent intent = new Intent(CustomApplication.getContext(), AlarmReceiver.class);
-		        intent.putExtra("bookingID", json.getString("bookingID"));
-		        // PendingIntent for AlarmManager 
-		        PendingIntent pendingIntent = PendingIntent.getBroadcast(CustomApplication.getContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT );
-		        // Just in case we have already set up AlarmManager,
-		        // we do cancel.
-		        am.cancel(pendingIntent);
-
-		        //Some simple code to define time of notification:
-		        Calendar cal = Calendar.getInstance();
-		        /* for production
-		        cal.setTime(SearchData.getInstance().getChosenDate());
-		        cal.add(Calendar.MINUTE, -15);
-		        */
-		        /*
-		         * <forTesting>
-		         */
-		        cal.setTime(new Date());
-		        cal.add(Calendar.MINUTE, 1);
-		        /*
-		         * </forTesting>
-		         */
-		        
-		        Date stamp =  cal.getTime();
-		        /*
-		        int pos = notifyTime.indexOf(":");
-		        int hour = Integer.parseInt(notifyTime.substring(0, pos));
-		        int minute = Integer.parseInt(notifyTime.substring(pos+1));
-		        stamp.setHours(hour);
-		        stamp.setMinutes(minute);
-		        stamp.setSeconds(0);
-				*/
-		        
-		        
-		        // In case it's too late notify user today
-		        if(stamp.getTime() < System.currentTimeMillis())
-		            stamp.setTime(stamp.getTime() + AlarmManager.INTERVAL_DAY);
-		                
-		        // Set one-time alarm
-		        am.set(AlarmManager.RTC_WAKEUP, stamp.getTime(), pendingIntent);
-		        Log.i("client notification", "alarm set");
 				
-				
-				
-				
-				
-				
-				return true;
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 			
-			return true;
+			return false;
 		}
 		
 		@Override
 		protected void onPostExecute(final Boolean success) {
-			
-	        
-			mBookingTask = null;
-			showProgress(false);
-			mBookingFormView.setVisibility(success?View.GONE:View.VISIBLE);
-			mBookingCompleteView.setVisibility(success?View.VISIBLE:View.GONE);
-			
-			setTitle("Booking Confirmed");
+			if (success) {
+				mBookingTask = null;
+				showProgress(false);
+				mBookingFormView.setVisibility(success?View.GONE:View.VISIBLE);
+				mBookingCompleteView.setVisibility(success?View.VISIBLE:View.GONE);
+				setTitle("Booking Confirmed");
+			} else {
+				UserData.getInstance().setEmail("");
+				showProgress(false);
+				
+				mAlertBuilder.setMessage("The email has been signed up, please login if you are the user, change the email otherwise.");
+				mAlertBuilder.setTitle("Error");
+				mAlertBuilder.setPositiveButton("OK", null);
+				mAlertBuilder.setCancelable(true);
+				mAlertBuilder.create().show();
+			}
 		}
 
 		@Override

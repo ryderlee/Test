@@ -36,6 +36,7 @@ public class UserManager {
 	
 	protected void loginSuccess(JSONObject userJson) {
 		UserData.getInstance().setLogin(true);
+		UserData.getInstance().newSessionId();
 		try {
 			UserData.getInstance().setUserId(userJson.getString("user_id"));
 			UserData.getInstance().setFirstName(userJson.getString("first_name"));

@@ -47,9 +47,13 @@ public class SignupActivity extends Activity {
 
 		// Set up the login form.
 		mFirstNameView = (EditText) findViewById(R.id.SIGNUP_FIRSTNAME);
+		mFirstNameView.setText(UserData.getInstance().getFirstName());
 		mLastNameView = (EditText) findViewById(R.id.SIGNUP_LASTNAME);
+		mLastNameView.setText(UserData.getInstance().getLastName());
 		mEmailView = (EditText) findViewById(R.id.SIGNUP_EMAIL);
+		mEmailView.setText(UserData.getInstance().getEmail());
 		mPhoneView = (EditText) findViewById(R.id.SIGNUP_PHONE);
+		mPhoneView.setText(UserData.getInstance().getPhone());
 		mPasswordView = (EditText) findViewById(R.id.SIGNUP_PASSWORD);
 		mPasswordConfirmView = (EditText) findViewById(R.id.SIGNUP_PASSWORD_CONFIRM);
 		
