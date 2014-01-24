@@ -1,7 +1,10 @@
 package com.example.test;
 
+import java.util.Calendar;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 public class UserData {
 
@@ -12,6 +15,7 @@ public class UserData {
 	private static final String USERDATA_EMAIL = "com.example.test.USERDATA_EMAIL";
 	private static final String USERDATA_PHONE = "com.example.test.USERDATA_PHONE";
 	private static final String USERDATA_TOKEN = "com.example.test.USERDATA_TOKEN";
+	private static final String USERDATA_SESSIONID = "com.example.test.USERDATA_SESSIONID";
 	
 	private static UserData sInstance;
 	
@@ -81,7 +85,7 @@ public class UserData {
 	}
 	
 	protected void setEmail(String email) {
-		mPrefs.edit().putString(USERDATA_EMAIL, email).commit();
+		mPrefs.edit().putString(USERDATA_EMAIL, email.toLowerCase()).commit();
 	}
 	
 	protected String getPhone() {
@@ -98,6 +102,15 @@ public class UserData {
 	
 	protected void setToken(String token) {
 		mPrefs.edit().putString(USERDATA_TOKEN, token).commit();
+	}
+	
+	protected String getSessionId() {
+		return mPrefs.getString(USERDATA_SESSIONID, "");
+	}
+	
+	protected void newSessionId() {
+		String sessionId = Build.SERIAL+Calendar.getInstance().getTimeInMillis();
+		mPrefs.edit().putString(USERDATA_SESSIONID, sessionId).commit();
 	}
 	
 }
