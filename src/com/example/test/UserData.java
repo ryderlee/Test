@@ -85,7 +85,7 @@ public class UserData {
 	}
 	
 	protected void setEmail(String email) {
-		mPrefs.edit().putString(USERDATA_EMAIL, email).commit();
+		mPrefs.edit().putString(USERDATA_EMAIL, email.toLowerCase()).commit();
 	}
 	
 	protected String getPhone() {

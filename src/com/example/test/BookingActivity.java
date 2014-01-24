@@ -46,17 +46,12 @@ public class BookingActivity extends Activity {
 	private View mBookingInfoView;
 	private View mBookingInfoViewComplete;
 	
-	private Boolean mNewSession;
-	
 	private AlertDialog.Builder mAlertBuilder;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_booking);
-		
-		BookingManager bm = BookingManager.getInstance(this);
-		UserData ud = UserData.getInstance();
 		
 //		mPhoneEditText = (EditText) findViewById(R.id.phoneEditText);
 		mSpecialRequestEditText = (EditText) findViewById(R.id.specialRequestEditText);
@@ -69,7 +64,7 @@ public class BookingActivity extends Activity {
 		mBookingStatusView = findViewById(R.id.bookingStatusView);
 		
 		mBookingSuccessMessage = (TextView) findViewById(R.id.bookingSuccessMessage);
-		mBookingSuccessMessage.setText((ud.isLogin()?ud.getFirstName():BookingManager.getInstance(this).getGuestFirstName())+", you're all set!");
+		mBookingSuccessMessage.setText(UserData.getInstance().getFirstName()+", you're all set!");
 		
 		mBookingInfoView = (View) findViewById(R.id.bookingInfoView);
 		RestaurantManager.getInstance(this).displayMiniBlock(mBookingInfoView);
@@ -78,18 +73,6 @@ public class BookingActivity extends Activity {
 		RestaurantManager.getInstance(this).displayMiniBlock(mBookingInfoViewComplete);
 		
 		mAlertBuilder = new AlertDialog.Builder(this);
-		
-		mNewSession = false;
-		if (!ud.isLogin() && !ud.getEmail().equals(bm.getGuestEmail())) {
-			mNewSession = true;
-			if (!ud.getEmail().isEmpty()) {
-				mAlertBuilder.setMessage("Email is changed, you can never see your current booking history again once this booking is being submitted, cancel if you want to keep your history.");
-				mAlertBuilder.setTitle("Warning");
-				mAlertBuilder.setPositiveButton("OK", null);
-				mAlertBuilder.setCancelable(true);
-				mAlertBuilder.create().show();
-			}
-		}
 	}
 
 	@Override
@@ -111,18 +94,6 @@ public class BookingActivity extends Activity {
 //			mPhoneEditText.requestFocus();
 //			return;
 //		}
-		
-		if (!UserData.getInstance().isLogin()) {
-			BookingManager bm = BookingManager.getInstance(this);
-			UserData ud = UserData.getInstance();
-			ud.setEmail(bm.getGuestEmail());
-			ud.setFirstName(bm.getGuestFirstName());
-			ud.setLastName(bm.getGuestLastName());
-			ud.setPhone(bm.getGuestPhone());
-			if (mNewSession) {
-				UserData.getInstance().newSessionId();
-			}
-		}
 		
 		showProgress(true);
 		mBookingTask = new BookingTask();
@@ -188,7 +159,7 @@ public class BookingActivity extends Activity {
 				return false;
 			}
 
-			int type = UserData.getInstance().isLogin()?1:2;
+			int isGuest = UserData.getInstance().isLogin()?0:1;
 			String userId = UserData.getInstance().isLogin()?UserData.getInstance().getUserId():"0";
 			String email = UserData.getInstance().getEmail();
 			String firstName = UserData.getInstance().getFirstName();
@@ -202,7 +173,7 @@ public class BookingActivity extends Activity {
 			String sessionID = UserData.getInstance().getSessionId();
 
 			String jsonString;
-			jsonString = ServerUtils.submitRequest("makeBooking", "type="+type, "userID="+userId, "email="+email, "firstName="+firstName, "lastName="+lastName, "phone="+phone, "sessionID="+sessionID, "merchantID="+restaurantId, "numberOfParticipant="+noOfParticipant, "datetime="+datetime, "specialRequest="+specialRequest);
+			jsonString = ServerUtils.submitRequest("makeBooking", "isGuest="+isGuest, "userID="+userId, "email="+email, "firstName="+firstName, "lastName="+lastName, "phone="+phone, "sessionID="+sessionID, "merchantID="+restaurantId, "numberOfParticipant="+noOfParticipant, "datetime="+datetime, "specialRequest="+specialRequest);
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				
@@ -272,7 +243,10 @@ public class BookingActivity extends Activity {
 				mBookingCompleteView.setVisibility(success?View.VISIBLE:View.GONE);
 				setTitle("Booking Confirmed");
 			} else {
+				UserData.getInstance().setFirstName("");
+				UserData.getInstance().setLastName("");
 				UserData.getInstance().setEmail("");
+				UserData.getInstance().setPhone("");
 				showProgress(false);
 				
 				mAlertBuilder.setMessage("The email has been signed up, please login if you are the user, change the email otherwise.");

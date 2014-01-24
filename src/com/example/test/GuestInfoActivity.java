@@ -2,6 +2,8 @@ package com.example.test;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
@@ -43,10 +45,12 @@ public class GuestInfoActivity extends Activity {
 	}
 	
 	public void guestNextButton_onClick(View view) {
-		String firstName = mGuestFirstNameEditText.getText().toString();
-		String lastName = mGuestLastNameEditText.getText().toString();
-		String email = mGuestEmailEditText.getText().toString();
-		String phone = mGuestPhoneEditText.getText().toString();
+		final String firstName = mGuestFirstNameEditText.getText().toString();
+		final String lastName = mGuestLastNameEditText.getText().toString();
+		final String email = mGuestEmailEditText.getText().toString();
+		final String phone = mGuestPhoneEditText.getText().toString();
+		final UserData ud = UserData.getInstance();
+		final BookingManager bm = BookingManager.getInstance(this);
 		
 		Boolean valid = true;
 		if (TextUtils.isEmpty(firstName)) {
@@ -76,7 +80,41 @@ public class GuestInfoActivity extends Activity {
 		}
 		
 		if (valid) {
-			BookingManager.getInstance(this).setGuestInfo(firstName, lastName, email, phone);
+			if (UserData.getInstance().getEmail().isEmpty()) {
+				ud.newSessionId();
+				ud.setFirstName(firstName);
+				ud.setLastName(lastName);
+				ud.setEmail(email);
+				ud.setPhone(phone);
+				bm.guestProceed();
+			} else if (!UserData.getInstance().getEmail().equals(email)) {
+				AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+				alertBuilder.setTitle("Warning");
+				alertBuilder.setMessage("Email updated, confirm to proceed?");
+				alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						ud.newSessionId();
+						ud.setFirstName(firstName);
+						ud.setLastName(lastName);
+						ud.setEmail(email);
+						ud.setPhone(phone);
+						bm.guestProceed();
+					}
+				});
+				alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						mGuestEmailEditText.requestFocus();
+					}
+				});
+				alertBuilder.create().show();
+			} else {
+				ud.setFirstName(firstName);
+				ud.setLastName(lastName);
+				ud.setPhone(phone);
+				bm.guestProceed();
+			}
 		}
 	}
 

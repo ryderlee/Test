@@ -12,10 +12,6 @@ public class BookingManager {
 	
 	private int mNumOfPeople;
 	private int mTimeSlotId;
-	private String mFirstName;
-	private String mLastName;
-	private String mEmail;
-	private String mPhone;
 	
 	public static synchronized BookingManager getInstance(Activity mActivity) {
 		if (sInstance == null) {
@@ -23,22 +19,6 @@ public class BookingManager {
 		}
 		sInstance.mActivity = mActivity;
 		return sInstance;
-	}
-	
-	protected String getGuestFirstName() {
-		return mFirstName;
-	}
-	
-	protected String getGuestLastName() {
-		return mLastName;
-	}
-	
-	protected String getGuestEmail() {
-		return mEmail;
-	}
-	
-	protected String getGuestPhone() {
-		return mPhone;
 	}
 	
 	protected int getNumOfPeople() {
@@ -74,12 +54,7 @@ public class BookingManager {
 		mTimeSlotId = timeSlotId;
 	}
 	
-	protected void setGuestInfo(String firstName, String lastName, String email, String phone) {
-		mFirstName = firstName;
-		mLastName = lastName;
-		mEmail = email;
-		mPhone = phone;
-		
+	protected void guestProceed() {
 		Intent intent = new Intent();
 		intent.setClass(mActivity, BookingActivity.class);
 		mActivity.startActivity(intent);
