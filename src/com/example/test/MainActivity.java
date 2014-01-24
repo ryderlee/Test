@@ -45,7 +45,7 @@ public class MainActivity extends ActionBarActivity {
 	private EditText mKeywordEditText;
 	private ListView mListView;
 	private LinearLayout mListViewFooter;
-	private GoogleMap googleMap;
+	private GoogleMap mGoogleMap;
 	private Location location;
 
 	
@@ -112,14 +112,10 @@ public class MainActivity extends ActionBarActivity {
 		try {
             // Loading map
             initilizeMap();
- 
         } catch (Exception e) {
             e.printStackTrace();
         }
 		search(true);
-		
-//		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//        StrictMode.setThreadPolicy(policy);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -132,12 +128,12 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
     private void initilizeMap() {
-        if (googleMap == null) {
-            googleMap = ((MapFragment) getFragmentManager().findFragmentById( R.id.gmap)).getMap();
-            googleMap.setBuildingsEnabled(true);
+        if (mGoogleMap == null) {
+        	mGoogleMap = ((MapFragment) getFragmentManager().findFragmentById( R.id.gmap)).getMap();
+        	mGoogleMap.setBuildingsEnabled(true);
             
             // check if map is created successfully or not
-            if (googleMap == null) {
+            if (mGoogleMap == null) {
                 Toast.makeText(getApplicationContext(),
                         "Sorry! unable to create maps", Toast.LENGTH_SHORT)
                         .show();
@@ -250,11 +246,9 @@ public class MainActivity extends ActionBarActivity {
     	Log.i("map", "showRestaurantsWithinMapRange");
      	SearchRestaurantMapTask mSearchRestaurantMapTask = new SearchRestaurantMapTask();
     	mSearchRestaurantMapTask.execute((Void) null);
-    	
-    	
     }
     public void addMarker(MarkerOptions mo){
-                           this.googleMap.addMarker(mo);
+       mGoogleMap.addMarker(mo);
     }
     public void getLastLocation(){
     	locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -263,40 +257,33 @@ public class MainActivity extends ActionBarActivity {
     		   
     		   @Override
     		   public void onStatusChanged(String provider, int status, Bundle extras) {
-    		    // TODO Auto-generated method stub
-    		    
     		   }
     		   
     		   @Override
     		   public void onProviderEnabled(String provider) {
-    		    // TODO Auto-generated method stub
-    		    
     		   }
     		   
     		   @Override
     		   public void onProviderDisabled(String provider) {
-    		    // TODO Auto-generated method stub
-    		    
     		   }
     		   
     		   @Override
     		   public void onLocationChanged(Location location) {
     			   Log.i("map","onLocationChanged");
-    		    
-                    setCurrentLocation(location);
+                   setCurrentLocation(location);
     		   }
     		   
       };
       Criteria crit = new Criteria();
       crit.setAccuracy(Criteria.ACCURACY_FINE);
       Log.w("map", "listener enabled");
-      locationManager.requestLocationUpdates(locationManager.getBestProvider(crit, false), 0, 1, locationListener);
+      locationManager.requestLocationUpdates(locationManager.getBestProvider(crit, false), 500, 1, locationListener);
       Log.w("map", "listener enabled");
     	
     }
     public void setCurrentLocation(Location l){
     	this.location = l;
-    	googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(l.getLatitude(), l.getLongitude()), 10));
+    	mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(l.getLatitude(), l.getLongitude()), 10));
     }
     
     /* <!-- /for google map--> */
@@ -349,7 +336,7 @@ public class MainActivity extends ActionBarActivity {
     
     private class SearchRestaurantMapTask extends AsyncTask<Void, Void, Boolean> {
 
-    	private ArrayList<RestaurantResultItem> results;
+    	private ArrayList<MarkerOptions> results;
     	
 		@Override
 		protected Boolean doInBackground(Void... params) {
@@ -360,9 +347,9 @@ public class MainActivity extends ActionBarActivity {
 				return false;
 			}
 			
-	    	results = new ArrayList<RestaurantResultItem>();
+	    	results = new ArrayList<MarkerOptions>();
         	
-        	String s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp=1000");
+        	String s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp=10000");
         	Log.d("com.example.test2", "Result: "+s);
 	        try{
 		        JSONArray jsa=new JSONArray(s);
@@ -380,8 +367,8 @@ public class MainActivity extends ActionBarActivity {
 	           			item.img = jo.getString("IMAGE");
 	           			item.rating = 1;
 	           			item.latlng = new LatLng( jo.getDouble("lat_float"), jo.getDouble("lng_float"));
-                        addMarker(new MarkerOptions().position(item.latlng).icon(BitmapDescriptorFactory.defaultMarker()));
-	           			results.add(item);
+	           			Log.d("map", String.format("add marker: %f %f", jo.getDouble("lat_float"), jo.getDouble("lng_float")));
+	           			results.add(new MarkerOptions().position(item.latlng).icon(BitmapDescriptorFactory.defaultMarker()));
 		        }
 	        }
 	        catch(Exception e){
@@ -394,13 +381,8 @@ public class MainActivity extends ActionBarActivity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
-			mSearchRestaurantTask = null;
-			mLoading = false;
-			mListView.removeFooterView(mListViewFooter);
-			if (success) {
-				mAdapter.addAll(results);
-				mAdapter.notifyDataSetChanged();
-			} else {
+			for (MarkerOptions marker : results) {
+				addMarker(marker);
 			}
 		}
 		
@@ -438,6 +420,7 @@ public class MainActivity extends ActionBarActivity {
 	           			item.adr = jo.getString("ADR");
 	           			item.img = jo.getString("IMAGE");
 	           			item.rating = 1;
+	           			results.add(item);
 		        }
 	        }
 	        catch(Exception e){
