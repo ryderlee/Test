@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-public class FullScreenAlbumActivity extends Activity {
+public class FullScreenAlbumActivity extends CustomActivity {
 
 	ViewPager mViewPager;
 	
