@@ -26,7 +26,9 @@ import com.example.test.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.*;
 
@@ -44,6 +46,7 @@ public class MainActivity extends ActionBarActivity {
 	private ListView mListView;
 	private LinearLayout mListViewFooter;
 	private GoogleMap googleMap;
+	private Location location;
 
 	
 	private ListViewAdapter<RestaurantResultItem> mAdapter;
@@ -188,6 +191,7 @@ public class MainActivity extends ActionBarActivity {
     	public String adr;
     	public int rating;
     	public String img;
+    	public LatLng latlng;
     }
     
     private class ListViewAdapter<T> extends ArrayAdapter {
@@ -238,10 +242,20 @@ public class MainActivity extends ActionBarActivity {
     	//mMapSearchView.setVisibility(View.VISIBLE);
     	gmapLinearLayout1.setVisibility(View.VISIBLE);
     	getLastLocation();
+    	this.showRestaurantsWithinMapRange();
     	//mMapSearchView.bringToFront();
     	
     }
-    
+    public void showRestaurantsWithinMapRange(){
+    	Log.i("map", "showRestaurantsWithinMapRange");
+     	SearchRestaurantMapTask mSearchRestaurantMapTask = new SearchRestaurantMapTask();
+    	mSearchRestaurantMapTask.execute((Void) null);
+    	
+    	
+    }
+    public void addMarker(MarkerOptions mo){
+                           this.googleMap.addMarker(mo);
+    }
     public void getLastLocation(){
     	locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     	
@@ -268,26 +282,21 @@ public class MainActivity extends ActionBarActivity {
     		   @Override
     		   public void onLocationChanged(Location location) {
     			   Log.i("map","onLocationChanged");
-    		    // TODO Auto-generated method stub
-    		    double latti = location.getLatitude();
-    		    double longi = location.getLongitude();
     		    
-    		    
-    		    //text.setText("latti :"+latti+"\n"+"longi :"+longi);
-    		    
-                    setCurrentLocation(latti, longi);
+                    setCurrentLocation(location);
     		   }
     		   
       };
       Criteria crit = new Criteria();
       crit.setAccuracy(Criteria.ACCURACY_FINE);
+      Log.w("map", "listener enabled");
       locationManager.requestLocationUpdates(locationManager.getBestProvider(crit, false), 0, 1, locationListener);
       Log.w("map", "listener enabled");
     	
     }
-    public void setCurrentLocation(double currLatitude, double currLongitude){
-    	googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currLatitude, currLongitude), 10));
-    	//googleMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+    public void setCurrentLocation(Location l){
+    	this.location = l;
+    	googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(l.getLatitude(), l.getLongitude()), 10));
     }
     
     /* <!-- /for google map--> */
@@ -338,6 +347,65 @@ public class MainActivity extends ActionBarActivity {
     	mSearchRestaurantTask.execute((Void) null);
     }
     
+    private class SearchRestaurantMapTask extends AsyncTask<Void, Void, Boolean> {
+
+    	private ArrayList<RestaurantResultItem> results;
+    	
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			try {
+				// Simulate network access.
+				Thread.sleep(0);
+			} catch (InterruptedException e) {
+				return false;
+			}
+			
+	    	results = new ArrayList<RestaurantResultItem>();
+        	
+        	String s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp=1000");
+        	Log.d("com.example.test2", "Result: "+s);
+	        try{
+		        JSONArray jsa=new JSONArray(s);
+		        if (jsa.length() == 0 || jsa.length() < mPageSize) {
+		        	mMoreToLoad = false;
+		        }
+	            for(int i=0;i<jsa.length();i++) {
+	               		JSONObject jo=(JSONObject)jsa.get(i);
+	               		RestaurantResultItem item = new RestaurantResultItem();
+	               		item.licno = jo.getString("LICNO");
+	               		item.type = jo.getString("TYPE");
+	           			item.dist = jo.getString("DIST");
+	           			item.ss = jo.getString("SS");
+	           			item.adr = jo.getString("ADR");
+	           			item.img = jo.getString("IMAGE");
+	           			item.rating = 1;
+	           			item.latlng = new LatLng( jo.getDouble("lat_float"), jo.getDouble("lng_float"));
+                        addMarker(new MarkerOptions().position(item.latlng).icon(BitmapDescriptorFactory.defaultMarker()));
+	           			results.add(item);
+		        }
+	        }
+	        catch(Exception e){
+	        	Log.d("exception", e.getMessage());
+	        }
+			
+			return true;
+		}
+		
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			mSearchRestaurantTask = null;
+			mLoading = false;
+			mListView.removeFooterView(mListViewFooter);
+			if (success) {
+				mAdapter.addAll(results);
+				mAdapter.notifyDataSetChanged();
+			} else {
+			}
+		}
+		
+	}
+    
     private class SearchRestaurantTask extends AsyncTask<Void, Void, Boolean> {
 
     	private ArrayList<RestaurantResultItem> results;
@@ -370,7 +438,6 @@ public class MainActivity extends ActionBarActivity {
 	           			item.adr = jo.getString("ADR");
 	           			item.img = jo.getString("IMAGE");
 	           			item.rating = 1;
-	           			results.add(item);
 		        }
 	        }
 	        catch(Exception e){
