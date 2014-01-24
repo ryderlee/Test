@@ -1,6 +1,7 @@
 package com.example.test;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -109,7 +110,7 @@ public class UserData {
 	}
 	
 	protected void newSessionId() {
-		String sessionId = Build.SERIAL+Calendar.getInstance().getTimeInMillis();
+		String sessionId = UUID.randomUUID().toString();
 		mPrefs.edit().putString(USERDATA_SESSIONID, sessionId).commit();
 	}
 	
