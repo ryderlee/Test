@@ -2,14 +2,14 @@ package com.example.test;
 
 import java.util.Date;
 
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
-import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.LinearLayout.LayoutParams;
@@ -23,8 +23,15 @@ import android.support.v7.app.*;
 
 import com.example.test.PhotoView;
 import com.example.test.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -36,18 +43,20 @@ import android.view.*;
 
 public class MainActivity extends ActionBarActivity {
 	
+	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private static final int MILLISECONDS_PER_SECOND = 1000;
+    public static final int UPDATE_INTERVAL_IN_SECONDS = 5;
+    private static final long UPDATE_INTERVAL = MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
+    private static final int FASTEST_INTERVAL_IN_SECONDS = 1;
+    private static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
+	
 	private Button mShowSearchButton;
 	private View mSearchView;
-	private View mMapSearchView;
-	private LinearLayout gmapLinearLayout1;
 	private Button mBookingPickerButton;
 	private BookingPicker mBookingPicker;
 	private EditText mKeywordEditText;
 	private ListView mListView;
 	private LinearLayout mListViewFooter;
-	private GoogleMap mGoogleMap;
-	private Location location;
-
 	
 	private ListViewAdapter<RestaurantResultItem> mAdapter;
 
@@ -57,26 +66,34 @@ public class MainActivity extends ActionBarActivity {
     private boolean mMoreToLoad;
 	
 	private int mPage;
-	private int mapZoom = 15;
 	private String mKeyword;
 	
-	private final int mPageSize = 10;
+	private final int mPageSize = 100;
 	
-	private LocationManager locationManager;
+	private boolean mIsListView;
+	
+	private int mDistance = 5;
+	private LinearLayout mGoogleMapContainer;
+	private GoogleMap mGoogleMap;
+	private LocationClient mLocationClient;
+	private LocationRequest mLocationRequest;
+	private LocationListener mLocationListener;
+	private Location mTargetLocation;
+	private Location mCurrentLocation;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(getIntent() != null)
-	        onNewIntent(getIntent());
+        
+        mIsListView = true;
+        
         mShowSearchButton = (Button) findViewById(R.id.showSearchButton);
         mSearchView = findViewById(R.id.searchView);
-        mMapSearchView = findViewById(R.id.mapSearchView);
         mBookingPickerButton = (Button) findViewById(R.id.bookingPickerButton);
         mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
         mKeywordEditText = (EditText) findViewById(R.id.keywordEditText);
-        gmapLinearLayout1= (LinearLayout) findViewById(R.id.gmapLinearLayout1);
+        mGoogleMapContainer= (LinearLayout) findViewById(R.id.googleMapContainer);
         
         mBookingPicker.setOnValueChangeListener(new BookingPicker.OnValueChangeListener() {
 			@Override
@@ -109,14 +126,88 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {}
 		});
+		
 		try {
-            // Loading map
-            initilizeMap();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-		search(true);
+			initLocationServices();
+		} catch (Exception e) {
+		}
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mLocationClient.connect();
+    }
+    @Override
+    protected void onStop() {
+    	if (mLocationClient.isConnected()) {
+    		mLocationClient.removeLocationUpdates(mLocationListener);
+        }
+        mLocationClient.disconnect();
+        super.onStop();
+    }
+    private void initLocationServices() {
+    	mLocationRequest = LocationRequest.create();
+		mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+		mLocationRequest.setInterval(UPDATE_INTERVAL);
+		mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+    	mLocationListener = new LocationListener() {
+			@Override
+			public void onLocationChanged(Location location) {
+				Log.v("MainActivity", "Location Changed: "+mCurrentLocation+" to "+location);
+				mCurrentLocation = location;
+				mTargetLocation = mCurrentLocation; 
+			}
+		};
+    	
+    	mLocationClient = new LocationClient(this, new ConnectionCallbacks() {
+			@Override
+			public void onDisconnected() {
+			}
+			@Override
+			public void onConnected(Bundle connectionHint) {
+				mLocationClient.requestLocationUpdates(mLocationRequest, mLocationListener);
+				search(true);
+			}
+		}, new OnConnectionFailedListener() {
+			@Override
+			public void onConnectionFailed(ConnectionResult connectionResult) {
+				/*
+		         * Google Play services can resolve some errors it detects.
+		         * If the error has a resolution, try sending an Intent to
+		         * start a Google Play services activity that can resolve
+		         * error.
+		         */
+		        if (connectionResult.hasResolution()) {
+		            try {
+		                // Start an Activity that tries to resolve the error
+		                connectionResult.startResolutionForResult(MainActivity.this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+		                /*
+		                 * Thrown if Google Play services canceled the original
+		                 * PendingIntent
+		                 */
+		            } catch (IntentSender.SendIntentException e) {
+		                // Log the error
+		                e.printStackTrace();
+		            }
+		        }
+			}
+		});
+		mCurrentLocation = mLocationClient.getLastLocation();
+		mTargetLocation = mCurrentLocation;
+		
+		mGoogleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.gmap)).getMap();
+    	mGoogleMap.setBuildingsEnabled(true);
+    	mGoogleMap.setMyLocationEnabled(true);
+    	mGoogleMap.setOnMapLoadedCallback(new OnMapLoadedCallback() {
+			@Override
+			public void onMapLoaded() {
+				Log.v("MainActivity", "onMapLoaded");
+				Location lastLocation = mLocationClient.getLastLocation();
+				mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 15));
+			}
+		});
+    }
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         // same as using a normal menu
@@ -124,26 +215,21 @@ public class MainActivity extends ActionBarActivity {
         case R.id.action_user:
         	UserManager.getInstance(this).login(false);
             break;
+        case R.id.action_switch_view:
+        	switchView();
+        	break;
         }
         return true;
     }
-    private void initilizeMap() {
-        if (mGoogleMap == null) {
-        	mGoogleMap = ((MapFragment) getFragmentManager().findFragmentById( R.id.gmap)).getMap();
-        	mGoogleMap.setBuildingsEnabled(true);
-            
-            // check if map is created successfully or not
-            if (mGoogleMap == null) {
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
-                        .show();
-            }
-        }
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem item = menu.add(Menu.NONE, R.id.action_switch_view, Menu.NONE, "");
+        item.setIcon(mIsListView?R.drawable.ic_action_locate:R.drawable.ic_action_paste);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        
         return true;
     }
     
@@ -176,8 +262,31 @@ public class MainActivity extends ActionBarActivity {
     	}
     	return super.onKeyDown(keyCode, event);
     }
-    
 
+    
+    public void switchView() {
+    	mIsListView = !mIsListView;
+    	/*if (!mIsListView) {
+    		AnimatorSet flipRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_right_out);
+    		AnimatorSet flipRightIn = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_right_in);
+    		flipRightOut.setTarget(mListView);
+//    		flipRightIn.setTarget(mGoogleMapContainer);
+    		flipRightOut.start();
+//    		flipRightIn.start();
+    		mGoogleMapContainer.setVisibility(View.VISIBLE);
+    	} else {
+    		AnimatorSet flipLeftOut = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_left_out);
+    		AnimatorSet flipLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_left_in);
+//    		flipLeftOut.setTarget(mGoogleMapContainer);
+    		flipLeftIn.setTarget(mListView);
+//    		flipLeftOut.start();
+    		flipLeftIn.start();
+    		mGoogleMapContainer.setVisibility(View.GONE);
+    	}*/
+		mListView.setVisibility(mIsListView?View.VISIBLE:View.GONE);
+		mGoogleMapContainer.setVisibility(mIsListView?View.GONE:View.VISIBLE);
+    	invalidateOptionsMenu();
+    }
     
     private class RestaurantResultItem {
     	public String licno;
@@ -232,62 +341,6 @@ public class MainActivity extends ActionBarActivity {
 		}
     }
     
-    /* <!-- for google map--> */
-    
-    public void showMapButton_onClick(View view) {
-    	//mMapSearchView.setVisibility(View.VISIBLE);
-    	gmapLinearLayout1.setVisibility(View.VISIBLE);
-    	getLastLocation();
-    	this.showRestaurantsWithinMapRange();
-    	//mMapSearchView.bringToFront();
-    	
-    }
-    public void showRestaurantsWithinMapRange(){
-    	Log.i("map", "showRestaurantsWithinMapRange");
-     	SearchRestaurantMapTask mSearchRestaurantMapTask = new SearchRestaurantMapTask();
-    	mSearchRestaurantMapTask.execute((Void) null);
-    }
-    public void addMarker(MarkerOptions mo){
-       mGoogleMap.addMarker(mo);
-    }
-    public void getLastLocation(){
-    	locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    	
-    	LocationListener locationListener = new LocationListener() {
-    		   
-    		   @Override
-    		   public void onStatusChanged(String provider, int status, Bundle extras) {
-    		   }
-    		   
-    		   @Override
-    		   public void onProviderEnabled(String provider) {
-    		   }
-    		   
-    		   @Override
-    		   public void onProviderDisabled(String provider) {
-    		   }
-    		   
-    		   @Override
-    		   public void onLocationChanged(Location location) {
-    			   Log.i("map","onLocationChanged");
-                   setCurrentLocation(location);
-    		   }
-    		   
-      };
-      Criteria crit = new Criteria();
-      crit.setAccuracy(Criteria.ACCURACY_FINE);
-      Log.w("map", "listener enabled");
-      locationManager.requestLocationUpdates(locationManager.getBestProvider(crit, false), 500, 1, locationListener);
-      Log.w("map", "listener enabled");
-    	
-    }
-    public void setCurrentLocation(Location l){
-    	this.location = l;
-    	mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(l.getLatitude(), l.getLongitude()), 10));
-    }
-    
-    /* <!-- /for google map--> */
-    
     
     
     public void showSearchButton_onClick(View view) {
@@ -324,6 +377,9 @@ public class MainActivity extends ActionBarActivity {
     	if (cleanup) {
     		mPage = 0;
     		mMoreToLoad = true;
+//    		if (mGoogleMap != null) {
+//    			mGoogleMap.clear();
+//    		}
         	mAdapter.clear();
         	mAdapter.notifyDataSetChanged();
     	} else {
@@ -333,60 +389,6 @@ public class MainActivity extends ActionBarActivity {
     	mSearchRestaurantTask = new SearchRestaurantTask();
     	mSearchRestaurantTask.execute((Void) null);
     }
-    
-    private class SearchRestaurantMapTask extends AsyncTask<Void, Void, Boolean> {
-
-    	private ArrayList<MarkerOptions> results;
-    	
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			try {
-				// Simulate network access.
-				Thread.sleep(0);
-			} catch (InterruptedException e) {
-				return false;
-			}
-			
-	    	results = new ArrayList<MarkerOptions>();
-        	
-        	String s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp=10000");
-        	Log.d("com.example.test2", "Result: "+s);
-	        try{
-		        JSONArray jsa=new JSONArray(s);
-		        if (jsa.length() == 0 || jsa.length() < mPageSize) {
-		        	mMoreToLoad = false;
-		        }
-	            for(int i=0;i<jsa.length();i++) {
-	               		JSONObject jo=(JSONObject)jsa.get(i);
-	               		RestaurantResultItem item = new RestaurantResultItem();
-	               		item.licno = jo.getString("LICNO");
-	               		item.type = jo.getString("TYPE");
-	           			item.dist = jo.getString("DIST");
-	           			item.ss = jo.getString("SS");
-	           			item.adr = jo.getString("ADR");
-	           			item.img = jo.getString("IMAGE");
-	           			item.rating = 1;
-	           			item.latlng = new LatLng( jo.getDouble("lat_float"), jo.getDouble("lng_float"));
-	           			Log.d("map", String.format("add marker: %f %f", jo.getDouble("lat_float"), jo.getDouble("lng_float")));
-	           			results.add(new MarkerOptions().position(item.latlng).icon(BitmapDescriptorFactory.defaultMarker()));
-		        }
-	        }
-	        catch(Exception e){
-	        	Log.d("exception", e.getMessage());
-	        }
-			
-			return true;
-		}
-		
-
-		@Override
-		protected void onPostExecute(final Boolean success) {
-			for (MarkerOptions marker : results) {
-				addMarker(marker);
-			}
-		}
-		
-	}
     
     private class SearchRestaurantTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -402,8 +404,13 @@ public class MainActivity extends ActionBarActivity {
 			}
 			
 	    	results = new ArrayList<RestaurantResultItem>();
-        	
-        	String s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword);
+
+	    	String s = "";
+	    	if (mGoogleMap != null) {
+	    		s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude());
+	    	} else {
+	    		s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize);
+	    	}
         	Log.d("com.example.test", "Result: "+s);
 	        try{
 		        JSONArray jsa=new JSONArray(s);
@@ -420,13 +427,13 @@ public class MainActivity extends ActionBarActivity {
 	           			item.adr = jo.getString("ADR");
 	           			item.img = jo.getString("IMAGE");
 	           			item.rating = 1;
+	           			item.latlng = new LatLng( jo.getDouble("lat_float"), jo.getDouble("lng_float"));
 	           			results.add(item);
 		        }
 	        }
 	        catch(Exception e){
 	        	Log.d("exception", e.getMessage());
 	        }
-			
 			return true;
 		}
 		
@@ -437,6 +444,12 @@ public class MainActivity extends ActionBarActivity {
 			mLoading = false;
 			mListView.removeFooterView(mListViewFooter);
 			if (success) {
+				if (mGoogleMap != null) {
+					for (RestaurantResultItem item : results) {
+						MarkerOptions marker = new MarkerOptions().position(item.latlng).icon(BitmapDescriptorFactory.defaultMarker());
+						mGoogleMap.addMarker(marker);
+					}
+				}
 				mAdapter.addAll(results);
 				mAdapter.notifyDataSetChanged();
 			} else {
