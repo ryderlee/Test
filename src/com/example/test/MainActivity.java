@@ -25,7 +25,6 @@ import org.json.*;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.*;
 
 import com.example.test.PhotoView;
 import com.example.test.R;
@@ -183,12 +182,12 @@ public class MainActivity extends CustomActivity {
 		}
     }
     @Override
-    protected void onStart() {
+	public void onStart() {
         super.onStart();
         mLocationClient.connect();
     }
     @Override
-    protected void onStop() {
+    public void onStop() {
         mLocationClient.disconnect();
         super.onStop();
     }

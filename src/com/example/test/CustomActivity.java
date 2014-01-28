@@ -1,5 +1,7 @@
 package com.example.test;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -24,6 +26,7 @@ public class CustomActivity extends ActionBarActivity {
 	}
 	
 	public void setupUI(View view) {
+		
 		final GestureDetector detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
 			@Override
 			public boolean onSingleTapUp(MotionEvent e) {
@@ -32,8 +35,9 @@ public class CustomActivity extends ActionBarActivity {
 				return false;
 			}
 		});
+		
 	    //Set up touch listener for non-text box views to hide keyboard.
-		view.setClickable(true);
+//		view.setClickable(true);
 	    if (!EditText.class.isInstance(view)) {
 	    	view.setOnTouchListener(new OnTouchListener() {
 				@Override
@@ -43,7 +47,7 @@ public class CustomActivity extends ActionBarActivity {
 					return false;
 				}
 	    	});
-	    } else {
+	    } else if (EditText.class.isInstance(view)) {
 	    	view.setOnFocusChangeListener(new OnFocusChangeListener() {
 				@Override
 				public void onFocusChange(View view, boolean hasFocus) {
