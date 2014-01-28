@@ -69,6 +69,7 @@ public class MainActivity extends CustomActivity {
 	private int mListViewVisibleThreshold = 0;
     private boolean mLoading;
     private boolean mMoreToLoad;
+    private boolean mInitSearch;
 	
 	private int mPage;
 	private String mKeyword;
@@ -92,6 +93,7 @@ public class MainActivity extends CustomActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        mInitSearch = true;
         mIsListView = true;
         mCanSwitchView = true;
         
@@ -198,8 +200,10 @@ public class MainActivity extends CustomActivity {
 			}
 			@Override
 			public void onConnected(Bundle connectionHint) {
-				mTargetLocation = mLocationClient.getLastLocation();
-				search(true);
+				if (mInitSearch) {
+					mInitSearch = false;
+					search(true);
+				}
 			}
 		}, new OnConnectionFailedListener() {
 			@Override
@@ -449,6 +453,7 @@ public class MainActivity extends CustomActivity {
     
     
     public void search(Boolean cleanup) {
+    	mTargetLocation = mLocationClient.getLastLocation();
     	if (mListView.getFooterViewsCount() == 0) {
     		mListView.addFooterView(mListViewFooter);
     	}
