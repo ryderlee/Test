@@ -9,7 +9,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:paddingTop="5dp"
-	    android:paddingBottom="15dp"
+	    android:paddingBottom="5dp"
 	    android:background="@drawable/search_view_background"
 	    android:visibility="gone" >
 	    
@@ -68,6 +68,34 @@
             android:maxLines="1"
             android:singleLine="true" />
         
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_below="@+id/keywordEditText" >
+            
+            <TextView
+	            android:id="@+id/distanceText"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:paddingLeft="10dp"
+	            android:textSize="16sp"
+	            android:text="Distance: " />
+	        
+	        <TextView
+	            android:id="@+id/distanceValueText"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="16sp" />
+	        
+	        <SeekBar 
+	            android:id="@+id/distanceSeekBar"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" />
+	        
+        </LinearLayout>
+        
 	</RelativeLayout>
 	
 	<Button
@@ -76,13 +104,51 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
-		android:onClick="showSearchButton_onClick"/>
+		android:onClick="showSearchButton_onClick" />
+	
+	<ImageButton
+        android:id="@+id/switchViewButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="10dp"
+        android:onClick="switchView" />
 	
 	<ListView
-			android:id="@+id/searchResultListView"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:layout_below="@+id/showSearchButton" />
+		android:id="@+id/searchResultListView"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_below="@+id/showSearchButton" />
 	
-
+	<RelativeLayout
+	    android:id="@+id/googleMapContainer"
+        android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_below="@+id/showSearchButton"
+	    android:visibility="gone" >
+        
+	    <fragment
+			android:id="@+id/googleMap"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_above="@+id/miniInfoPager"
+			android:name="com.google.android.gms.maps.MapFragment"/>
+	    
+	    <Button
+	        android:id="@+id/searchHereButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_above="@+id/miniInfoPager"
+	        android:layout_marginBottom="30dp"
+	        android:text="Search here" />
+	    
+	    <android.support.v4.view.ViewPager
+	        android:id="@+id/miniInfoPager"
+	        android:layout_width="match_parent"
+	        android:layout_height="80dp"
+	        android:layout_alignParentBottom="true" />
+		
+	</RelativeLayout>
+	
 </RelativeLayout>
