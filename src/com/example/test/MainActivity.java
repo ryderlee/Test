@@ -39,6 +39,7 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -84,6 +85,7 @@ public class MainActivity extends CustomActivity {
 	private GoogleMap mGoogleMap;
 	private LocationClient mLocationClient;
 	private Location mTargetLocation;
+	private LatLngBounds mLatLngBounds;
 	private Marker mSelectedMarker;
 	
 	private ViewPager mViewPager;
@@ -451,8 +453,16 @@ public class MainActivity extends CustomActivity {
     	mBookingPicker.setVisibility(mBookingPicker.isShown()?View.GONE:View.VISIBLE);
     }
     
-    
+    public void searchHere(View view) {
+    	mLatLngBounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+    	search(true, true);
+    }
+
     public void search(Boolean cleanup) {
+    	search(cleanup, false);
+    }
+    
+    public void search(Boolean cleanup, Boolean visibleArea) {
     	mTargetLocation = mLocationClient.getLastLocation();
     	if (mListView.getFooterViewsCount() == 0) {
     		mListView.addFooterView(mListViewFooter);
@@ -475,13 +485,18 @@ public class MainActivity extends CustomActivity {
     		mPage++;
     	}
     	mLoading = true;
-    	mSearchRestaurantTask = new SearchRestaurantTask();
+    	mSearchRestaurantTask = new SearchRestaurantTask(visibleArea);
     	mSearchRestaurantTask.execute((Void) null);
     }
     
     private class SearchRestaurantTask extends AsyncTask<Void, Void, Boolean> {
 
     	private ArrayList<RestaurantResultItem> results;
+    	private Boolean mVisibleArea;
+    	
+    	public SearchRestaurantTask(Boolean visibleArea) {
+    		mVisibleArea = visibleArea;
+    	}
     	
 		@Override
 		protected Boolean doInBackground(Void... params) {
@@ -496,7 +511,11 @@ public class MainActivity extends CustomActivity {
 
 	    	String s = "";
 	    	if (mGoogleMap != null) {
-	    		s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude());
+	    		if (mVisibleArea) {
+	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "latmin="+mLatLngBounds.southwest.latitude, "lngmin="+mLatLngBounds.southwest.longitude, "latmax="+mLatLngBounds.northeast.latitude, "lngmax="+mLatLngBounds.northeast.longitude);
+	    		} else {
+	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude());
+	    		}
 	    	} else {
 	    		s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize);
 	    	}
