@@ -1,7 +1,5 @@
 package com.example.test;
 
-import com.google.android.gms.maps.GoogleMap;
-
 import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -19,7 +17,7 @@ public class CustomActivity extends ActionBarActivity {
 
 	@Override
 	public void onStart() {
-		Log.d("CustomActivity", "onStart");
+//		Log.d("CustomActivity", "onStart");
 		super.onStart();
 		getWindow().getDecorView().findViewById(android.R.id.content).setFocusableInTouchMode(true);
 		setupUI(getWindow().getDecorView().findViewById(android.R.id.content));
@@ -30,7 +28,7 @@ public class CustomActivity extends ActionBarActivity {
 		final GestureDetector detector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
 			@Override
 			public boolean onSingleTapUp(MotionEvent e) {
-				Log.d("CustomActivity", "onSingleTapUp");
+//				Log.d("CustomActivity", "onSingleTapUp");
 				hideSoftKeyboard();
 				return false;
 			}
@@ -42,7 +40,7 @@ public class CustomActivity extends ActionBarActivity {
 	    	view.setOnTouchListener(new OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent event) {
-					Log.d("CustomActivity", "MotionEvent: "+event+" | View: "+view);
+//					Log.d("CustomActivity", "MotionEvent: "+event+" | View: "+view);
 					detector.onTouchEvent(event);
 					return false;
 				}
@@ -51,7 +49,7 @@ public class CustomActivity extends ActionBarActivity {
 	    	view.setOnFocusChangeListener(new OnFocusChangeListener() {
 				@Override
 				public void onFocusChange(View view, boolean hasFocus) {
-					Log.d("CustomActivity", "OnFocusChange hasFocus: "+hasFocus);
+//					Log.d("CustomActivity", "OnFocusChange hasFocus: "+hasFocus);
 					if (hasFocus) {
 						showSoftKeyboard();
 					}
@@ -69,20 +67,20 @@ public class CustomActivity extends ActionBarActivity {
 	}
 	
 	public void hideSoftKeyboard() {
-		Log.d("CustomActivity", "Try to hide keyboard");
+//		Log.d("CustomActivity", "Try to hide keyboard");
 		getWindow().getDecorView().findViewById(android.R.id.content).requestFocus();
 	    InputMethodManager imm = (InputMethodManager)  this.getSystemService(Activity.INPUT_METHOD_SERVICE);
 	    if (imm != null && this.getCurrentFocus() != null) {
-	    	Log.d("CustomActivity", "Hide Keyboard");
+//	    	Log.d("CustomActivity", "Hide Keyboard");
 	    	imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
 	    }
 	}
 	
 	public void showSoftKeyboard() {
-		Log.d("CustomActivity", "Try to show keyboard");
+//		Log.d("CustomActivity", "Try to show keyboard");
 		InputMethodManager imm = (InputMethodManager)  this.getSystemService(Activity.INPUT_METHOD_SERVICE);
 	    if (imm != null) {
-	    	Log.d("CustomActivity", "Show Keyboard");
+//	    	Log.d("CustomActivity", "Show Keyboard");
 	    	imm.showSoftInput(this.getCurrentFocus(), 0);
 	    }
 	}
