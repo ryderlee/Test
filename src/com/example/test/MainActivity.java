@@ -85,7 +85,10 @@ public class MainActivity extends CustomActivity {
 	private GoogleMap mGoogleMap;
 	private LocationClient mLocationClient;
 	private Location mTargetLocation;
-	private LatLngBounds mLatLngBounds;
+	private double mMinLat;
+	private double mMinLng;
+	private double mMaxLat;
+	private double mMaxLng;
 	private Marker mSelectedMarker;
 	
 	private ViewPager mViewPager;
@@ -164,6 +167,7 @@ public class MainActivity extends CustomActivity {
 		
 		mMiniInfoAdapter = new MiniInfoAdapter();
     	mViewPager = (ViewPager) findViewById(R.id.miniInfoPager);
+    	mViewPager.setOffscreenPageLimit(5);
 		mViewPager.setAdapter(mMiniInfoAdapter);
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
@@ -245,10 +249,9 @@ public class MainActivity extends CustomActivity {
     	mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 			@Override
 			public boolean onMarkerClick(Marker marker) {
-				Log.d("MainActivity", "Markers");
 				highlightMarker(marker);
 				mViewPager.setCurrentItem(mResultMarkers.indexOf(marker));
-				return false;
+				return true;
 			}
 		});
     }
@@ -260,12 +263,12 @@ public class MainActivity extends CustomActivity {
 		mSelectedMarker = marker;
     }
     private void moveToMarker(Marker marker) {
-    	LatLng latLng = marker.getPosition();
-    	mGoogleMap.stopAnimation();
-//    	mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), mGoogleMap.getCameraPosition().zoom));
-		mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), mGoogleMap.getCameraPosition().zoom));
-//    	CameraPosition position = new CameraPosition.Builder().target(latLng).zoom().build();
-//    	mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+    	LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+    	LatLng markerLatLng = marker.getPosition();
+    	if (!bounds.contains(markerLatLng)) {
+			mGoogleMap.stopAnimation();
+			mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(markerLatLng.latitude, markerLatLng.longitude), mGoogleMap.getCameraPosition().zoom));
+    	}
     }
     
     @Override
@@ -454,7 +457,11 @@ public class MainActivity extends CustomActivity {
     }
     
     public void searchHere(View view) {
-    	mLatLngBounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+    	LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+    	mMinLat = bounds.northeast.latitude<bounds.southwest.latitude?bounds.northeast.latitude:bounds.southwest.latitude;
+    	mMaxLat = bounds.northeast.latitude>bounds.southwest.latitude?bounds.northeast.latitude:bounds.southwest.latitude;
+    	mMinLng = bounds.northeast.longitude<bounds.southwest.longitude?bounds.northeast.longitude:bounds.southwest.longitude;
+    	mMaxLng = bounds.northeast.longitude>bounds.southwest.longitude?bounds.northeast.longitude:bounds.southwest.longitude;
     	search(true, true);
     }
 
@@ -512,7 +519,7 @@ public class MainActivity extends CustomActivity {
 	    	String s = "";
 	    	if (mGoogleMap != null) {
 	    		if (mVisibleArea) {
-	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "latmin="+mLatLngBounds.southwest.latitude, "lngmin="+mLatLngBounds.southwest.longitude, "latmax="+mLatLngBounds.northeast.latitude, "lngmax="+mLatLngBounds.northeast.longitude);
+	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "latmin="+mMinLat, "lngmin="+mMinLng, "latmax="+mMaxLat, "lngmax="+mMaxLng);
 	    		} else {
 	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude());
 	    		}

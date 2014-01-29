@@ -116,6 +116,7 @@ public class RestaurantInfoActivity extends CustomActivity {
         mRadioGroup.check(R.id.infoRadioButton);
         
         mViewPager = (ViewPager) findViewById(R.id.fullScreenAlbumPager);
+        mViewPager.setOffscreenPageLimit(3);
 		FullScreenAlbumAdapter adapter = new FullScreenAlbumAdapter();
 		mViewPager.setAdapter(adapter);
 		
