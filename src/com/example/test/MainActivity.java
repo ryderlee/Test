@@ -568,9 +568,12 @@ public class MainActivity extends CustomActivity {
 				mAdapter.addAll(results);
 				mAdapter.notifyDataSetChanged();
 				mMiniInfoAdapter.notifyDataSetChanged();
-				highlightMarker(mResultMarkers.get(0));
-				if (!mVisibleArea) {
-					moveToMarker(mResultMarkers.get(0));
+				if (results.size() > 0) {
+					mViewPager.setCurrentItem(0);
+					highlightMarker(mResultMarkers.get(0));
+					if (!mVisibleArea) {
+						moveToMarker(mResultMarkers.get(0));
+					}
 				}
 			} else {
 			}
