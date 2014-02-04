@@ -39,6 +39,7 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -84,6 +85,10 @@ public class MainActivity extends CustomActivity {
 	private GoogleMap mGoogleMap;
 	private LocationClient mLocationClient;
 	private Location mTargetLocation;
+	private double mMinLat;
+	private double mMinLng;
+	private double mMaxLat;
+	private double mMaxLng;
 	private Marker mSelectedMarker;
 	
 	private ViewPager mViewPager;
@@ -162,6 +167,7 @@ public class MainActivity extends CustomActivity {
 		
 		mMiniInfoAdapter = new MiniInfoAdapter();
     	mViewPager = (ViewPager) findViewById(R.id.miniInfoPager);
+    	mViewPager.setOffscreenPageLimit(5);
 		mViewPager.setAdapter(mMiniInfoAdapter);
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
@@ -243,10 +249,9 @@ public class MainActivity extends CustomActivity {
     	mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 			@Override
 			public boolean onMarkerClick(Marker marker) {
-				Log.d("MainActivity", "Markers");
 				highlightMarker(marker);
 				mViewPager.setCurrentItem(mResultMarkers.indexOf(marker));
-				return false;
+				return true;
 			}
 		});
     }
@@ -258,12 +263,12 @@ public class MainActivity extends CustomActivity {
 		mSelectedMarker = marker;
     }
     private void moveToMarker(Marker marker) {
-    	LatLng latLng = marker.getPosition();
-    	mGoogleMap.stopAnimation();
-//    	mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), mGoogleMap.getCameraPosition().zoom));
-		mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), mGoogleMap.getCameraPosition().zoom));
-//    	CameraPosition position = new CameraPosition.Builder().target(latLng).zoom().build();
-//    	mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+    	LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+    	LatLng markerLatLng = marker.getPosition();
+    	if (!bounds.contains(markerLatLng)) {
+			mGoogleMap.stopAnimation();
+			mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(markerLatLng.latitude, markerLatLng.longitude), mGoogleMap.getCameraPosition().zoom));
+    	}
     }
     
     @Override
@@ -451,8 +456,20 @@ public class MainActivity extends CustomActivity {
     	mBookingPicker.setVisibility(mBookingPicker.isShown()?View.GONE:View.VISIBLE);
     }
     
-    
+    public void searchHere(View view) {
+    	LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+    	mMinLat = bounds.northeast.latitude<bounds.southwest.latitude?bounds.northeast.latitude:bounds.southwest.latitude;
+    	mMaxLat = bounds.northeast.latitude>bounds.southwest.latitude?bounds.northeast.latitude:bounds.southwest.latitude;
+    	mMinLng = bounds.northeast.longitude<bounds.southwest.longitude?bounds.northeast.longitude:bounds.southwest.longitude;
+    	mMaxLng = bounds.northeast.longitude>bounds.southwest.longitude?bounds.northeast.longitude:bounds.southwest.longitude;
+    	search(true, true);
+    }
+
     public void search(Boolean cleanup) {
+    	search(cleanup, false);
+    }
+    
+    public void search(Boolean cleanup, Boolean visibleArea) {
     	mTargetLocation = mLocationClient.getLastLocation();
     	if (mListView.getFooterViewsCount() == 0) {
     		mListView.addFooterView(mListViewFooter);
@@ -475,13 +492,18 @@ public class MainActivity extends CustomActivity {
     		mPage++;
     	}
     	mLoading = true;
-    	mSearchRestaurantTask = new SearchRestaurantTask();
+    	mSearchRestaurantTask = new SearchRestaurantTask(visibleArea);
     	mSearchRestaurantTask.execute((Void) null);
     }
     
     private class SearchRestaurantTask extends AsyncTask<Void, Void, Boolean> {
 
     	private ArrayList<RestaurantResultItem> results;
+    	private Boolean mVisibleArea;
+    	
+    	public SearchRestaurantTask(Boolean visibleArea) {
+    		mVisibleArea = visibleArea;
+    	}
     	
 		@Override
 		protected Boolean doInBackground(Void... params) {
@@ -496,7 +518,11 @@ public class MainActivity extends CustomActivity {
 
 	    	String s = "";
 	    	if (mGoogleMap != null) {
-	    		s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude());
+	    		if (mVisibleArea) {
+	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "latmin="+mMinLat, "lngmin="+mMinLng, "latmax="+mMaxLat, "lngmax="+mMaxLng);
+	    		} else {
+	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude());
+	    		}
 	    	} else {
 	    		s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize);
 	    	}
@@ -542,8 +568,13 @@ public class MainActivity extends CustomActivity {
 				mAdapter.addAll(results);
 				mAdapter.notifyDataSetChanged();
 				mMiniInfoAdapter.notifyDataSetChanged();
-				highlightMarker(mResultMarkers.get(0));
-				moveToMarker(mResultMarkers.get(0));
+				if (results.size() > 0) {
+					mViewPager.setCurrentItem(0);
+					highlightMarker(mResultMarkers.get(0));
+					if (!mVisibleArea) {
+						moveToMarker(mResultMarkers.get(0));
+					}
+				}
 			} else {
 			}
 		}
