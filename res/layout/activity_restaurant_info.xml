@@ -106,7 +106,7 @@
 				        android:textSize="14sp"
 				        android:gravity="left|center_vertical"
 				        android:onClick="pickerButton_onClick" />
-				    <com.example.test.BookingPicker
+				    <com.ikky.ui.BookingPicker
 				    	android:id="@+id/bookingPicker"
 				    	android:layout_width="match_parent"
 				    	android:layout_height="wrap_content"

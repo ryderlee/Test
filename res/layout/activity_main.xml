@@ -52,7 +52,7 @@
 			android:layout_below="@+id/searchButton"
 			android:onClick="bookingPickerButton_onClick" />
 		
-        <com.example.test.BookingPicker
+        <com.ikky.ui.BookingPicker
             android:id="@+id/bookingPicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

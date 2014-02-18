@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.test"
+    package="com.ikky.activities"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -24,7 +24,7 @@
         android:required="true" />
 
     <application
-        android:name="com.example.test.CustomApplication"
+        android:name="com.ikky.base.BaseApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="ikky"
@@ -34,7 +34,7 @@
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAvkAY39w-20RwGuU8MCR2Q5MmNasNKtS4" />
         
         <activity
-            android:name="com.example.test.MainActivity"
+            android:name="com.ikky.activities.MainActivity"
             android:label="ikky"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" >
@@ -46,82 +46,85 @@
         </activity>
         
         <activity
-            android:name="com.example.test.RestaurantInfoActivity"
+            android:name="com.ikky.activities.RestaurantInfoActivity"
             android:label="Information"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
-            android:parentActivityName="com.example.test.MainActivity" >
+            android:parentActivityName="com.ikky.activities.MainActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.test.MainActivity" />
+                android:value="com.ikky.activities.MainActivity" />
         </activity>
         
         <activity
-            android:name="com.example.test.BookingActivity"
+            android:name="com.ikky.activities.BookingActivity"
             android:label="Last Step"
             android:screenOrientation="portrait"
-            android:parentActivityName="com.example.test.RestaurantInfoActivity" >
+       		android:parentActivityName="com.ikky.activities.RestaurantInfoActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.test.RestaurantInfoActivity" />
+                android:value="com.ikky.activities.RestaurantInfoActivity" />
         </activity>
         
         <activity
-            android:name="com.example.test.UserProfileActivity"
+            android:name="com.ikky.activities.UserProfileActivity"
             android:label="Profile"
             android:screenOrientation="portrait"
-            android:parentActivityName="com.example.test.MainActivity" >
+            android:parentActivityName="com.ikky.activities.MainActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.test.MainActivity" />
+                android:value="com.ikky.activities.MainActivity" />
         </activity>
         
         <activity
-            android:name="com.example.test.SigninOptionActivity"
+            android:name="com.ikky.activities.SigninOptionActivity"
             android:label="User"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" >
         </activity>
         
         <activity
-            android:name="com.example.test.SigninActivity"
+            android:name="com.ikky.activities.SigninActivity"
             android:label="Signin"
             android:screenOrientation="portrait"
-            android:parentActivityName="com.example.test.SigninOptionActivity" >
+            android:parentActivityName="com.ikky.activities.SigninOptionActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.test.SigninOptionActivity" />
+                android:value="com.ikky.activities.SigninOptionActivity" />
         </activity>
         
         <activity
-            android:name="com.example.test.SignupActivity"
+            android:name="com.ikky.activities.SignupActivity"
             android:label="Signup"
             android:screenOrientation="portrait"
-            android:parentActivityName="com.example.test.SigninOptionActivity" >
+       		android:parentActivityName="com.ikky.activities.SigninOptionActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.test.SigninOptionActivity" />
+                android:value="com.ikky.activities.GuestInfoActivity" />
         </activity>
         
         <activity
-            android:name="com.example.test.GuestInfoActivity"
+            android:name="com.ikky.activities.GuestInfoActivity"
             android:label="Step 2"
             android:screenOrientation="portrait"
-            android:parentActivityName="com.example.test.SigninOptionActivity" >
+       		android:parentActivityName="com.ikky.activities.SigninOptionActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.test.SigninOptionActivity" />
+                android:value="com.ikky.activities.SigninOptionActivity" />
         </activity>
         
         
-        <receiver android:name=".AlarmReceiver" >
+        <receiver android:name="com.ikky.receivers.AlarmReceiver" >
         </receiver>
+        
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
+        <activity android:label="@string/app_name" android:name="com.facebook.LoginActivity"></activity>
         
     </application>
 

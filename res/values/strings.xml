@@ -11,5 +11,6 @@
     <string name="title_activity_booking">BookingActivity</string>
     <string name="title_activity_guest_info">GuestInfoActivity</string>
     <string name="title_activity_full_screen_album">FullScreenAlbumActivity</string>
+    <string name="app_id">631125780264586</string>
 
 </resources>
