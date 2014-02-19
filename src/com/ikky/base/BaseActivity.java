@@ -25,7 +25,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class BaseActivity extends ActionBarActivity {
-
+	
 	private Session.StatusCallback fbStatusCallback = new Session.StatusCallback() {
 	    @Override
 	    public void call(Session session, SessionState state, Exception exception) {
@@ -81,27 +81,19 @@ public class BaseActivity extends ActionBarActivity {
 	    if (state.isOpened()) {
 	        Log.i("FacebookLogin", "Logged in...");
 	        Log.v("FacebookLogin", String.format("Token: %s, Expire: %s", session.getAccessToken(), session.getExpirationDate()));
+	        final Boolean initialLogin = UserData.getInstance().getFbToken().isEmpty();
 	        this.fbOnLogin();
-	        if (UserData.getInstance().getFbToken().isEmpty() || UserData.getInstance().isUpdateFbData()) {
+	        if (initialLogin || UserData.getInstance().isUpdateFbData()) {
 		        Request.newMeRequest(session, new GraphUserCallback() {
 					@Override
 					public void onCompleted(GraphUser user, Response response) {
 						Log.v("FacebookLogin", "My information: "+user);
 						if (UserData.getInstance().setFbData(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), session.getAccessToken(), Long.toString(session.getExpirationDate().getTime()/1000))) {
-//							String jsonString = ServerUtils.submitRequest("fbLogin", "email="+user.getProperty("email"), "fbId="+user.getId(), "username="+user.getUsername(), "firstName="+user.getFirstName(), "lastName="+user.getLastName(), "token="+session.getAccessToken(), "expireTs="+Long.toString(session.getExpirationDate().getTime()/1000));
-//							JSONObject json;
-//							try {
-//								json = new JSONObject(jsonString);
-//								if (json.getBoolean("result")) {
-//									// Update user id
-//								} else {
-//									session.closeAndClearTokenInformation();
-//									UserData.getInstance().clearFbData();
-//								}
-//							} catch (JSONException e) {
-//								e.printStackTrace();
-//							}
-							Log.i("FacebookLogin", "Submit Facebook information to server");
+							if (initialLogin) {
+								fbOnUserInfoCallback(user.getProperty("email").toString(), user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), session.getAccessToken(), Long.toString(session.getExpirationDate().getTime()/1000));
+							} else {
+								// TODO: Send updated info to server
+							}
 						}
 					}
 				}).executeAsync();
@@ -111,9 +103,11 @@ public class BaseActivity extends ActionBarActivity {
 	        UserData.getInstance().clearFbData();
 	    }
 	}
-	
-	// Override this to hide login with facebook layout
+
+	// Override these to hide login with facebook layout
 	protected void fbOnLogin() {
+	}
+	protected void fbOnUserInfoCallback(String email, String fbId, String username, String firstName, String lastName, String token, String expireTs) {
 	}
 	
 

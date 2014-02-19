@@ -42,8 +42,8 @@
             <method>PUT</method>
         </resource>
         <resource name="fbLogin">
-            <uri>/users/fb</uri>
-            <method>PUT</method>
+            <uri>/users/sn/:snId</uri>
+            <method>POST</method>
         </resource>
     </api>
 </configs>

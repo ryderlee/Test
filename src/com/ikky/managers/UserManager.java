@@ -3,6 +3,7 @@ package com.ikky.managers;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.facebook.Session;
 import com.ikky.activities.SigninOptionActivity;
 import com.ikky.activities.UserProfileActivity;
 import com.ikky.constants.Constants;
@@ -71,6 +72,8 @@ public class UserManager {
 	
 	public void logout() {
 		UserData.getInstance().clearAll();
+		UserData.getInstance().clearFbData();
+		Session.getActiveSession().closeAndClearTokenInformation();
 		this.backToTopActivity(Constants.ACTION_LOGOUT);
 	}
 	
