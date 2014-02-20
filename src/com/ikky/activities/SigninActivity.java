@@ -191,7 +191,7 @@ public class SigninActivity extends BaseActivity {
 	
 	public void loginDone() {
 		try {
-			if (!mUserJson.getString("access_token").isEmpty()) {
+			if (!mUserJson.isNull("access_token") && !mUserJson.getString("access_token").isEmpty()) {
 				Session.openActiveSessionWithAccessToken(this, AccessToken.createFromExistingAccessToken(mUserJson.getString("access_token"), null, null, null, null), this.fbStatusCallback);
 			} else {
 				UserManager.getInstance(this).loginSuccess(mUserJson);

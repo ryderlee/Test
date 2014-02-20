@@ -205,7 +205,6 @@ public class SigninOptionActivity extends BaseActivity {
 					return true;
 				}
 			} catch (JSONException e) {
-				Session.getActiveSession().closeAndClearTokenInformation();
 			}
 			
 			return false;

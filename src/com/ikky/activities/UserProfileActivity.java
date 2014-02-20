@@ -5,17 +5,26 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.facebook.Session;
+import com.facebook.widget.LoginButton;
 import com.ikky.activities.R;
+import com.ikky.activities.SigninOptionActivity.FbLoginTask;
 import com.ikky.base.BaseActivity;
 import com.ikky.helpers.ServerUtils;
 import com.ikky.helpers.Utils;
 import com.ikky.managers.UserData;
 import com.ikky.managers.UserManager;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -30,6 +39,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
@@ -41,21 +51,33 @@ public class UserProfileActivity extends BaseActivity {
 	private ProgressBar mProgressBar;
 	private TextView mEmptyTextView;
 	
+	private FbLoginTask mFbLoginTask = null;
+	
+	private LoginButton mFbLoginButton;
+	
 	private ArrayAdapter<BookingItem> mAdapter;
 	
 	private BookingListTask mBookingListTask = null;
 	private BookingUpdateTask mBookingUpdateTask = null;
+	
+	private View mLoginStatusView;
+	private View mProfileView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_profile);
 		
+		mLoginStatusView = findViewById(R.id.login_status);
+		mProfileView = findViewById(R.id.profileView);
+		
 		mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 		mEmptyTextView = (TextView) findViewById(R.id.emptyTextView);
 		
 		TextView usernameTextView = (TextView) findViewById(R.id.usernameTextView);
 		usernameTextView.setText(UserData.getInstance().getFullName());
+		
+		mFbLoginButton = (LoginButton) findViewById(R.id.fbSigninButton);
 		
 		mAdapter = new BookingListAdapter<BookingItem>(this, R.id.bookingsListView);
 		mBookingListView = (ListView) findViewById(R.id.bookingsListView);
@@ -148,6 +170,61 @@ public class UserProfileActivity extends BaseActivity {
 		public int noOfParticipants;
 		public Date bookingDate;
 		public int status;
+	}
+	
+	@Override
+	protected void fbOnLogin() {
+		mFbLoginButton.setVisibility(View.GONE);
+		if (UserData.getInstance().getFbToken().isEmpty()) {
+			this.showProgress(true);
+		}
+	}
+	
+	/**
+	 * Shows the progress UI and hides the login form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	private void showProgress(final boolean show) {
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs to fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			int shortAnimTime = getResources().getInteger(
+					android.R.integer.config_shortAnimTime);
+
+			mLoginStatusView.setVisibility(View.VISIBLE);
+			mLoginStatusView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mLoginStatusView.setVisibility(show ? View.VISIBLE
+									: View.GONE);
+						}
+					});
+
+			mProfileView.setVisibility(View.VISIBLE);
+			mProfileView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 0 : 1)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mProfileView.setVisibility(show ? View.GONE
+									: View.VISIBLE);
+						}
+					});
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.
+			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mProfileView.setVisibility(show ? View.GONE : View.VISIBLE);
+		}
+	}
+	
+	@Override
+	protected void fbOnUserInfoCallback(String email, String fbId, String username, String firstName, String lastName, String token, String expireTs) {
+		mFbLoginTask = new FbLoginTask(email, fbId, username, firstName, lastName, token, expireTs);
+		mFbLoginTask.execute((Void) null);
 	}
 	
 	private class BookingListAdapter<T> extends ArrayAdapter<T> {
@@ -270,6 +347,70 @@ public class UserProfileActivity extends BaseActivity {
 				loadBookings();
 			} else {
 			}
+		}
+	}
+	
+	public class FbLoginTask extends AsyncTask<Void, Void, Boolean> {
+		
+		String mEmail;
+		String mFbId;
+		String mUsername;
+		String mFirstName;
+		String mLastName;
+		String mToken;
+		String mExpireTs;
+		
+		public FbLoginTask(String email, String fbId, String username, String firstName, String lastName, String token, String expireTs) {
+			mEmail = email;
+			mFbId = fbId;
+			mUsername = username;
+			mFirstName = firstName;
+			mLastName = lastName;
+			mToken = token;
+			mExpireTs = expireTs;
+		}
+		
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				// Simulate network access.
+				Thread.sleep(0);
+			} catch (InterruptedException e) {
+				return false;
+			}
+			
+        	String jsonString = ServerUtils.submitRequest("fbLogin", "snId=1", "userId="+UserData.getInstance().getUserId(), "email="+mEmail, "snUserId="+mFbId, "username="+mUsername, "firstName="+mFirstName, "lastName="+mLastName, "token="+mToken, "expireTs="+mExpireTs);
+        	JSONObject json;
+			try {
+				json = new JSONObject(jsonString);
+				if (json.getBoolean("result")) {
+					return true;
+				}
+			} catch (JSONException e) {
+			}
+			
+			return false;
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			mFbLoginTask = null;
+
+			if (!success) {
+				mFbLoginButton.setVisibility(View.VISIBLE);
+				Session.getActiveSession().closeAndClearTokenInformation();
+				UserData.getInstance().clearFbData();
+				Toast.makeText(getApplicationContext(), "Login with Facebook failed", Toast.LENGTH_LONG).show();
+			}
+			showProgress(false);
+		}
+
+		@Override
+		protected void onCancelled() {
+			mFbLoginTask = null;
+			showProgress(false);
 		}
 	}
 }
