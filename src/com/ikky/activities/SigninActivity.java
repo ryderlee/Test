@@ -3,6 +3,8 @@ package com.ikky.activities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.facebook.AccessToken;
+import com.facebook.Session;
 import com.ikky.activities.R;
 import com.ikky.base.BaseActivity;
 import com.ikky.helpers.ServerUtils;
@@ -32,6 +34,7 @@ public class SigninActivity extends BaseActivity {
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
 	private UserLoginTask mAuthTask = null;
+	private JSONObject mUserJson;
 
 	// Values for email and password at the time of the login attempt.
 	private String mEmail;
@@ -186,9 +189,25 @@ public class SigninActivity extends BaseActivity {
 		}
 	}
 	
-	public void loginDone(JSONObject userJson) {
-		UserManager.getInstance(this).loginSuccess(userJson);
+	public void loginDone() {
+		try {
+			if (!mUserJson.getString("access_token").isEmpty()) {
+				Session.openActiveSessionWithAccessToken(this, AccessToken.createFromExistingAccessToken(mUserJson.getString("access_token"), null, null, null, null), this.fbStatusCallback);
+			} else {
+				UserManager.getInstance(this).loginSuccess(mUserJson);
+			}
+		} catch (JSONException e) {
+			UserManager.getInstance(this).loginSuccess(mUserJson);
+			e.printStackTrace();
+		}
 	}
+	
+	@Override
+	protected void fbOnUserInfoCallback() {
+		UserManager.getInstance(this).loginSuccess(mUserJson);
+	}
+	
+	
 
 	/**
 	 * Represents an asynchronous login/registration task used to authenticate
@@ -196,12 +215,8 @@ public class SigninActivity extends BaseActivity {
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		
-		private JSONObject userJson;
-		
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-
 			try {
 				// Simulate network access.
 				Thread.sleep(0);
@@ -214,7 +229,7 @@ public class SigninActivity extends BaseActivity {
 			try {
 				jso = new JSONObject(jsonString);
 				if (jso.getBoolean("result")) {
-					userJson = jso.getJSONObject("user");
+					mUserJson = jso.getJSONObject("user");
 					return true;
 				}
 			} catch (JSONException e) {
@@ -230,7 +245,7 @@ public class SigninActivity extends BaseActivity {
 
 			if (success) {
 				//finish();
-				loginDone(userJson);
+				loginDone();
 			} else {
 				showProgress(false);
 				mPasswordView.setError(getString(R.string.error_incorrect_password));

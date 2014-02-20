@@ -26,7 +26,7 @@ import android.widget.ListView;
 
 public class BaseActivity extends ActionBarActivity {
 	
-	private Session.StatusCallback fbStatusCallback = new Session.StatusCallback() {
+	protected Session.StatusCallback fbStatusCallback = new Session.StatusCallback() {
 	    @Override
 	    public void call(Session session, SessionState state, Exception exception) {
 	        fbOnSessionStateChange(session, state, exception);
@@ -88,13 +88,16 @@ public class BaseActivity extends ActionBarActivity {
 					@Override
 					public void onCompleted(GraphUser user, Response response) {
 						Log.v("FacebookLogin", "My information: "+user);
-						if (UserData.getInstance().setFbData(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), session.getAccessToken(), Long.toString(session.getExpirationDate().getTime()/1000))) {
-							if (initialLogin) {
-								fbOnUserInfoCallback(user.getProperty("email").toString(), user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), session.getAccessToken(), Long.toString(session.getExpirationDate().getTime()/1000));
-							} else {
-								// TODO: Send updated info to server
+						if (user != null) {
+							if (UserData.getInstance().setFbData(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), session.getAccessToken(), Long.toString(session.getExpirationDate().getTime()/1000))) {
+								if (initialLogin) {
+									fbOnUserInfoCallback(user.getProperty("email").toString(), user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), session.getAccessToken(), Long.toString(session.getExpirationDate().getTime()/1000));
+								} else {
+									// TODO: Send updated info to server
+								}
 							}
 						}
+						fbOnUserInfoCallback();
 					}
 				}).executeAsync();
 	        }
@@ -106,6 +109,8 @@ public class BaseActivity extends ActionBarActivity {
 
 	// Override these to hide login with facebook layout
 	protected void fbOnLogin() {
+	}
+	protected void fbOnUserInfoCallback() {
 	}
 	protected void fbOnUserInfoCallback(String email, String fbId, String username, String firstName, String lastName, String token, String expireTs) {
 	}
