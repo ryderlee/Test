@@ -32,6 +32,7 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -40,7 +41,7 @@ import android.widget.TextView;
 
 public class BookingActivity extends BaseActivity {
 	
-//	private EditText mPhoneEditText;
+	private EditText mPhoneEditText;
 	private EditText mSpecialRequestEditText;
 	
 	private View mBookingView;
@@ -63,7 +64,8 @@ public class BookingActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_booking);
 		
-//		mPhoneEditText = (EditText) findViewById(R.id.phoneEditText);
+		mPhoneEditText = (EditText) findViewById(R.id.phoneEditText);
+		mPhoneEditText.setText(UserData.getInstance().getPhone());
 		mSpecialRequestEditText = (EditText) findViewById(R.id.specialRequestEditText);
 		
 		mBookingView = findViewById(R.id.bookingView);
@@ -97,13 +99,15 @@ public class BookingActivity extends BaseActivity {
 	}
 	
 	public void reserveButton_onClick(View view) {
-//		String phoneNumber = mPhoneEditText.getText().toString();
-//		// Check for a valid phone.
-//		if (TextUtils.isEmpty(phoneNumber) || phoneNumber.length() < 8) {
-//			mPhoneEditText.setError(TextUtils.isEmpty(phoneNumber)?getString(R.string.error_field_required):"Please enter a valid phone");
-//			mPhoneEditText.requestFocus();
-//			return;
-//		}
+		String phoneNumber = mPhoneEditText.getText().toString();
+		// Check for a valid phone.
+		if (TextUtils.isEmpty(phoneNumber) || phoneNumber.length() < 8) {
+			mPhoneEditText.setError(TextUtils.isEmpty(phoneNumber)?getString(R.string.error_field_required):"Please enter a valid phone");
+			mPhoneEditText.requestFocus();
+			return;
+		}
+		
+		UserData.getInstance().setPhone(phoneNumber);
 		
 		showProgress(true);
 		mBookingTask = new BookingTask();
