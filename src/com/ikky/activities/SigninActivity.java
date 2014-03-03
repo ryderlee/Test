@@ -203,7 +203,7 @@ public class SigninActivity extends BaseActivity {
 	}
 	
 	@Override
-	protected void fbOnUserInfoCallback() {
+	protected void fbOnUserInfoRequestComplete() {
 		UserManager.getInstance(this).loginSuccess(mUserJson);
 	}
 	

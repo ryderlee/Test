@@ -173,7 +173,7 @@ public class UserProfileActivity extends BaseActivity {
 	}
 	
 	@Override
-	protected void fbOnLogin() {
+	protected void fbOnSessionOpened() {
 		mFbLoginButton.setVisibility(View.GONE);
 		if (UserData.getInstance().getFbToken().isEmpty()) {
 			this.showProgress(true);

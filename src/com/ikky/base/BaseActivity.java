@@ -82,7 +82,7 @@ public class BaseActivity extends ActionBarActivity {
 	        Log.i("FacebookLogin", "Logged in...");
 	        Log.v("FacebookLogin", String.format("Token: %s, Expire: %s", session.getAccessToken(), session.getExpirationDate()));
 	        final Boolean initialLogin = UserData.getInstance().getFbToken().isEmpty();
-	        this.fbOnLogin();
+	        fbOnSessionOpened();
 	        if (initialLogin || UserData.getInstance().isUpdateFbData()) {
 		        Request.newMeRequest(session, new GraphUserCallback() {
 					@Override
@@ -97,7 +97,7 @@ public class BaseActivity extends ActionBarActivity {
 								}
 							}
 						}
-						fbOnUserInfoCallback();
+						fbOnUserInfoRequestComplete();
 					}
 				}).executeAsync();
 	        }
@@ -108,9 +108,9 @@ public class BaseActivity extends ActionBarActivity {
 	}
 
 	// Override these to hide login with facebook layout
-	protected void fbOnLogin() {
+	protected void fbOnSessionOpened() {
 	}
-	protected void fbOnUserInfoCallback() {
+	protected void fbOnUserInfoRequestComplete() {
 	}
 	protected void fbOnUserInfoCallback(String email, String fbId, String username, String firstName, String lastName, String token, String expireTs) {
 	}

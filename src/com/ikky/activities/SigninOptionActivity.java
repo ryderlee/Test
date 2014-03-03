@@ -103,7 +103,7 @@ public class SigninOptionActivity extends BaseActivity {
 	}
 	
 	@Override
-	protected void fbOnLogin() {
+	protected void fbOnSessionOpened() {
 		showProgress(true);
 	}
 	
