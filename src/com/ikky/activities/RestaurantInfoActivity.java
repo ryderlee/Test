@@ -210,15 +210,28 @@ public class RestaurantInfoActivity extends BaseActivity {
 		descriptionView.setText(rd.getRestaurantDescription());
 		
 		mAvailableTimeSlots.clear();
+		int min;
+		String timeSlotStr;
+		String timeSlotArr[];
+		Calendar timeSlot;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Calendar currentTime = Calendar.getInstance();
 		for (int i=0; i<timeSlots.size(); i++) {
-			String timeSlotStr = timeSlots.get(i);
-			String timeSlotArr[] = timeSlotStr.split(":");
-			Calendar timeSlot = Calendar.getInstance();
+			timeSlotStr = timeSlots.get(i);
+			timeSlotArr = timeSlotStr.split(":");
+			timeSlot = Calendar.getInstance();
 			timeSlot.setTime(SearchData.getInstance().getSearchDate());
 			timeSlot.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSlotArr[0]));
 			timeSlot.set(Calendar.MINUTE, Integer.parseInt(timeSlotArr[1]));
 			timeSlot.set(Calendar.SECOND, 0);
-			mAvailableTimeSlots.add(timeSlot.getTime());
+			Log.d("currentTime", ""+ sdf.format(currentTime.getTime()));
+			Log.d("addingTime", ""+ sdf.format(timeSlot.getTime()));
+			if(currentTime.compareTo(timeSlot) < 0){
+				mAvailableTimeSlots.add(timeSlot.getTime());
+				Log.d("add","" + timeSlot.getTime());
+			}else{
+				Log.d("not adding","" + timeSlot.getTime());
+			}
 		}
         displayTimeSlots();
 	}
@@ -440,8 +453,12 @@ public class RestaurantInfoActivity extends BaseActivity {
 			}
 			
 			String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(SearchData.getInstance().getChosenDate());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date d=SearchData.getInstance().getChosenDate();
+			Calendar calObj= Calendar.getInstance();
+			calObj.setTime(d);
         	String jsonString = ServerUtils.submitRequest("getAvailableTimeslots", "mid="+RestaurantData.getInstance().getRestaurantID(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
-        	
+        	Calendar currentCal = Calendar.getInstance();
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				JSONObject jsonObj = json.getJSONObject("RESTAURANT_BOOKING_SLOTS");
@@ -450,7 +467,16 @@ public class RestaurantInfoActivity extends BaseActivity {
 				for (Iterator iter = jsonObj.keys(); iter.hasNext();) {
 					String timeslotStr = iter.next().toString();
 					if (jsonObj.getInt(timeslotStr) == 1) {
-						bookingSlots.add(timeslotStr.substring(0, 2) + ":" + timeslotStr.substring(2));
+						calObj.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeslotStr.substring(0, 2)));
+						calObj.set(Calendar.MINUTE, Integer.parseInt(timeslotStr.substring(2)));
+						Log.d("currentTime", ""+ sdf.format(currentCal.getTime()));
+						Log.d("addingTime", ""+ sdf.format(calObj.getTime()));
+						if(currentCal.compareTo(calObj) <0){
+							
+                                bookingSlots.add(timeslotStr.substring(0, 2) + ":" + timeslotStr.substring(2));
+							
+							
+						}
 					}
 				}
 				Collections.sort(bookingSlots);
