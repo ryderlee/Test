@@ -106,6 +106,17 @@ public class BookingActivity extends BaseActivity {
 			mPhoneEditText.requestFocus();
 			return;
 		}
+		Date d = SearchData.getInstance().getChosenDate();
+		Calendar submitCal = Calendar.getInstance();
+		submitCal.setTime(d);
+		Calendar currentCal = Calendar.getInstance();
+		
+		if(currentCal.compareTo(submitCal) >=0){
+			Log.d("booking", "booking date earlier than current date");
+			return;
+		}
+			
+		
 		
 		UserData.getInstance().setPhone(phoneNumber);
 		
