@@ -5,7 +5,9 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +29,7 @@ import com.ikky.ui.BookingPicker.OnValueChangeListener;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -135,6 +138,13 @@ public class RestaurantInfoActivity extends BaseActivity {
 		mRestaurantInfoRequestTask.execute((Void) null);
 	}
 	
+	@Override
+	public void onResume() {
+	    super.onResume();
+	    Log.d("RestaurantInfoActivity", "onResume");
+	    getTimeslots(true);
+	}
+	
 	private void switchFullScreen(Boolean on) {
 		getWindow().setFlags(on?WindowManager.LayoutParams.FLAG_FULLSCREEN:0, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		mInfoView.setFillViewport(on);
@@ -178,7 +188,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 		return true;
 	}
 	
-	private void updateRestaurantInfo(JSONArray timeSlots) {
+	private void updateRestaurantInfo(ArrayList<String> timeSlots) {
 		TextView nameView = (TextView) findViewById(R.id.RESTAURANT_INFO_NAME);
 		TextView addressView = (TextView) findViewById(R.id.RESTAURANT_INFO_ADDRESS);
 		TextView phoneView = (TextView) findViewById(R.id.RESTAURANT_INFO_PHONE);
@@ -200,19 +210,15 @@ public class RestaurantInfoActivity extends BaseActivity {
 		descriptionView.setText(rd.getRestaurantDescription());
 		
 		mAvailableTimeSlots.clear();
-		for (int i=0; i<timeSlots.length(); i++) {
-			try {
-				String timeSlotStr = timeSlots.getString(i);
-				String timeSlotArr[] = timeSlotStr.split(":");
-				Calendar timeSlot = Calendar.getInstance();
-				timeSlot.setTime(SearchData.getInstance().getSearchDate());
-				timeSlot.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSlotArr[0]));
-				timeSlot.set(Calendar.MINUTE, Integer.parseInt(timeSlotArr[1]));
-				timeSlot.set(Calendar.SECOND, 0);
-				mAvailableTimeSlots.add(timeSlot.getTime());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+		for (int i=0; i<timeSlots.size(); i++) {
+			String timeSlotStr = timeSlots.get(i);
+			String timeSlotArr[] = timeSlotStr.split(":");
+			Calendar timeSlot = Calendar.getInstance();
+			timeSlot.setTime(SearchData.getInstance().getSearchDate());
+			timeSlot.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSlotArr[0]));
+			timeSlot.set(Calendar.MINUTE, Integer.parseInt(timeSlotArr[1]));
+			timeSlot.set(Calendar.SECOND, 0);
+			mAvailableTimeSlots.add(timeSlot.getTime());
 		}
         displayTimeSlots();
 	}
@@ -221,22 +227,26 @@ public class RestaurantInfoActivity extends BaseActivity {
 		if (mBookingPicker.getVisibility()==View.VISIBLE) {
 			mBookingPicker.setVisibility(View.GONE);
 			mTimeSlotsView.setVisibility(View.VISIBLE);
-			if (mBookingPicker.getDate().compareTo(mTargetTime) != 0 || mBookingPicker.getNoOfParticipants() != mTargetNoOfParticipants) {
-				mTargetTime = mBookingPicker.getDate();
-				mTargetNoOfParticipants = mBookingPicker.getNoOfParticipants();
-				
-				mTimeSlotsScrollView.setVisibility(View.GONE);
-				mPickerProgressBar.setVisibility(View.VISIBLE);
-				
-				if (mTimeSlotsRequestTask != null) {
-					mTimeSlotsRequestTask.cancel(true);
-				}
-				mTimeSlotsRequestTask = new TimeSlotsRequestTask();
-				mTimeSlotsRequestTask.execute((Void) null);
-			}
+			getTimeslots(false);
 		} else {
 			mBookingPicker.setVisibility(View.VISIBLE);
 			mTimeSlotsView.setVisibility(View.GONE);
+		}
+	}
+	
+	private void getTimeslots(Boolean force) {
+		if (force || (mBookingPicker.getDate().compareTo(mTargetTime) != 0 || mBookingPicker.getNoOfParticipants() != mTargetNoOfParticipants)) {
+			mTargetTime = mBookingPicker.getDate();
+			mTargetNoOfParticipants = mBookingPicker.getNoOfParticipants();
+			
+			mTimeSlotsScrollView.setVisibility(View.GONE);
+			mPickerProgressBar.setVisibility(View.VISIBLE);
+			
+			if (mTimeSlotsRequestTask != null) {
+				mTimeSlotsRequestTask.cancel(true);
+			}
+			mTimeSlotsRequestTask = new TimeSlotsRequestTask();
+			mTimeSlotsRequestTask.execute((Void) null);
 		}
 	}
 	
@@ -267,22 +277,17 @@ public class RestaurantInfoActivity extends BaseActivity {
 		mPickerProgressBar.setVisibility(View.GONE);
 	}
 	
-	private void updateTimeSlots(JSONObject json) {
-		try {
-			JSONArray timeSlotsResult = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
-			mAvailableTimeSlots.clear();
-			for (int i=0; i<timeSlotsResult.length(); i++) {
-				String timeSlotStr = timeSlotsResult.getString(i);
-				String timeSlotArr[] = timeSlotStr.split(":");
-				Calendar timeSlot = Calendar.getInstance();
-				timeSlot.setTime(SearchData.getInstance().getSearchDate());
-				timeSlot.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSlotArr[0]));
-				timeSlot.set(Calendar.MINUTE, Integer.parseInt(timeSlotArr[1]));
-				timeSlot.set(Calendar.SECOND, 0);
-				mAvailableTimeSlots.add(timeSlot.getTime());
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+	private void updateTimeSlots(ArrayList<String> timeslots) {
+		mAvailableTimeSlots.clear();
+		for (int i=0; i<timeslots.size(); i++) {
+			String timeSlotStr = timeslots.get(i);
+			String timeSlotArr[] = timeSlotStr.split(":");
+			Calendar timeSlot = Calendar.getInstance();
+			timeSlot.setTime(SearchData.getInstance().getSearchDate());
+			timeSlot.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSlotArr[0]));
+			timeSlot.set(Calendar.MINUTE, Integer.parseInt(timeSlotArr[1]));
+			timeSlot.set(Calendar.SECOND, 0);
+			mAvailableTimeSlots.add(timeSlot.getTime());
 		}
 	}
 
@@ -354,7 +359,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 	
 	private class RestaurantInfoRequestTask extends AsyncTask<Void, Void, Boolean> {
 		
-		JSONArray mBookingSlots;
+		ArrayList<String> mBookingSlots;
 		
 		@Override
 		protected Boolean doInBackground(Void... params) {
@@ -366,7 +371,8 @@ public class RestaurantInfoActivity extends BaseActivity {
 				return false;
 			}
 		
-        	String jsonString = ServerUtils.submitRequest("getMerchantDetail", "mid="+RestaurantData.getInstance().getRestaurantID());
+			String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(SearchData.getInstance().getChosenDate());
+        	String jsonString = ServerUtils.submitRequest("getMerchantDetail", "mid="+RestaurantData.getInstance().getRestaurantID(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				
@@ -387,7 +393,15 @@ public class RestaurantInfoActivity extends BaseActivity {
 				rd.setReviewAmbiance(json.getString("RESTAURANT_REVIEW_AMBIANCE"));
 				rd.setReviews(json.getString("RESTAURANT_REVIEWS"));
 				
-				mBookingSlots = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
+				mBookingSlots = new ArrayList<String>();
+				JSONObject jsonObj = json.getJSONObject("RESTAURANT_BOOKING_SLOTS");
+				for (Iterator iter = jsonObj.keys(); iter.hasNext();) {
+					String timeslotStr = iter.next().toString();
+					if (jsonObj.getInt(timeslotStr) == 1) {
+						mBookingSlots.add(timeslotStr.substring(0, 2) + ":" + timeslotStr.substring(2));
+					}
+				}
+				Collections.sort(mBookingSlots);
 				
 				return true;
 			} catch (JSONException e) {
@@ -425,10 +439,23 @@ public class RestaurantInfoActivity extends BaseActivity {
 				return false;
 			}
 			
-        	String jsonString = ServerUtils.submitRequest("getAvailableTimeslots", "mid="+RestaurantData.getInstance().getRestaurantID());
+			String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(SearchData.getInstance().getChosenDate());
+        	String jsonString = ServerUtils.submitRequest("getAvailableTimeslots", "mid="+RestaurantData.getInstance().getRestaurantID(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
+        	
 			try {
 				JSONObject json = new JSONObject(jsonString);
-				updateTimeSlots(json);
+				JSONObject jsonObj = json.getJSONObject("RESTAURANT_BOOKING_SLOTS");
+				
+				ArrayList<String> bookingSlots = new ArrayList<String>();
+				for (Iterator iter = jsonObj.keys(); iter.hasNext();) {
+					String timeslotStr = iter.next().toString();
+					if (jsonObj.getInt(timeslotStr) == 1) {
+						bookingSlots.add(timeslotStr.substring(0, 2) + ":" + timeslotStr.substring(2));
+					}
+				}
+				Collections.sort(bookingSlots);
+				
+				updateTimeSlots(bookingSlots);
 				return true;
 			} catch (JSONException e) {
 				e.printStackTrace();

@@ -141,7 +141,7 @@ public class UserData {
 	public Boolean setFbData(String fbId, String username, String firstName, String lastName, String token, String expireTs) {
 		Boolean changed = false;
 		if (!mPrefs.getString(USERDATA_FB_USERNAME, "").equals(username) || !mPrefs.getString(USERDATA_FB_FIRSTNAME, "").equals(firstName) || !mPrefs.getString(USERDATA_FB_LASTNAME, "").equals(lastName) || !mPrefs.getString(USERDATA_FB_TOKEN, "").equals(token) || !mPrefs.getString(USERDATA_FB_EXPIRE_TS, "").equals(expireTs)) {
-			changed = true;			
+			changed = true;
 		}
 		Editor edit = mPrefs.edit();
 		edit.putString(USERDATA_FB_ID, fbId);

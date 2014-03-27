@@ -258,13 +258,23 @@ public class BookingActivity extends BaseActivity {
 				mBookingCompleteView.setVisibility(success?View.VISIBLE:View.GONE);
 				setTitle("Booking Confirmed");
 			} else {
-				UserData.getInstance().setFirstName("");
-				UserData.getInstance().setLastName("");
-				UserData.getInstance().setEmail("");
-				UserData.getInstance().setPhone("");
+				// TODO: Need to determine the error code
+				//		 Only clear user information when the fail is related to user duplicated information
+				
+				// Temp Fix Begins
+				if (!UserData.getInstance().isLogin()) {
+				// Temp Fix Ends
+					UserData.getInstance().setFirstName("");
+					UserData.getInstance().setLastName("");
+					UserData.getInstance().setEmail("");
+					UserData.getInstance().setPhone("");
+				// Temp Fix Begins
+				}
+				// Temp Fix Ends
 				showProgress(false);
 				
-				mAlertBuilder.setMessage("The email has been signed up, please login if you are the user, change the email otherwise.");
+				mAlertBuilder.setMessage("Booking cannot be made, please try again.");
+//				mAlertBuilder.setMessage("The email has been signed up, please login if you are the user, change the email otherwise.");
 				mAlertBuilder.setTitle("Error");
 				mAlertBuilder.setPositiveButton("OK", null);
 				mAlertBuilder.setCancelable(true);

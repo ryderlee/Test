@@ -1,5 +1,6 @@
 package com.ikky.activities;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.location.Location;
@@ -397,6 +398,7 @@ public class MainActivity extends BaseActivity {
     	public int rating;
     	public String img;
     	public LatLng latlng;
+    	public ArrayList<String> timeslots;
     }
     
     private class ListViewAdapter<T> extends ArrayAdapter<T> {
@@ -416,9 +418,21 @@ public class MainActivity extends BaseActivity {
 	    	
 	    	TextView licnoTextView = (TextView) convertView.findViewById(R.id.restaurantResult_licnoTextView);
 	    	
+	    	TextView timeslotTextView = (TextView) convertView.findViewById(R.id.restaurantResult_slotTextView);
+	    	
 	    	RestaurantResultItem item = (RestaurantResultItem)this.getItem(position);
 	    	nameTextView.setText(item.ss);
 	    	addressTextView.setText(item.adr);
+	    	if (item.timeslots.size() > 0) {
+	    		Collections.sort(item.timeslots);
+	    		String timeslotString = "";
+	    		for (String timeslot : item.timeslots) {
+	    			timeslotString += timeslot.substring(0, 2) + ":" + timeslot.substring(2) + " ";
+	    		}
+	    		timeslotTextView.setText(timeslotString);
+	    	} else {
+	    		timeslotTextView.setText(" - ");
+	    	}
 	    	convertView.setTag(item.licno);
 	    	
 	    	licnoTextView.setText(item.licno);
@@ -527,22 +541,23 @@ public class MainActivity extends BaseActivity {
 
 	    	String s = "";
 	    	if (mGoogleMap != null) {
+	    		String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(SearchData.getInstance().getChosenDate());
 	    		if (mVisibleArea) {
-	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "latmin="+mMinLat, "lngmin="+mMinLng, "latmax="+mMaxLat, "lngmax="+mMaxLng);
+	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "latmin="+mMinLat, "lngmin="+mMinLng, "latmax="+mMaxLat, "lngmax="+mMaxLng, "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
 	    		} else {
-	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude());
+	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
 	    		}
 	    	} else {
 	    		s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize);
 	    	}
         	Log.d("com.example.test", "Result: "+s);
 	        try{
-		        JSONArray jsa=new JSONArray(s);
-		        if (jsa.length() == 0 || jsa.length() < mPageSize) {
+		        JSONArray restaurants = new JSONArray(s);
+		        if (restaurants.length() == 0 || restaurants.length() < mPageSize) {
 		        	mMoreToLoad = false;
 		        }
-	            for(int i=0;i<jsa.length();i++) {
-	               		JSONObject jo=(JSONObject)jsa.get(i);
+	            for(int i=0;i<restaurants.length();i++) {
+	               		JSONObject jo = restaurants.getJSONObject(i);
 	               		RestaurantResultItem item = new RestaurantResultItem();
 	               		item.licno = jo.getString("LICNO");
 	               		item.type = jo.getString("TYPE");
@@ -550,6 +565,37 @@ public class MainActivity extends BaseActivity {
 	           			item.ss = jo.getString("SS");
 	           			item.adr = jo.getString("ADR");
 	           			item.img = jo.getString("IMAGE");
+	           			ArrayList<String> timeslots = new ArrayList<String>();
+	           			
+	           			if (jo.has("timeslotAvailability")) {
+	           				JSONObject timeslotAvailability = jo.getJSONObject("timeslotAvailability");
+	           				for (Iterator iter = timeslotAvailability.keys(); iter.hasNext();) {
+	           					String timeslotStr = iter.next().toString();
+	           					if (timeslotAvailability.getInt(timeslotStr) == 1) {
+	           						timeslots.add(timeslotStr);
+	           					}
+	           				}
+	           				Collections.sort(timeslots);
+	           				if (timeslots.size() > 6) {
+	           					ArrayList<String> targetTimeslots = new ArrayList<String>();
+	           					String targetTimeslotStr = new SimpleDateFormat("HHmm").format(SearchData.getInstance().getChosenDate());
+	           					int largerTimeslotCount = 0;
+	           					for (String timeslotStr : timeslots) {
+	           						if (timeslotStr.compareTo(targetTimeslotStr) > 0) {
+	           							largerTimeslotCount++;
+	           						}
+	           						targetTimeslots.add(timeslotStr);
+	           						if (targetTimeslots.size() > 6) {
+	           							targetTimeslots.remove(0);
+	           						}
+	           						if (largerTimeslotCount == 2 && targetTimeslots.size() == 6) {
+	           							break;
+	           						}
+	           					}
+	           					timeslots = targetTimeslots;
+	           				}
+	           			}
+	           			item.timeslots = timeslots;
 	           			item.rating = 1;
 	           			item.latlng = new LatLng( jo.getDouble("lat_float"), jo.getDouble("lng_float"));
 	           			results.add(item);
