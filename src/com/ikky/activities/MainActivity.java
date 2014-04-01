@@ -311,13 +311,13 @@ public class MainActivity extends BaseActivity {
     	}else{
     		Log.d("onNewIntent", "no intent");
     	}
-    	if(intent.hasExtra("ACTION")){
+    	/*if(intent.hasExtra("ACTION")){
 	        String action = intent.getStringExtra("ACTION");
 	    	if (action.equals(Constants.ACTION_LOGIN_SUCCESS)) {
 	            Log.d("example", "login success and show profile now");
 	    		UserManager.getInstance(this).showProfile();
 	    	}
-    	}
+    	}*/
     }
     
 //    @Override
