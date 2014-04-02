@@ -424,7 +424,6 @@ public class MainActivity extends BaseActivity {
 	    	nameTextView.setText(item.ss);
 	    	addressTextView.setText(item.adr);
 	    	if (item.timeslots.size() > 0) {
-	    		Collections.sort(item.timeslots);
 	    		String timeslotString = "";
 	    		for (String timeslot : item.timeslots) {
 	    			timeslotString += timeslot.substring(0, 2) + ":" + timeslot.substring(2) + " ";
@@ -568,14 +567,11 @@ public class MainActivity extends BaseActivity {
 	           			ArrayList<String> timeslots = new ArrayList<String>();
 	           			
 	           			if (jo.has("timeslotAvailability")) {
-	           				JSONObject timeslotAvailability = jo.getJSONObject("timeslotAvailability");
-	           				for (Iterator iter = timeslotAvailability.keys(); iter.hasNext();) {
-	           					String timeslotStr = iter.next().toString();
-	           					if (timeslotAvailability.getInt(timeslotStr) == 1) {
-	           						timeslots.add(timeslotStr);
-	           					}
+	           				JSONArray timeslotAvailability = jo.getJSONArray("timeslotAvailability");
+	           				for (int j=0; j<timeslotAvailability.length(); j++) {
+	           					String timeslotStr = timeslotAvailability.getString(j);
+           						timeslots.add(timeslotStr);
 	           				}
-	           				Collections.sort(timeslots);
 	           				if (timeslots.size() > 6) {
 	           					ArrayList<String> targetTimeslots = new ArrayList<String>();
 	           					String targetTimeslotStr = new SimpleDateFormat("HHmm").format(SearchData.getInstance().getChosenDate());

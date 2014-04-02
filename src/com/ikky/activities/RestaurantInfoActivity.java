@@ -5,9 +5,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -416,14 +414,11 @@ public class RestaurantInfoActivity extends BaseActivity {
 				
 				mBookingSlots = new ArrayList<String>();
 				if (json.optJSONObject("RESTAURANT_BOOKING_SLOTS") != null) {
-					JSONObject jsonObj = json.getJSONObject("RESTAURANT_BOOKING_SLOTS");
-					for (Iterator iter = jsonObj.keys(); iter.hasNext();) {
-						String timeslotStr = iter.next().toString();
-						if (jsonObj.getInt(timeslotStr) == 1) {
-							mBookingSlots.add(timeslotStr.substring(0, 2) + ":" + timeslotStr.substring(2));
-						}
+					JSONArray jsonArr = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
+					for (int i=0; i<jsonArr.length(); i++) {
+						String timeslotStr = jsonArr.getString(i);
+						mBookingSlots.add(timeslotStr.substring(0, 2) + ":" + timeslotStr.substring(2));
 					}
-					Collections.sort(mBookingSlots);
 				}
 				
 				return true;
@@ -472,30 +467,18 @@ public class RestaurantInfoActivity extends BaseActivity {
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				
-				if (json.optJSONObject("RESTAURANT_BOOKING_SLOTS") != null) {
-					JSONObject jsonObj = json.getJSONObject("RESTAURANT_BOOKING_SLOTS");
-					
-					ArrayList<String> bookingSlots = new ArrayList<String>();
-					for (Iterator iter = jsonObj.keys(); iter.hasNext();) {
-						String timeslotStr = iter.next().toString();
-						if (jsonObj.getInt(timeslotStr) == 1) {
-							calObj.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeslotStr.substring(0, 2)));
-							calObj.set(Calendar.MINUTE, Integer.parseInt(timeslotStr.substring(2)));
-//							Log.d("currentTime", ""+ sdf.format(currentCal.getTime()));
-//							Log.d("addingTime", ""+ sdf.format(calObj.getTime()));
-							if(currentCal.compareTo(calObj) <0){
-								
-	                                bookingSlots.add(timeslotStr.substring(0, 2) + ":" + timeslotStr.substring(2));
-								
-								
-							}
-						}
-					}
-					Collections.sort(bookingSlots);
-					
-					updateTimeSlots(bookingSlots);
-				}
+				JSONArray jsonArr = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
 				
+				ArrayList<String> bookingSlots = new ArrayList<String>();
+				for (int i=0; i<jsonArr.length(); i++) {
+					String timeslotStr = jsonArr.getString(i);
+					calObj.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeslotStr.substring(0, 2)));
+					calObj.set(Calendar.MINUTE, Integer.parseInt(timeslotStr.substring(2)));
+					if(currentCal.compareTo(calObj) <0){
+                            bookingSlots.add(timeslotStr.substring(0, 2) + ":" + timeslotStr.substring(2));
+					}
+				}
+				updateTimeSlots(bookingSlots);
 				return true;
 			} catch (JSONException e) {
 				e.printStackTrace();
