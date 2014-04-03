@@ -21,6 +21,7 @@ import com.ikky.managers.RestaurantData;
 import com.ikky.managers.SearchData;
 import com.ikky.managers.UserManager;
 import com.ikky.ui.BookingPicker;
+import com.ikky.ui.CustomHorizontalScrollView;
 import com.ikky.ui.PhotoView;
 import com.ikky.ui.BookingPicker.OnValueChangeListener;
 
@@ -72,7 +73,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 	private BookingPicker mBookingPicker;
 	private Button mPickerButton;
 	private ProgressBar mPickerProgressBar;
-	private HorizontalScrollView mTimeSlotsScrollView;
+	private CustomHorizontalScrollView mTimeSlotsScrollView;
 	private LinearLayout mTimeSlotsContainer;
 	private TextView mNoTableFoundText;
 	
@@ -102,7 +103,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 		mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
 		mPickerButton = (Button) findViewById(R.id.pickerButton);
 		mPickerProgressBar = (ProgressBar) findViewById(R.id.pickerProgressBar);
-		mTimeSlotsScrollView = (HorizontalScrollView) findViewById(R.id.timeSlotsScrollView);
+		mTimeSlotsScrollView = (CustomHorizontalScrollView) findViewById(R.id.timeSlotsScrollView);
 		mTimeSlotsContainer = (LinearLayout) findViewById(R.id.timeSlotsContainer);
 		
 		mNoTableFoundText = (TextView) findViewById(R.id.noTableFoundText);
@@ -267,15 +268,25 @@ public class RestaurantInfoActivity extends BaseActivity {
 	
 	private void displayTimeSlots() {
 		mTimeSlotsContainer.removeAllViews();
+
+		int targetIdx = 0;
+		int delta = -1;
 		
 		if (mAvailableTimeSlots.size() > 0) {
 			for (int i=0; i<mAvailableTimeSlots.size(); i++) {
 				Date d = mAvailableTimeSlots.get(i);
+				
+				if (i==0 || Math.abs(mAvailableTimeSlots.get(i).getTime() - SearchData.getInstance().getSearchDate().getTime()) < delta) {
+					targetIdx = i;
+					delta = (int) Math.abs(mAvailableTimeSlots.get(i).getTime() - SearchData.getInstance().getSearchDate().getTime());
+				}
+				
 				LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				inflater.inflate(R.layout.view_common_button, mTimeSlotsContainer, true);
 				Button timeSlotButton = (Button) mTimeSlotsContainer.getChildAt(i);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 				params.setMargins(5, 14, 5, 14);
+				timeSlotButton.setWidth(150);
 				timeSlotButton.setLayoutParams(params);
 				timeSlotButton.setBackgroundResource(R.drawable.common_button_background);
 				timeSlotButton.setText(new SimpleDateFormat("h:mm aa").format(d).toLowerCase());
@@ -290,6 +301,11 @@ public class RestaurantInfoActivity extends BaseActivity {
 			}
 			
 			mTimeSlotsScrollView.setVisibility(View.VISIBLE);
+			mTimeSlotsContainer.refreshDrawableState();
+			
+			Log.d("HEY", "targetIdx:"+targetIdx);
+			mTimeSlotsScrollView.scrollToX(targetIdx*160);
+			
 		} else {
 			mNoTableFoundText.setVisibility(View.VISIBLE);
 		}

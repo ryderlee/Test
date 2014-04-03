@@ -124,7 +124,7 @@
 					       	android:layout_height="wrap_content"
 					       	android:layout_gravity="center"
 					       	android:visibility="gone" />
-					    <HorizontalScrollView
+					    <com.ikky.ui.CustomHorizontalScrollView
 					        android:id="@+id/timeSlotsScrollView"
 					        android:layout_width="wrap_content"
 					        android:layout_height="wrap_content">
@@ -134,7 +134,7 @@
 					            android:layout_width="wrap_content"
 					        	android:layout_height="wrap_content">
 					        </LinearLayout>
-					    </HorizontalScrollView>
+					    </com.ikky.ui.CustomHorizontalScrollView>
 					    <TextView
 					        android:id="@+id/noTableFoundText"
 					        android:layout_width="wrap_content"
@@ -142,7 +142,7 @@
 					        android:layout_marginTop="10dp"
 					        android:layout_marginBottom="10dp"
 					        android:textColor="#888888"
-					    	android:text="No available table found" />
+					    	android:text="No table available" />
 				    </LinearLayout>
 				    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#666666"/>
 				    <TextView
