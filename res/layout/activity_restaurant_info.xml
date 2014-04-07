@@ -102,8 +102,8 @@
 				        android:background="@null"
 				        android:layout_width="match_parent"
 				        android:layout_height="wrap_content"
-				        android:textColor="#444444"
 				        android:textSize="14sp"
+				        android:textColor="#80AED3"
 				        android:gravity="left|center_vertical"
 				        android:onClick="pickerButton_onClick" />
 				    <com.ikky.ui.BookingPicker

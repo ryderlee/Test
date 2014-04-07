@@ -51,7 +51,7 @@ public class UserManager {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		this.backToTopActivity(Constants.ACTION_LOGIN_SUCCESS);
+//		this.backToTopActivity(Constants.ACTION_LOGIN_SUCCESS);
 	}
 	
 	public void bookAsGuest() {
