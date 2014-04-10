@@ -9,6 +9,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:background="#b3000000"
+	    android:clickable="true"
 	    android:visibility="gone" >
 	    
 	    <RelativeLayout
@@ -68,13 +69,14 @@
 	            android:id="@+id/bookingPicker"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:layout_below="@+id/distanceSeekBar"
-	            android:scaleY="0.6" />
+	            android:layout_below="@+id/distanceSeekBar" />
         
 	        <LinearLayout
+	            android:id="@+id/searchViewButtons"
 	            android:orientation="horizontal"
 	            android:layout_width="match_parent"
 	            android:layout_height="45dp"
+	            android:layout_marginTop="6dp"
 	            android:layout_below="@+id/bookingPicker" >
 			
 				<Button
@@ -85,6 +87,8 @@
 					android:background="#eceded"
 					android:textSize="15sp"
 					android:textColor="#777777"
+					android:drawablePadding="30dp"
+					android:drawableLeft="@drawable/btn_cross"
 					android:text="CANCEL"
 					android:onClick="cancelButton_onClick" />
 				
@@ -109,23 +113,22 @@
 					android:background="#eceded"
 					android:textSize="15sp"
 					android:textColor="#777777"
+					android:drawableLeft="@drawable/btn_tick_normal"
 					android:text="SEARCH"
 					android:onClick="searchButton_onClick" />
 				
 	        </LinearLayout>
+	        
+	        <LinearLayout
+        		android:orientation="horizontal"
+        		android:layout_height="2dp"
+        		android:layout_width="match_parent"
+        		android:layout_below="@id/searchViewButtons"
+        		android:background="#d6d6d6" />
 		
 		</RelativeLayout>
         
 	</RelativeLayout>
-	
-	<ImageButton
-        android:id="@+id/switchViewButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="10dp"
-        android:onClick="switchView" />
 	
 	<ListView
 		android:id="@+id/searchResultListView"

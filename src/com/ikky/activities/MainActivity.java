@@ -10,6 +10,7 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -131,14 +132,28 @@ public class MainActivity extends BaseActivity {
 				showSearchButton_onClick(v);
 			}
 		});
+        final Activity act = this;
+        getActionBar().getCustomView().findViewById(R.id.actionBarUser).setOnClickListener(new Button.OnClickListener() {
+        	@Override
+        	public void onClick(View v) {
+        		UserManager.getInstance(act).login(false);
+        		cancelButton_onClick(v);
+        	}
+        });
         mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
         mKeywordEditText = (EditText) findViewById(R.id.keywordEditText);
         mDistanceValueText = (TextView) findViewById(R.id.distanceValueText);
         mDistanceValueText.setTypeface(mTypefaceRobotoRegular);
         mDistanceSeekBar = (SeekBar) findViewById(R.id.distanceSeekBar);
         mGoogleMapContainer= (RelativeLayout) findViewById(R.id.googleMapContainer);
-        mSwitchViewButton = (ImageButton) findViewById(R.id.switchViewButton);
-        mSwitchViewButton.setBackgroundResource(R.drawable.ic_action_locate);
+        mSwitchViewButton = (ImageButton) getActionBar().getCustomView().findViewById(R.id.actionBarMap);
+        mSwitchViewButton.setOnClickListener(new Button.OnClickListener() {
+        	@Override
+        	public void onClick(View v) {
+        		switchView(v);
+        		cancelButton_onClick(v);
+        	}
+        });
         
         mBookingPicker.setOnValueChangeListener(new BookingPicker.OnValueChangeListener() {
 			@Override
@@ -297,8 +312,6 @@ public class MainActivity extends BaseActivity {
     	}
     }
     
-    //TODO: UserManager.getInstance(this).login(false);
-    
     @Override
     protected void onNewIntent(Intent intent) {
     	if(intent.hasExtra("source") && intent.getStringExtra("source").equals("notification")
@@ -337,7 +350,7 @@ public class MainActivity extends BaseActivity {
     	mCanSwitchView = false;
     	mIsListView = !mIsListView;
     	if (!mIsListView) {
-    		mSwitchViewButton.setBackgroundResource(R.drawable.ic_action_paste);
+    		mSwitchViewButton.setImageResource(R.drawable.ic_launcher_list_view);
     		AnimatorSet flipRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_right_out);
     		AnimatorSet flipRightIn = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_right_in);
     		flipRightOut.setTarget(mListView);
@@ -362,7 +375,7 @@ public class MainActivity extends BaseActivity {
     		flipRightOut.start();
     		flipRightIn.start();
     	} else {
-    		mSwitchViewButton.setBackgroundResource(R.drawable.ic_action_locate);
+    		mSwitchViewButton.setImageResource(R.drawable.ic_launcher_map);
     		AnimatorSet flipLeftOut = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_left_out);
     		AnimatorSet flipLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_left_in);
     		flipLeftOut.setTarget(mGoogleMapContainer);
@@ -478,7 +491,7 @@ public class MainActivity extends BaseActivity {
     
     public void showSearchButton_onClick(View view) {
     	if (mSearchView.getVisibility()==View.VISIBLE) {
-    		mSearchView.setVisibility(View.GONE);
+    		cancelButton_onClick(view);
     	} else {
 	    	mSearchView.setVisibility(View.VISIBLE);
 	    	mKeywordEditText.setText("");
@@ -492,6 +505,7 @@ public class MainActivity extends BaseActivity {
     	search(true);
     }
     public void cancelButton_onClick(View view) {
+    	hideSoftKeyboard();
     	mSearchView.setVisibility(View.GONE);
     }
     public void bookingPickerButton_onClick(View view) {
@@ -564,7 +578,7 @@ public class MainActivity extends BaseActivity {
 	    		if (mVisibleArea) {
 	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "latmin="+mMinLat, "lngmin="+mMinLng, "latmax="+mMaxLat, "lngmax="+mMaxLng, "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
 	    		} else {
-	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
+	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+100, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
 	    		}
 	    	} else {
 	    		s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize);
