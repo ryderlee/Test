@@ -78,6 +78,7 @@ public class SignupActivity extends BaseActivity {
 		mLoginFormView = findViewById(R.id.login_form);
 		mLoginStatusView = findViewById(R.id.login_status);
 		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+		mLoginStatusMessageView.setTypeface(mTypefaceRobotoRegular);
 
 		findViewById(R.id.SIGNUP_BUTTON).setOnClickListener(
 				new View.OnClickListener() {

@@ -73,8 +73,10 @@ public class UserProfileActivity extends BaseActivity {
 		
 		mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 		mEmptyTextView = (TextView) findViewById(R.id.emptyTextView);
+		mEmptyTextView.setTypeface(mTypefaceRobotoRegular);
 		
 		TextView usernameTextView = (TextView) findViewById(R.id.usernameTextView);
+		usernameTextView.setTypeface(mTypefaceRobotoRegular);
 		usernameTextView.setText(UserData.getInstance().getFullName());
 		
 		mFbLoginButton = (LoginButton) findViewById(R.id.fbSigninButton);
@@ -242,7 +244,9 @@ public class UserProfileActivity extends BaseActivity {
 	    	BookingItem item = (BookingItem) this.getItem(position);
 	    	TextView restaurantNameTextView = (TextView) convertView.findViewById(R.id.restaurantNameTextView);
 	    	TextView bookingInfoTextView = (TextView) convertView.findViewById(R.id.bookingInfoTextView);
+	    	restaurantNameTextView.setTypeface(mTypefaceRobotoRegular);
 	    	restaurantNameTextView.setText(item.restaurantName);
+	    	bookingInfoTextView.setTypeface(mTypefaceRobotoRegular);
 	    	bookingInfoTextView.setText(Utils.getLongBookingInfo(item.bookingDate, item.noOfParticipants));
 	    	
 	    	convertView.setTag(item.bookingId);

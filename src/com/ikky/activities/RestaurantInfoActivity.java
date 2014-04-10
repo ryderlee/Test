@@ -46,6 +46,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
@@ -80,7 +81,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 	private ViewPager mViewPager;
 	private int mViewPagerHeight;
 	private ArrayList<String> mImageUrls;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -102,11 +103,13 @@ public class RestaurantInfoActivity extends BaseActivity {
 		mTimeSlotsView = (View) findViewById(R.id.timeSlotsView);
 		mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
 		mPickerButton = (Button) findViewById(R.id.pickerButton);
+		mPickerButton.setTypeface(mTypefaceRobotoRegular);
 		mPickerProgressBar = (ProgressBar) findViewById(R.id.pickerProgressBar);
 		mTimeSlotsScrollView = (CustomHorizontalScrollView) findViewById(R.id.timeSlotsScrollView);
 		mTimeSlotsContainer = (LinearLayout) findViewById(R.id.timeSlotsContainer);
 		
 		mNoTableFoundText = (TextView) findViewById(R.id.noTableFoundText);
+		mNoTableFoundText.setTypeface(mTypefaceRobotoRegular);
 		
 		mTargetTime = SearchData.getInstance().getSearchDate();
 		mTargetNoOfParticipants = SearchData.getInstance().getNumberOfReservation();
@@ -192,13 +195,21 @@ public class RestaurantInfoActivity extends BaseActivity {
 	
 	private void updateRestaurantInfo(ArrayList<String> timeSlots) {
 		TextView nameView = (TextView) findViewById(R.id.RESTAURANT_INFO_NAME);
+		nameView.setTypeface(mTypefaceRobotoRegular);
 		TextView addressView = (TextView) findViewById(R.id.RESTAURANT_INFO_ADDRESS);
+		addressView.setTypeface(mTypefaceRobotoRegular);
 		TextView phoneView = (TextView) findViewById(R.id.RESTAURANT_INFO_PHONE);
+		phoneView.setTypeface(mTypefaceRobotoRegular);
 		TextView cuisineView = (TextView) findViewById(R.id.RESTAURANT_INFO_CUSINE);
+		cuisineView.setTypeface(mTypefaceRobotoRegular);
 		TextView priceView = (TextView) findViewById(R.id.RESTAURANT_INFO_PRICE);
+		priceView.setTypeface(mTypefaceRobotoRegular);
 		TextView hoursView = (TextView) findViewById(R.id.RESTAURANT_INFO_HOURS);
+		hoursView.setTypeface(mTypefaceRobotoRegular);
 		TextView parkingView = (TextView) findViewById(R.id.RESTAURANT_INFO_PARKING);
+		parkingView.setTypeface(mTypefaceRobotoRegular);
 		TextView descriptionView = (TextView) findViewById(R.id.RESTAURANT_INFO_DESCRIPTION);
+		descriptionView.setTypeface(mTypefaceRobotoRegular);
 
 		RestaurantData rd = RestaurantData.getInstance();
 		

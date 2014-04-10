@@ -28,7 +28,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="ikky"
-        android:theme="@style/Theme.AppCompat.Light" >
+        android:theme="@style/MyTheme" >
         
         <meta-data android:name="com.google.android.gms.version" android:value="4323000" />
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAvkAY39w-20RwGuU8MCR2Q5MmNasNKtS4" />

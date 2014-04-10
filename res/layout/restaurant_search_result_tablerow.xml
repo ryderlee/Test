@@ -1,72 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/sampleRow"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="125dp"
+                android:paddingLeft="12dp"
+				android:paddingRight="12dp" >
                 
-                	<com.ikky.ui.PhotoView
-                	    android:id="@+id/restaurantResult_thumbnailImageView"
-                	    android:layout_width="100dp"
-					    android:layout_height="80dp"
-					    android:scaleType="fitXY"/>
-                	
-                	<TableLayout
-                	    android:layout_width="match_parent"
-                	    android:layout_height="match_parent"
-                	    android:layout_margin="2dp">
-                	    	<TableRow 
-                	    	    android:layout_width="wrap_content"
-                	    	    android:layout_height="wrap_content">
+	    <com.ikky.ui.PhotoView
+			android:id="@+id/restaurantResult_thumbnailImageView"
+			android:layout_width="114dp"
+			android:layout_height="114dp"
+			android:layout_alignParentRight="true"
+			android:layout_marginTop="5.5dp"
+			android:scaleType="fitXY"/>
+		    
+		<TextView
+			android:id="@+id/restaurantResult_nameTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="15sp"
+			android:textColor="#ee2e2d"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:layout_toLeftOf="@+id/restaurantResult_thumbnailImageView"
+			android:layout_marginRight="5.5dp"
+			android:layout_marginTop="10dp" />
+		
+		<TextView
+		    android:id="@+id/restaurantResult_cusine"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:textSize="12sp"
+		    android:textColor="#777777"
+		    android:layout_below="@+id/restaurantResult_nameTextView"
+		    android:text="Western / Steakhouse" /> 
+		    
+		<TextView
+			android:id="@+id/restaurantResult_addressTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_alignRight="@+id/restaurantResult_nameTextView"
+			android:layout_above="@+id/restaurantResult_timeslotsContainer"
+			android:maxLines="2"
+			android:ellipsize="end"
+			android:layout_marginBottom="5.5dp"
+			android:textColor="#777777"
+			android:textSize="11sp"/>
+		
+		<LinearLayout
+		    android:id="@+id/restaurantResult_timeslotsContainer"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_toLeftOf="@+id/restaurantResult_thumbnailImageView"
+		    android:layout_alignBottom="@+id/restaurantResult_thumbnailImageView"
+		    android:layout_marginRight="6dp"
+		    android:orientation="horizontal">
+		    
+		</LinearLayout>
 
-                	    		<TextView
-                	    		    android:id="@+id/restaurantResult_nameTextView"
-                	    		    android:layout_width="wrap_content"
-                	    		    android:layout_height="wrap_content"
-                	    		    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                	    	</TableRow>
-                	    	<TableRow 
-                	    	    android:id="@+id/tableRow1_addressRow"
-                	    	    android:layout_width="wrap_content"
-                	    	    android:layout_height="wrap_content">
-
-                	    		<TextView
-                	    		    android:id="@+id/restaurantResult_addressTextView"
-                	    		    android:layout_width="wrap_content"
-                	    		    android:layout_height="wrap_content"
-                	    		    android:textColor="#555555"
-                	    		    android:textSize="10sp" />
-
-							</TableRow>
-                	    	<TableRow 
-                	    	    android:id="@+id/tableRow1_slot"
-                	    	    android:layout_width="wrap_content"
-                	    	    android:layout_height="wrap_content">
-
-                	    		<TextView
-                	    		    android:id="@+id/restaurantResult_slotTextView"
-                	    		    android:layout_width="wrap_content"
-                	    		    android:layout_height="wrap_content"
-                	    		    android:text=" - "
-                	    		    android:textSize="12sp" />
-
-							</TableRow>
-                	    
-                	    	<TableRow 
-                	    	    android:id="@+id/tableRow1_licnoRow"
-                	    	    android:layout_width="wrap_content"
-                	    	    android:layout_height="wrap_content">
-
-                	    		<TextView
-                	    		    android:id="@+id/restaurantResult_licnoTextView"
-                	    		    android:layout_width="wrap_content"
-                	    		    android:layout_height="wrap_content"
-                	    		    android:textColor="#555555"
-                	    		    android:textSize="10sp" />
-
-							</TableRow>
-                	    
-                	</TableLayout>
-                
-
-     </TableRow>
+</RelativeLayout>

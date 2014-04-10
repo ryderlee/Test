@@ -7,106 +7,116 @@
 	<RelativeLayout
 	    android:id="@+id/searchView"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:paddingTop="5dp"
-	    android:paddingBottom="5dp"
-	    android:background="@drawable/search_view_background"
+	    android:layout_height="match_parent"
+	    android:background="#b3000000"
 	    android:visibility="gone" >
 	    
-	    <Button
-			android:id="@+id/searchButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Search"
-			android:background="@drawable/common_button_background"
-			android:layout_alignParentRight="true"
-			android:layout_marginRight="5dp"
-			android:minHeight="1dp"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:paddingTop="6dp"
-			android:paddingBottom="6dp"
-			android:onClick="searchButton_onClick" />
-		
-		<Button
-			android:id="@+id/cancelButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Cancel"
-			android:background="@drawable/common_button_background"
-			android:layout_alignParentLeft="true"
-			android:layout_marginLeft="5dp"
-			android:minHeight="1dp"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:paddingTop="6dp"
-			android:paddingBottom="6dp"
-			android:onClick="cancelButton_onClick" />
-
-		<Button
-			android:id="@+id/bookingPickerButton"
-			android:background="@null"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerHorizontal="true"
-			android:textColor="#80AED3"
-			android:layout_below="@+id/searchButton"
-			android:onClick="bookingPickerButton_onClick" />
-		
-        <com.ikky.ui.BookingPicker
-            android:id="@+id/bookingPicker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/bookingPickerButton"
-            android:visibility="gone" />
-        
-        <EditText
-            android:id="@+id/keywordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/bookingPicker"
-            android:hint="Find a restaurant"
-            android:maxLines="1"
-            android:singleLine="true" />
-        
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_below="@+id/keywordEditText" >
-            
-            <TextView
-	            android:id="@+id/distanceText"
-	            android:layout_width="wrap_content"
+	    <RelativeLayout
+	    	android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:background="#ffffff"
+	    	android:layout_alignParentTop="true" >
+	    
+		    <EditText
+	            android:id="@+id/keywordEditText"
+	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:paddingLeft="10dp"
-	            android:textSize="16sp"
-	            android:text="Distance: " />
-	        
-	        <TextView
-	            android:id="@+id/distanceValueText"
-	            android:layout_width="wrap_content"
+	            android:layout_alignParentTop="true"
+	            android:paddingLeft="25dp"
+	            android:textSize="18sp"
+	            android:textColor="#777777"
+	            android:paddingTop="15dp"
+	            android:layout_marginLeft="12dp"
+	            android:layout_marginRight="12dp"
+	            android:hint="Find a restaurant"
+	            android:maxLines="1"
+	            android:singleLine="true" />
+        
+	        <LinearLayout
+	            android:id="@+id/distanceContainer"
+	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:textSize="16sp" />
-	        
+	            android:paddingTop="10dp"
+	            android:paddingLeft="37dp"
+	            android:orientation="horizontal"
+	            android:layout_below="@+id/keywordEditText" >
+	            
+	            <TextView
+		            android:id="@+id/distanceText"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textSize="18sp"
+		            android:textColor="#777777"
+		            android:text="Distance: " />
+		        
+		        <TextView
+		            android:id="@+id/distanceValueText"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textSize="18sp"
+		            android:textColor="#777777" />
+		        
+			</LinearLayout>
+			
 	        <SeekBar 
 	            android:id="@+id/distanceSeekBar"
 	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content" />
-	        
-        </LinearLayout>
+	            android:layout_height="wrap_content"
+	            android:layout_below="@+id/distanceContainer" />
+		
+	        <com.ikky.ui.BookingPicker
+	            android:id="@+id/bookingPicker"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@+id/distanceSeekBar"
+	            android:scaleY="0.6" />
+        
+	        <LinearLayout
+	            android:orientation="horizontal"
+	            android:layout_width="match_parent"
+	            android:layout_height="45dp"
+	            android:layout_below="@+id/bookingPicker" >
+			
+				<Button
+					android:id="@+id/cancelButton"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:background="#eceded"
+					android:textSize="15sp"
+					android:textColor="#777777"
+					android:text="CANCEL"
+					android:onClick="cancelButton_onClick" />
+				
+				<LinearLayout
+				    android:orientation="horizontal"
+				    android:layout_width="1dp"
+				    android:layout_height="match_parent"
+				    android:background="#eceded" >
+				    <LinearLayout
+				        android:orientation="horizontal"
+				        android:layout_width="match_parent"
+				        android:layout_height="26dp"
+				        android:layout_gravity="center"
+				        android:background="#dcdcdc" />
+			    </LinearLayout>
+				
+				<Button
+					android:id="@+id/searchButton"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:background="#eceded"
+					android:textSize="15sp"
+					android:textColor="#777777"
+					android:text="SEARCH"
+					android:onClick="searchButton_onClick" />
+				
+	        </LinearLayout>
+		
+		</RelativeLayout>
         
 	</RelativeLayout>
-	
-	<Button
-		android:id="@+id/showSearchButton"
-		android:background="@null"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:textColor="#80AED3"
-		android:onClick="showSearchButton_onClick" />
 	
 	<ImageButton
         android:id="@+id/switchViewButton"
@@ -120,14 +130,12 @@
 	<ListView
 		android:id="@+id/searchResultListView"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_below="@+id/showSearchButton" />
+	    android:layout_height="match_parent" />
 	
 	<RelativeLayout
 	    android:id="@+id/googleMapContainer"
         android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:layout_below="@+id/showSearchButton"
 	    android:visibility="gone" >
         
 	    <fragment
@@ -149,7 +157,7 @@
 	    <android.support.v4.view.ViewPager
 	        android:id="@+id/miniInfoPager"
 	        android:layout_width="match_parent"
-	        android:layout_height="80dp"
+	        android:layout_height="125dp"
 	        android:layout_alignParentBottom="true" />
 		
 	</RelativeLayout>

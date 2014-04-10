@@ -9,12 +9,15 @@ import com.ikky.activities.R;
 import com.ikky.managers.SearchData;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 
 public class BookingPicker extends LinearLayout {
+	
+	private Typeface mTypefaceRobotoRegular;
 
 	static final private int MAX_PEOPLE = 20;
 	
@@ -32,6 +35,8 @@ public class BookingPicker extends LinearLayout {
 	
 	public BookingPicker(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		
+		mTypefaceRobotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
 		
 		setOrientation(LinearLayout.HORIZONTAL);
 		

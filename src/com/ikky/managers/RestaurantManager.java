@@ -7,6 +7,7 @@ import com.ikky.activities.RestaurantInfoActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.TextView;
 
@@ -69,6 +70,20 @@ public class RestaurantManager {
 		tv_RESTAURANT_REVIEW_FOOD.setText(rd.getRestaurantReviewFood());
 		tv_RESTAURANT_REVIEW_SERVICE.setText(rd.getRestaurantReviewService());
 		tv_RESTAURANT_REVIEW_AMBIENCE.setText(rd.getRestaurantReviewAmbiance());
+		Typeface typefaceRobotoRegular = Typeface.createFromAsset(this.mActivity.getAssets(), "fonts/Roboto-Regular.ttf");
+		tv_RESTAURANT_NAME.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_ADDRESS.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_PHONE.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_CUISINE.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_PRICE.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_HOURS.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_PARKING.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_DESCRIPTION.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_MENU.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_REVIEW_OVERALL.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_REVIEW_FOOD.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_REVIEW_SERVICE.setTypeface(typefaceRobotoRegular);
+		tv_RESTAURANT_REVIEW_AMBIENCE.setTypeface(typefaceRobotoRegular);
 		
 	}
 	

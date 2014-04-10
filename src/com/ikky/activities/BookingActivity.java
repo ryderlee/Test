@@ -32,6 +32,7 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -75,8 +76,10 @@ public class BookingActivity extends BaseActivity {
 		
 		mBookingStatusView = findViewById(R.id.bookingStatusView);
 		
+		
 		mBookingSuccessMessage = (TextView) findViewById(R.id.bookingSuccessMessage);
 		mBookingSuccessMessage.setText(UserData.getInstance().getFirstName()+", you're all set!");
+		mBookingSuccessMessage.setTypeface(mTypefaceRobotoRegular);
 		
 		mBookingInfoView = (View) findViewById(R.id.bookingInfoView);
 		RestaurantManager.getInstance(this).displayMiniBlock(mBookingInfoView);

@@ -13,11 +13,14 @@ import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.util.Log;
+import android.util.TypedValue;
 
 import java.net.*;
 
@@ -26,6 +29,7 @@ import org.json.*;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.ActionBar;
 
 import com.ikky.activities.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -61,7 +65,6 @@ public class MainActivity extends BaseActivity {
 	
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 	
-	private Button mShowSearchButton;
 	private View mSearchView;
 	private Button mBookingPickerButton;
 	private BookingPicker mBookingPicker;
@@ -107,17 +110,31 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        LayoutInflater inflater = LayoutInflater.from(this.getBaseContext());
+		View actionBarView = inflater.inflate(R.layout.actionbar_view, null);
+        
+        getActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setDisplayShowCustomEnabled(true);
+        getActionBar().setCustomView(actionBarView);
         
         mInitSearch = true;
         mIsListView = true;
         mCanSwitchView = true;
         
-        mShowSearchButton = (Button) findViewById(R.id.showSearchButton);
         mSearchView = findViewById(R.id.searchView);
-        mBookingPickerButton = (Button) findViewById(R.id.bookingPickerButton);
+        mBookingPickerButton = (Button) getActionBar().getCustomView().findViewById(R.id.actionBarPicker);
+        mBookingPickerButton.setTypeface(mTypefaceRobotoRegular);
+        mBookingPickerButton.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showSearchButton_onClick(v);
+			}
+		});
         mBookingPicker = (BookingPicker) findViewById(R.id.bookingPicker);
         mKeywordEditText = (EditText) findViewById(R.id.keywordEditText);
         mDistanceValueText = (TextView) findViewById(R.id.distanceValueText);
+        mDistanceValueText.setTypeface(mTypefaceRobotoRegular);
         mDistanceSeekBar = (SeekBar) findViewById(R.id.distanceSeekBar);
         mGoogleMapContainer= (RelativeLayout) findViewById(R.id.googleMapContainer);
         mSwitchViewButton = (ImageButton) findViewById(R.id.switchViewButton);
@@ -131,7 +148,6 @@ public class MainActivity extends BaseActivity {
 				mBookingPickerButton.setText(Utils.getLongBookingInfo());
 			}
 		});
-        mShowSearchButton.setText(Utils.getShortBookingInfo());
         
         mDistanceSeekBar.setMax(9);
         mDistanceSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -281,23 +297,7 @@ public class MainActivity extends BaseActivity {
     	}
     }
     
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        // same as using a normal menu
-        switch(item.getItemId()) {
-        case R.id.action_user:
-        	UserManager.getInstance(this).login(false);
-            break;
-        }
-        return true;
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        
-        return true;
-    }
+    //TODO: UserManager.getInstance(this).login(false);
     
     @Override
     protected void onNewIntent(Intent intent) {
@@ -414,27 +414,48 @@ public class MainActivity extends BaseActivity {
 			}
 			
 			TextView nameTextView = (TextView) convertView.findViewById(R.id.restaurantResult_nameTextView);
+			nameTextView.setTypeface(mTypefaceRobotoRegular);
 			TextView addressTextView = (TextView) convertView.findViewById(R.id.restaurantResult_addressTextView);
-	    	
-	    	TextView licnoTextView = (TextView) convertView.findViewById(R.id.restaurantResult_licnoTextView);
-	    	
-	    	TextView timeslotTextView = (TextView) convertView.findViewById(R.id.restaurantResult_slotTextView);
+	    	addressTextView.setTypeface(mTypefaceRobotoRegular);
 	    	
 	    	RestaurantResultItem item = (RestaurantResultItem)this.getItem(position);
 	    	nameTextView.setText(item.ss);
 	    	addressTextView.setText(item.adr);
-	    	if (item.timeslots.size() > 0) {
-	    		String timeslotString = "";
-	    		for (String timeslot : item.timeslots) {
-	    			timeslotString += timeslot.substring(0, 2) + ":" + timeslot.substring(2) + " ";
+	    	
+	    	final float scale = getContext().getResources().getDisplayMetrics().density;
+	    	int widthInDp = (int) (50 * scale + 0.5f);
+	    	int heightInDp = (int) (17 * scale + 0.5f);
+	    	Iterator<String> iter = item.timeslots.iterator();
+	    	LinearLayout timeslotsContainer = (LinearLayout) convertView.findViewById(R.id.restaurantResult_timeslotsContainer);
+	    	timeslotsContainer.removeAllViews();
+	    	for (int i=0; i<4; i++) {
+	    		TextView timeslot = new TextView(getContext());
+	    		timeslot.setWidth(widthInDp);
+	    		timeslot.setHeight(heightInDp);
+	    		timeslot.setGravity(Gravity.CENTER);
+	    		timeslot.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+	    		timeslot.setTextColor(Color.WHITE);
+	    		String viewString = "-";
+	    		if (iter.hasNext()) {
+	    			timeslot.setBackgroundColor(Color.argb(255, 14, 180, 88));
+	    			String timeslotString = iter.next();
+	    			viewString = timeslotString.substring(0, 2) + ":" + timeslotString.substring(2);
+	    		} else {
+	    			timeslot.setBackgroundColor(Color.argb(255, 214, 214, 214));
 	    		}
-	    		timeslotTextView.setText(timeslotString);
-	    	} else {
-	    		timeslotTextView.setText(" - ");
+	    		timeslot.setText(viewString);
+	    		timeslotsContainer.addView(timeslot);
+	    		
+	    		if (i<3) {
+	    			LinearLayout paddingView = new LinearLayout(getContext());
+	    			paddingView.setOrientation(LinearLayout.HORIZONTAL);
+	    			LayoutParams params = new LayoutParams(0, LayoutParams.MATCH_PARENT);
+	    			params.weight = 1;
+	    			paddingView.setLayoutParams(params);
+	    			timeslotsContainer.addView(paddingView);
+	    		}
 	    	}
 	    	convertView.setTag(item.licno);
-	    	
-	    	licnoTextView.setText(item.licno);
 	    	
 	    	PhotoView pv = ((PhotoView) convertView.findViewById(R.id.restaurantResult_thumbnailImageView));
 	    	try{
@@ -456,23 +477,22 @@ public class MainActivity extends BaseActivity {
     
     
     public void showSearchButton_onClick(View view) {
-    	mSearchView.setVisibility(View.VISIBLE);
-    	mShowSearchButton.setVisibility(View.INVISIBLE);
-    	mBookingPicker.setVisibility(View.GONE);
-    	mKeywordEditText.setText("");
-    	mSearchView.bringToFront();
-    	mKeywordEditText.requestFocus();
+    	if (mSearchView.getVisibility()==View.VISIBLE) {
+    		mSearchView.setVisibility(View.GONE);
+    	} else {
+	    	mSearchView.setVisibility(View.VISIBLE);
+	    	mKeywordEditText.setText("");
+	    	mSearchView.bringToFront();
+	    	mKeywordEditText.requestFocus();
+    	}
     }
     public void searchButton_onClick(View view) {
     	mSearchView.setVisibility(View.GONE);
-    	mShowSearchButton.setVisibility(View.VISIBLE);
-    	mShowSearchButton.setText(Utils.getShortBookingInfo());
     	mKeyword = mKeywordEditText.getText().toString();
     	search(true);
     }
     public void cancelButton_onClick(View view) {
     	mSearchView.setVisibility(View.GONE);
-    	mShowSearchButton.setVisibility(View.VISIBLE);
     }
     public void bookingPickerButton_onClick(View view) {
     	mBookingPicker.setVisibility(mBookingPicker.isShown()?View.GONE:View.VISIBLE);
@@ -572,7 +592,7 @@ public class MainActivity extends BaseActivity {
 	           					String timeslotStr = timeslotAvailability.getString(j);
            						timeslots.add(timeslotStr);
 	           				}
-	           				if (timeslots.size() > 6) {
+	           				if (timeslots.size() > 4) {
 	           					ArrayList<String> targetTimeslots = new ArrayList<String>();
 	           					String targetTimeslotStr = new SimpleDateFormat("HHmm").format(SearchData.getInstance().getChosenDate());
 	           					int largerTimeslotCount = 0;
@@ -581,10 +601,10 @@ public class MainActivity extends BaseActivity {
 	           							largerTimeslotCount++;
 	           						}
 	           						targetTimeslots.add(timeslotStr);
-	           						if (targetTimeslots.size() > 6) {
+	           						if (targetTimeslots.size() > 4) {
 	           							targetTimeslots.remove(0);
 	           						}
-	           						if (largerTimeslotCount == 2 && targetTimeslots.size() == 6) {
+	           						if (largerTimeslotCount == 2 && targetTimeslots.size() == 4) {
 	           							break;
 	           						}
 	           					}
@@ -651,14 +671,10 @@ public class MainActivity extends BaseActivity {
 			TextView nameTextView = (TextView) viewLayout.findViewById(R.id.restaurantResult_nameTextView);
 			TextView addressTextView = (TextView) viewLayout.findViewById(R.id.restaurantResult_addressTextView);
 	    	
-	    	TextView licnoTextView = (TextView) viewLayout.findViewById(R.id.restaurantResult_licnoTextView);
-	    	
 	    	RestaurantResultItem item = mAdapter.getItem(position);
 	    	nameTextView.setText(item.ss);
 	    	addressTextView.setText(item.adr);
 	    	viewLayout.setTag(item.licno);
-	    	
-	    	licnoTextView.setText(item.licno);
 	    	
 	    	PhotoView pv = ((PhotoView) viewLayout.findViewById(R.id.restaurantResult_thumbnailImageView));
 	    	try{

@@ -9,12 +9,17 @@ import com.facebook.Request.GraphUserCallback;
 import com.facebook.model.GraphUser;
 import com.ikky.managers.UserData;
 
+import com.ikky.activities.R;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -25,6 +30,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class BaseActivity extends ActionBarActivity {
+	
+	protected Typeface mTypefaceRobotoRegular;
 	
 	protected Session.StatusCallback fbStatusCallback = new Session.StatusCallback() {
 	    @Override
@@ -37,6 +44,8 @@ public class BaseActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		mTypefaceRobotoRegular = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
 		fbUiHelper = new UiLifecycleHelper(this, fbStatusCallback);
 		fbUiHelper.onCreate(savedInstanceState);
 	}
