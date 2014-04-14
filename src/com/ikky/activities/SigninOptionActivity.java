@@ -30,6 +30,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 public class SigninOptionActivity extends BaseActivity {
@@ -73,6 +75,14 @@ public class SigninOptionActivity extends BaseActivity {
 		findViewById(R.id.textOR).setVisibility(mReserve ? View.GONE : View.VISIBLE);
 		findViewById(R.id.guestButton).setVisibility(mReserve ? View.VISIBLE : View.GONE);
 		findViewById(R.id.bookingInfoView).setVisibility(mReserve ? View.VISIBLE : View.GONE);
+		findViewById(R.id.ikkyLogo).setVisibility(mReserve ? View.GONE : View.VISIBLE);
+		
+		if (mReserve) {
+			RelativeLayout.LayoutParams params = (LayoutParams) findViewById(R.id.signinButton).getLayoutParams();
+			params.addRule(RelativeLayout.BELOW, R.id.bookingInfoView);
+			params.topMargin = 0;
+			findViewById(R.id.signinButton).setLayoutParams(params);
+		}
 		
 		RestaurantManager.getInstance(this).displayMiniBlock(findViewById(R.id.bookingInfoView));
 		

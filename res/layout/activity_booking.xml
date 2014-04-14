@@ -2,10 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".BookingActivity" >
 
     <LinearLayout
@@ -18,74 +14,143 @@
 	        android:id="@+id/bookingFormView"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent">
-	
-		    <Button
-		        android:id="@+id/cancelButton"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignParentLeft="true"
-		        android:layout_alignParentTop="true"
-		        android:text="Cancel"
-		        android:background="@drawable/common_button_background"
-		        android:minHeight="1dp"
-		        android:paddingLeft="10dp"
-		        android:paddingRight="10dp"
-		        android:paddingTop="6dp"
-		        android:paddingBottom="6dp"
-		        android:onClick="cancelButton_onClick" />
-		
-		    <Button
-		        android:id="@+id/reserveButton"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignParentRight="true"
-		        android:layout_alignParentTop="true"
-		        android:text="Reserve"
-		        android:background="@drawable/common_button_background"
-		        android:minHeight="1dp"
-		        android:paddingLeft="10dp"
-		        android:paddingRight="10dp"
-		        android:paddingTop="6dp"
-		        android:paddingBottom="6dp"
-		        android:onClick="reserveButton_onClick" />
-		    
-		    <LinearLayout
+	        
+	        <LinearLayout
 		        android:id="@+id/bookingInfoView" 
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:layout_below="@+id/reserveButton"
-		        android:layout_marginTop="50dp" >
+		        android:layout_alignParentTop="true" >
 		        <include layout="@layout/view_booking_info" />
 		    </LinearLayout>
+		    
+	        <LinearLayout
+	            android:orientation="vertical"
+	            android:id="@+id/personalInfoTitle"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@+id/bookingInfoView" >
+	            <View android:layout_width="match_parent" android:layout_height="1px" android:background="#c9caca" />
+	            <View android:layout_width="match_parent" android:layout_height="1px" android:background="#ffffff"/>
+		        <TextView
+		            android:layout_width="match_parent"
+		            android:layout_height="30dp"
+		            android:paddingLeft="12dp"
+		            android:gravity="center_vertical"
+		            android:textSize="15sp"
+		            android:textColor="#777777"
+		            android:background="#ebebeb"
+		            android:text="PERSONAL INFORMATION" />
+	        </LinearLayout>
 		
 		    <EditText
 		        android:id="@+id/phoneEditText"
-		        android:layout_width="wrap_content"
+		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:layout_alignParentLeft="true"
-		        android:layout_alignParentRight="true"
-		        android:layout_below="@+id/bookingInfoView"
-		        android:layout_marginTop="60dp"
+		        android:paddingLeft="12dp"
+		        android:paddingRight="12dp"
+		        android:layout_below="@+id/personalInfoTitle"
+		        android:layout_marginTop="10dp"
 		        android:inputType="phone"
+		        android:maxLength="8"
 		        android:singleLine="true"
-		        android:hint="Phone Number"
+		        android:hint="Phone number"
 		        android:gravity="top" >
 		        <requestFocus />
 	        </EditText>
 		    
 		    <EditText
 		        android:id="@+id/specialRequestEditText"
-		        android:layout_width="wrap_content"
-		        android:layout_height="100dp"
-		        android:layout_alignParentLeft="true"
-		        android:layout_alignParentRight="true"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingLeft="12dp"
+		        android:paddingRight="12dp"
 		        android:layout_below="@+id/phoneEditText"
 		        android:layout_marginTop="10dp"
-		        android:inputType="text|textMultiLine"
+		        android:inputType="text"
+		        android:singleLine="true"
 		        android:hint="Add a special request"
 		        android:gravity="top" >
 		        <requestFocus />
 	        </EditText>
+
+		    <View android:layout_width="match_parent" android:layout_height="1px" android:background="#777777" android:layout_above="@+id/searchViewButtons" />
+		    	        
+		    <LinearLayout
+	            android:id="@+id/searchViewButtons"
+	            android:orientation="horizontal"
+	            android:layout_width="match_parent"
+	            android:layout_height="45dp"
+	            android:layout_marginTop="6dp"
+	            android:layout_alignParentBottom="true" >
+		        
+	            <LinearLayout
+				    android:layout_width="0dp"
+				    android:layout_height="match_parent"
+				    android:layout_weight="1"
+				    android:gravity="center"
+				    android:background="#ffffff"
+				    android:onClick="cancelButton_onClick" >
+				    
+				    <ImageView
+				        android:layout_width="20dp"
+				        android:layout_height="20dp"
+				        android:scaleType="fitXY"
+				        android:clickable="false"
+				        android:textSize="15sp"
+						android:textColor="#777777"
+						android:background="#0000"
+						android:layout_marginRight="8dp"
+				        android:src="@drawable/btn_cross" />
+				    <TextView
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:clickable="false"
+				        android:background="#0000"
+				        android:text="CANCEL" />
+				    
+				</LinearLayout>
+				
+				<LinearLayout
+				    android:orientation="horizontal"
+				    android:layout_width="1px"
+				    android:layout_height="match_parent"
+				    android:background="#ffffff" >
+				    <LinearLayout
+				        android:orientation="horizontal"
+				        android:layout_width="match_parent"
+				        android:layout_height="match_parent"
+				        android:layout_gravity="center"
+				        android:background="#777777" />
+			    </LinearLayout>
+				
+				<LinearLayout
+				    android:layout_width="0dp"
+				    android:layout_height="match_parent"
+				    android:layout_weight="1"
+				    android:gravity="center"
+				    android:background="#ffffff"
+				    android:onClick="reserveButton_onClick" >
+				    
+				    <ImageView
+				        android:layout_width="24.5dp"
+				        android:layout_height="20dp"
+				        android:scaleType="fitXY"
+				        android:clickable="false"
+				        android:textSize="15sp"
+						android:textColor="#777777"
+						android:background="#0000"
+						android:layout_marginRight="8dp"
+				        android:src="@drawable/btn_tick_normal" />
+				    <TextView
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:clickable="false"
+				        android:background="#0000"
+				        android:text="RESERVE" />
+				    
+				</LinearLayout>
+				
+	        </LinearLayout>
 	    
 	    </RelativeLayout>
 	    

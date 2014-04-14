@@ -2,103 +2,109 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/booking_info_border" >
+    android:layout_marginBottom="13dp" >
+
+    <com.ikky.ui.PhotoView
+        android:id="@+id/bookingInfoPhotoView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop" />
+    
+    <LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="33dp"
+		android:background="#88000000"
+		android:layout_alignBottom="@+id/bookingInfoPhotoView" />
     
     <TextView
         android:id="@+id/RESTAURANT_MINI_NAME"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-		android:layout_toLeftOf="@+id/RESTAURANT_MINI_NO_OF_PARTICIPANTS"
-		android:layout_alignParentLeft="true" />
+		android:layout_height="33dp"
+		android:layout_alignBottom="@+id/bookingInfoPhotoView"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="12dp"
+        android:textSize="18sp"
+        android:textColor="#ffffff" />
     
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_NO_OF_PARTICIPANTS"
-        android:layout_width="wrap_content"
+    <LinearLayout
+		android:orientation="vertical"
+        android:id="@+id/reservationDetailTitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="10dp"
-        android:background="@drawable/ic_action_user"
-        android:gravity="center" />
+        android:layout_below="@+id/RESTAURANT_MINI_NAME" >
+        <View android:layout_width="match_parent" android:layout_height="1px" android:background="#c9caca" />
+        <View android:layout_width="match_parent" android:layout_height="1px" android:background="#ffffff"/>
+		<TextView
+			android:layout_width="match_parent"
+	        android:layout_height="30dp"
+	        android:paddingLeft="12dp"
+	        android:gravity="center_vertical"
+	        android:textSize="15sp"
+	        android:textColor="#777777"
+	        android:background="#ebebeb"
+	        android:text="RESERVATION DETAILS" />
+    </LinearLayout>
     
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_DATE_TIME"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/bookingDateContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/RESTAURANT_MINI_NAME"
-        android:layout_marginTop="10dp"
-        android:textSize="11dp" />
+        android:layout_marginTop="11dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_below="@id/reservationDetailTitle"
+        android:orientation="horizontal"
+        android:gravity="center_vertical" >
+        <ImageView android:src="@drawable/ic_date" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginRight="12dp" android:scaleType="fitXY" />
+        <TextView
+	        android:id="@+id/RESTAURANT_MINI_DATE_TIME"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="12sp"
+	        android:layout_marginTop="4dp"
+	        android:layout_marginBottom="5dp" />
+    </LinearLayout>
     
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_ADDRESS"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/bookingTimeContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:layout_marginTop="11dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_below="@id/bookingDateContainer"
+        android:orientation="horizontal"
+        android:gravity="center_vertical" >
+        <ImageView android:src="@drawable/ic_hour" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginRight="12dp" android:scaleType="fitXY" />
+        <TextView
+	        android:id="@+id/RESTAURANT_MINI_ADDRESS"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="12sp"
+	        android:layout_marginTop="4dp"
+	        android:layout_marginBottom="5dp" />
+    </LinearLayout>
     
-    
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_PHONE"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/noOfParticipantsContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_CUISINE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_PRICE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_HOURS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_PARKING"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-    
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_DESCRIPTION"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-    
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_MENU"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-    
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_REVIEW_OVERALL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-    
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_REVIEW_FOOD"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-    
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_REVIEW_SERVICE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-    
-    <TextView
-        android:id="@+id/RESTAURANT_MINI_REVIEW_AMBIENCE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:layout_marginTop="11dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_below="@id/bookingTimeContainer"
+        android:orientation="horizontal"
+        android:gravity="center_vertical" >
+        <ImageView android:src="@drawable/ic_people" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginRight="12dp" android:scaleType="fitXY" />
+        <TextView
+	        android:id="@+id/RESTAURANT_MINI_NO_OF_PARTICIPANTS"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="12sp"
+	        android:layout_marginTop="4dp"
+	        android:layout_marginBottom="5dp" />
+    </LinearLayout>
     
 </RelativeLayout>

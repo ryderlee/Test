@@ -29,7 +29,7 @@ public class UserManager {
 	public void login(boolean reserve) {
 		this.mLoginTopActivity = this.mActivity;
 		if (UserData.getInstance().isLogin()) {
-			this.backToTopActivity(Constants.ACTION_SHOW_PROFILE);
+			this.backToTopActivity(Constants.ACTION_ALREADY_LOGIN);
 		} else {
 			Intent intent = new Intent();
 			intent.setClass(this.mActivity, SigninOptionActivity.class);

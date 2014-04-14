@@ -365,7 +365,7 @@ public class RestaurantInfoActivity extends BaseActivity {
     protected void onNewIntent(Intent intent) {
         String action = intent.getStringExtra("ACTION");
         if (action != null) {
-	    	if (action.equals(Constants.ACTION_LOGIN_SUCCESS)) {
+	    	if (action.equals(Constants.ACTION_LOGIN_SUCCESS) || action.equals(Constants.ACTION_ALREADY_LOGIN)) {
 	            int numOfPeople = 1;
 	            int timeSlotId = 1;
 	            BookingManager.getInstance(this).book(numOfPeople, timeSlotId);

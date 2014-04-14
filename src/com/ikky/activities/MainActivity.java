@@ -332,7 +332,7 @@ public class MainActivity extends BaseActivity {
     	}
     	if(intent.hasExtra("ACTION")){
 	        String action = intent.getStringExtra("ACTION");
-	    	if (action.equals(Constants.ACTION_SHOW_PROFILE)) {
+	    	if (action.equals(Constants.ACTION_ALREADY_LOGIN)) {
 	            Log.d("example", "login success and show profile now");
 	    		UserManager.getInstance(this).showProfile();
 	    	}

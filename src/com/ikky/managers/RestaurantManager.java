@@ -1,9 +1,12 @@
 package com.ikky.managers;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 
 import com.ikky.activities.R;
 import com.ikky.activities.RestaurantInfoActivity;
+import com.ikky.ui.PhotoView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -41,49 +44,24 @@ public class RestaurantManager {
 
 		TextView tv_BOOKING_DATE_TIME = (TextView) v.findViewById(R.id.RESTAURANT_MINI_DATE_TIME);
 		TextView tv_BOOKING_NO_OF_PARTICIPANTS = (TextView) v.findViewById(R.id.RESTAURANT_MINI_NO_OF_PARTICIPANTS);
-		tv_BOOKING_DATE_TIME.setText(new SimpleDateFormat("EEEE, MMMM dd 'at' HH:mm").format(SearchData.getInstance().getChosenDate()));
-		tv_BOOKING_NO_OF_PARTICIPANTS.setText(Integer.toString(SearchData.getInstance().getNumberOfReservation()));
+		tv_BOOKING_DATE_TIME.setText(new SimpleDateFormat("EEEE, MMMM dd").format(SearchData.getInstance().getChosenDate()));
+		tv_BOOKING_NO_OF_PARTICIPANTS.setText(Integer.toString(SearchData.getInstance().getNumberOfReservation())+" People");
 		
 		TextView tv_RESTAURANT_NAME = (TextView) v.findViewById(R.id.RESTAURANT_MINI_NAME);
 		TextView tv_RESTAURANT_ADDRESS = (TextView) v.findViewById(R.id.RESTAURANT_MINI_ADDRESS);
-		TextView tv_RESTAURANT_PHONE= (TextView) v.findViewById(R.id.RESTAURANT_MINI_PHONE);
-		TextView tv_RESTAURANT_CUISINE = (TextView) v.findViewById(R.id.RESTAURANT_MINI_CUISINE);
-		TextView tv_RESTAURANT_PRICE= (TextView) v.findViewById(R.id.RESTAURANT_MINI_PRICE);
-		TextView tv_RESTAURANT_HOURS= (TextView) v.findViewById(R.id.RESTAURANT_MINI_HOURS);
-		TextView tv_RESTAURANT_PARKING= (TextView) v.findViewById(R.id.RESTAURANT_MINI_PARKING);
-		TextView tv_RESTAURANT_DESCRIPTION = (TextView) v.findViewById(R.id.RESTAURANT_MINI_DESCRIPTION);
-		TextView tv_RESTAURANT_MENU= (TextView) v.findViewById(R.id.RESTAURANT_MINI_MENU);
-		TextView tv_RESTAURANT_REVIEW_OVERALL = (TextView) v.findViewById(R.id.RESTAURANT_MINI_REVIEW_OVERALL);
-		TextView tv_RESTAURANT_REVIEW_FOOD = (TextView) v.findViewById(R.id.RESTAURANT_MINI_REVIEW_FOOD);
-		TextView tv_RESTAURANT_REVIEW_SERVICE = (TextView) v.findViewById(R.id.RESTAURANT_MINI_REVIEW_SERVICE);
-		TextView tv_RESTAURANT_REVIEW_AMBIENCE = (TextView) v.findViewById(R.id.RESTAURANT_MINI_REVIEW_AMBIENCE);
 		tv_RESTAURANT_NAME.setText(rd.getRestaurantName());
-		tv_RESTAURANT_ADDRESS.setText(rd.getRestaurantAddress());
-		tv_RESTAURANT_PHONE.setText(rd.getRestaurantPhone());
-		tv_RESTAURANT_CUISINE.setText(rd.getRestaurantCuisine());
-		tv_RESTAURANT_PRICE.setText(rd.getRestaurantPrice());
-		tv_RESTAURANT_HOURS.setText(rd.getRestaurantHours());
-		tv_RESTAURANT_PARKING.setText(rd.getRestaurantParking());
-		tv_RESTAURANT_DESCRIPTION.setText(rd.getRestaurantDescription());
-		tv_RESTAURANT_MENU.setText(rd.getRestaurantMenu());
-		tv_RESTAURANT_REVIEW_OVERALL.setText(rd.getRestaurantReviewOverall());
-		tv_RESTAURANT_REVIEW_FOOD.setText(rd.getRestaurantReviewFood());
-		tv_RESTAURANT_REVIEW_SERVICE.setText(rd.getRestaurantReviewService());
-		tv_RESTAURANT_REVIEW_AMBIENCE.setText(rd.getRestaurantReviewAmbiance());
+		tv_RESTAURANT_ADDRESS.setText(new SimpleDateFormat("HH:mm").format(SearchData.getInstance().getChosenDate()));
 		Typeface typefaceRobotoRegular = Typeface.createFromAsset(this.mActivity.getAssets(), "fonts/Roboto-Regular.ttf");
 		tv_RESTAURANT_NAME.setTypeface(typefaceRobotoRegular);
 		tv_RESTAURANT_ADDRESS.setTypeface(typefaceRobotoRegular);
-		tv_RESTAURANT_PHONE.setTypeface(typefaceRobotoRegular);
-		tv_RESTAURANT_CUISINE.setTypeface(typefaceRobotoRegular);
-		tv_RESTAURANT_PRICE.setTypeface(typefaceRobotoRegular);
-		tv_RESTAURANT_HOURS.setTypeface(typefaceRobotoRegular);
-		tv_RESTAURANT_PARKING.setTypeface(typefaceRobotoRegular);
-		tv_RESTAURANT_DESCRIPTION.setTypeface(typefaceRobotoRegular);
-		tv_RESTAURANT_MENU.setTypeface(typefaceRobotoRegular);
-		tv_RESTAURANT_REVIEW_OVERALL.setTypeface(typefaceRobotoRegular);
-		tv_RESTAURANT_REVIEW_FOOD.setTypeface(typefaceRobotoRegular);
-		tv_RESTAURANT_REVIEW_SERVICE.setTypeface(typefaceRobotoRegular);
-		tv_RESTAURANT_REVIEW_AMBIENCE.setTypeface(typefaceRobotoRegular);
+		
+		PhotoView photoView = (PhotoView) v.findViewById(R.id.bookingInfoPhotoView);
+		
+		try {
+			URL imageUrl = new URL("http://www.foodnut.com/i/Yung-Kee-Restaurant-Hong-Kong/Yung-Kee-Restaurant-Hong-Kong-1.jpg");
+			photoView.setImageURL(imageUrl, true, null);
+		}
+		catch(MalformedURLException mfe){}
 		
 	}
 	
