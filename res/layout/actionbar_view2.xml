@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_alignParentLeft="true"
+    	android:layout_alignParentRight="true" >
+    	
+	    <Button
+		    android:id="@+id/myUpButton"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:layout_marginLeft="9dp"
+		    android:background="@null"
+		    android:padding="0dp"
+		    android:textColor="#777777"
+		    android:textSize="15sp"
+		    android:layout_centerVertical="true"
+		    android:gravity="left|center_vertical"
+		    android:drawableLeft="@drawable/abc_ic_ab_back_holo_light" />
+    
+	    <TextView
+		    android:id="@+id/usernameTextView"
+		    android:textSize="18sp"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerInParent="true"
+		    android:textColor="#555555" />
+    
+	</RelativeLayout>
+
+</RelativeLayout>

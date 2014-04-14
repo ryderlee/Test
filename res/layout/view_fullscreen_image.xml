@@ -9,18 +9,15 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
     
-    <Button
+    <ImageView
         android:id="@+id/fullScreenImageCloseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:scaleType="fitXY"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:background="@drawable/button_background"
-        android:textColor="#ffffff"
-        android:text="Close" />
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_close" />
 
 </RelativeLayout>

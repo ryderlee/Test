@@ -32,6 +32,7 @@ import android.widget.ListView;
 public class BaseActivity extends ActionBarActivity {
 	
 	protected Typeface mTypefaceRobotoRegular;
+	protected Typeface mTypefaceRobotoMedium;
 	
 	protected Session.StatusCallback fbStatusCallback = new Session.StatusCallback() {
 	    @Override
@@ -46,6 +47,7 @@ public class BaseActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		
 		mTypefaceRobotoRegular = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
+		mTypefaceRobotoMedium = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Medium.ttf");
 		fbUiHelper = new UiLifecycleHelper(this, fbStatusCallback);
 		fbUiHelper.onCreate(savedInstanceState);
 	}

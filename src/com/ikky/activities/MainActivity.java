@@ -15,7 +15,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.LinearLayout.LayoutParams;
@@ -30,7 +29,6 @@ import org.json.*;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.ActionBar;
 
 import com.ikky.activities.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -56,7 +54,6 @@ import com.ikky.managers.SearchData;
 import com.ikky.managers.UserManager;
 import com.ikky.ui.BookingPicker;
 import com.ikky.ui.PhotoView;
-import com.ikky.ui.BookingPicker.OnValueChangeListener;
 
 import java.util.*;
 
@@ -75,6 +72,9 @@ public class MainActivity extends BaseActivity {
 	private TextView mDistanceValueText;
 	private SeekBar mDistanceSeekBar;
 	private ImageButton mSwitchViewButton;
+	private Boolean mMapLoaded;
+	
+	private RelativeLayout mMiniInfoLoading;
 	
 	private ListViewAdapter<RestaurantResultItem> mAdapter;
 	private MiniInfoAdapter mMiniInfoAdapter;
@@ -122,6 +122,7 @@ public class MainActivity extends BaseActivity {
         mInitSearch = true;
         mIsListView = true;
         mCanSwitchView = true;
+        mMapLoaded = false;
         
         mSearchView = findViewById(R.id.searchView);
         mBookingPickerButton = (Button) getActionBar().getCustomView().findViewById(R.id.actionBarPicker);
@@ -154,6 +155,8 @@ public class MainActivity extends BaseActivity {
         		cancelButton_onClick(v);
         	}
         });
+        
+        mMiniInfoLoading = (RelativeLayout) findViewById(R.id.miniInfoLoading);
         
         mBookingPicker.setOnValueChangeListener(new BookingPicker.OnValueChangeListener() {
 			@Override
@@ -277,12 +280,15 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 		
+    	float scale = getBaseContext().getResources().getDisplayMetrics().density;
 		mGoogleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.googleMap)).getMap();
+		mGoogleMap.setPadding(0, 0, 0, (int)(125*scale));
     	mGoogleMap.setBuildingsEnabled(true);
     	mGoogleMap.setMyLocationEnabled(true);
     	mGoogleMap.setOnMapLoadedCallback(new OnMapLoadedCallback() {
 			@Override
 			public void onMapLoaded() {
+				mMapLoaded = true;
 				Location lastLocation = mLocationClient.getLastLocation();
 				mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 16));
 			}
@@ -298,9 +304,9 @@ public class MainActivity extends BaseActivity {
     }
     private void highlightMarker(Marker marker) {
 		if (mSelectedMarker != null) {
-			mSelectedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+			mSelectedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_blue));
 		}
-		marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+		marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_red));
 		mSelectedMarker = marker;
     }
     private void moveToMarker(Marker marker) {
@@ -326,7 +332,7 @@ public class MainActivity extends BaseActivity {
     	}
     	if(intent.hasExtra("ACTION")){
 	        String action = intent.getStringExtra("ACTION");
-	    	if (action.equals(Constants.ACTION_LOGIN_SUCCESS)) {
+	    	if (action.equals(Constants.ACTION_SHOW_PROFILE)) {
 	            Log.d("example", "login success and show profile now");
 	    		UserManager.getInstance(this).showProfile();
 	    	}
@@ -349,8 +355,13 @@ public class MainActivity extends BaseActivity {
     	}
     	mCanSwitchView = false;
     	mIsListView = !mIsListView;
+    	final float scale = getBaseContext().getResources().getDisplayMetrics().density;
     	if (!mIsListView) {
     		mSwitchViewButton.setImageResource(R.drawable.ic_launcher_list_view);
+    		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mSwitchViewButton.getLayoutParams();
+    		params.width = (int) (21.5*scale + 0.5F);
+    		params.height = (int) (18*scale + 0.5F);
+    		mSwitchViewButton.setLayoutParams(params);
     		AnimatorSet flipRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_right_out);
     		AnimatorSet flipRightIn = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_right_in);
     		flipRightOut.setTarget(mListView);
@@ -376,6 +387,10 @@ public class MainActivity extends BaseActivity {
     		flipRightIn.start();
     	} else {
     		mSwitchViewButton.setImageResource(R.drawable.ic_launcher_map);
+    		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mSwitchViewButton.getLayoutParams();
+    		params.width = (int) (26*scale + 0.5F);
+    		params.height = (int) (26*scale + 0.5F);
+    		mSwitchViewButton.setLayoutParams(params);
     		AnimatorSet flipLeftOut = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_left_out);
     		AnimatorSet flipLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.card_flip_left_in);
     		flipLeftOut.setTarget(mGoogleMapContainer);
@@ -544,6 +559,7 @@ public class MainActivity extends BaseActivity {
         	mResultMarkers.clear();
         	mAdapter.notifyDataSetChanged();
         	mMiniInfoAdapter.notifyDataSetChanged();
+        	mMiniInfoLoading.setVisibility(View.VISIBLE);
     	} else {
     		mPage++;
     	}
@@ -578,7 +594,7 @@ public class MainActivity extends BaseActivity {
 	    		if (mVisibleArea) {
 	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "latmin="+mMinLat, "lngmin="+mMinLng, "latmax="+mMaxLat, "lngmax="+mMaxLng, "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
 	    		} else {
-	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+100, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
+	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
 	    		}
 	    	} else {
 	    		s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize);
@@ -645,7 +661,7 @@ public class MainActivity extends BaseActivity {
 			if (success) {
 				if (mGoogleMap != null) {
 					for (RestaurantResultItem item : results) {
-						MarkerOptions markerOptions = new MarkerOptions().position(item.latlng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+						MarkerOptions markerOptions = new MarkerOptions().position(item.latlng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_blue));
 						Marker marker = mGoogleMap.addMarker(markerOptions);
 						mResultMarkers.add(marker);
 					}
@@ -653,6 +669,7 @@ public class MainActivity extends BaseActivity {
 				mAdapter.addAll(results);
 				mAdapter.notifyDataSetChanged();
 				mMiniInfoAdapter.notifyDataSetChanged();
+				mMiniInfoLoading.setVisibility(View.GONE);
 				if (results.size() > 0) {
 					mViewPager.setCurrentItem(0);
 					highlightMarker(mResultMarkers.get(0));
@@ -681,6 +698,7 @@ public class MainActivity extends BaseActivity {
 	    public Object instantiateItem(ViewGroup container, int position) {
 	        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	        View viewLayout = inflater.inflate(R.layout.restaurant_search_result_tablerow, container, false);
+	        viewLayout.setBackgroundColor(Color.argb(217, 255, 255, 255));
 			
 			TextView nameTextView = (TextView) viewLayout.findViewById(R.id.restaurantResult_nameTextView);
 			TextView addressTextView = (TextView) viewLayout.findViewById(R.id.restaurantResult_addressTextView);

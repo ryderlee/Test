@@ -29,7 +29,7 @@ public class UserManager {
 	public void login(boolean reserve) {
 		this.mLoginTopActivity = this.mActivity;
 		if (UserData.getInstance().isLogin()) {
-			this.backToTopActivity(Constants.ACTION_LOGIN_SUCCESS);
+			this.backToTopActivity(Constants.ACTION_SHOW_PROFILE);
 		} else {
 			Intent intent = new Intent();
 			intent.setClass(this.mActivity, SigninOptionActivity.class);
@@ -51,7 +51,7 @@ public class UserManager {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-//		this.backToTopActivity(Constants.ACTION_LOGIN_SUCCESS);
+		this.backToTopActivity(Constants.ACTION_LOGIN_SUCCESS);
 	}
 	
 	public void bookAsGuest() {

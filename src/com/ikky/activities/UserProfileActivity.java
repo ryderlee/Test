@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import com.facebook.Session;
 import com.facebook.widget.LoginButton;
 import com.ikky.activities.R;
-import com.ikky.activities.SigninOptionActivity.FbLoginTask;
 import com.ikky.base.BaseActivity;
 import com.ikky.helpers.ServerUtils;
 import com.ikky.helpers.Utils;
@@ -21,12 +20,13 @@ import com.ikky.managers.UserManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +35,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -68,6 +69,22 @@ public class UserProfileActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_profile);
 		
+		LayoutInflater inflater = LayoutInflater.from(this.getBaseContext());
+		View actionBarView = inflater.inflate(R.layout.actionbar_view2, null);
+        
+        getActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setDisplayShowCustomEnabled(true);
+        getActionBar().setCustomView(actionBarView);
+        Button upButton = (Button) getActionBar().getCustomView().findViewById(R.id.myUpButton);
+        upButton.setText(getTitle());
+        final Activity act = this;
+        upButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				NavUtils.navigateUpFromSameTask(act);
+			}
+		});
+		
 		mLoginStatusView = findViewById(R.id.login_status);
 		mProfileView = findViewById(R.id.profileView);
 		
@@ -75,8 +92,8 @@ public class UserProfileActivity extends BaseActivity {
 		mEmptyTextView = (TextView) findViewById(R.id.emptyTextView);
 		mEmptyTextView.setTypeface(mTypefaceRobotoRegular);
 		
-		TextView usernameTextView = (TextView) findViewById(R.id.usernameTextView);
-		usernameTextView.setTypeface(mTypefaceRobotoRegular);
+		TextView usernameTextView = (TextView) getActionBar().getCustomView().findViewById(R.id.usernameTextView);
+		usernameTextView.setTypeface(mTypefaceRobotoMedium);
 		usernameTextView.setText(UserData.getInstance().getFullName());
 		
 		mFbLoginButton = (LoginButton) findViewById(R.id.fbSigninButton);
@@ -251,22 +268,14 @@ public class UserProfileActivity extends BaseActivity {
 	    	
 	    	convertView.setTag(item.bookingId);
 	    	
-	    	Button cancelButton = (Button) convertView.findViewById(R.id.cancelButton);
-	    	Button confirmButton = (Button) convertView.findViewById(R.id.confirmButton);
+	    	ImageButton cancelButton = (ImageButton) convertView.findViewById(R.id.cancelButton);
 	    	
 	    	cancelButton.setVisibility(item.status==0?View.VISIBLE:View.GONE);
-	    	confirmButton.setVisibility(item.status==0?View.VISIBLE:View.GONE);
 	    	
 	    	cancelButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					cancel((Integer)((View)view.getParent()).getTag());
-				}
-			});
-	    	confirmButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					confirm((Integer)((View)view.getParent()).getTag());
 				}
 			});
 	    	

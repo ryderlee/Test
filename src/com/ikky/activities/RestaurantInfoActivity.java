@@ -44,9 +44,11 @@ import android.widget.TextView;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
@@ -76,7 +78,6 @@ public class RestaurantInfoActivity extends BaseActivity {
 	private ProgressBar mPickerProgressBar;
 	private CustomHorizontalScrollView mTimeSlotsScrollView;
 	private LinearLayout mTimeSlotsContainer;
-	private TextView mNoTableFoundText;
 	
 	private ViewPager mViewPager;
 	private int mViewPagerHeight;
@@ -86,6 +87,22 @@ public class RestaurantInfoActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_restaurant_info);
+		
+		LayoutInflater inflater = LayoutInflater.from(this.getBaseContext());
+		View actionBarView = inflater.inflate(R.layout.actionbar_view3, null);
+        
+        getActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setDisplayShowCustomEnabled(true);
+        getActionBar().setCustomView(actionBarView);
+        Button upButton = (Button) getActionBar().getCustomView().findViewById(R.id.myUpButton);
+        upButton.setText(getTitle());
+        final Activity act = this;
+        upButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				NavUtils.navigateUpFromSameTask(act);
+			}
+		});
 		
 		mAvailableTimeSlots = new ArrayList<Date>();
 		
@@ -107,9 +124,6 @@ public class RestaurantInfoActivity extends BaseActivity {
 		mPickerProgressBar = (ProgressBar) findViewById(R.id.pickerProgressBar);
 		mTimeSlotsScrollView = (CustomHorizontalScrollView) findViewById(R.id.timeSlotsScrollView);
 		mTimeSlotsContainer = (LinearLayout) findViewById(R.id.timeSlotsContainer);
-		
-		mNoTableFoundText = (TextView) findViewById(R.id.noTableFoundText);
-		mNoTableFoundText.setTypeface(mTypefaceRobotoRegular);
 		
 		mTargetTime = SearchData.getInstance().getSearchDate();
 		mTargetNoOfParticipants = SearchData.getInstance().getNumberOfReservation();
@@ -155,11 +169,11 @@ public class RestaurantInfoActivity extends BaseActivity {
 		mInfoView.setFillViewport(on);
 		if (on) {
 			getActionBar().hide();
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			mViewPager.setLayoutParams(params);
 		} else {
 			getActionBar().show();
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, mViewPagerHeight);
+			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, mViewPagerHeight);
 			mViewPager.setLayoutParams(params);
 		}
 		mViewWrapper.setVisibility(on?View.GONE:View.VISIBLE);
@@ -265,7 +279,6 @@ public class RestaurantInfoActivity extends BaseActivity {
 			mTargetTime = mBookingPicker.getDate();
 			mTargetNoOfParticipants = mBookingPicker.getNoOfParticipants();
 
-			mNoTableFoundText.setVisibility(View.GONE);
 			mTimeSlotsScrollView.setVisibility(View.GONE);
 			mPickerProgressBar.setVisibility(View.VISIBLE);
 			
@@ -283,6 +296,8 @@ public class RestaurantInfoActivity extends BaseActivity {
 		int targetIdx = 0;
 		int delta = -1;
 		
+		float scale = getResources().getDisplayMetrics().density;
+		
 		if (mAvailableTimeSlots.size() > 0) {
 			for (int i=0; i<mAvailableTimeSlots.size(); i++) {
 				Date d = mAvailableTimeSlots.get(i);
@@ -293,15 +308,15 @@ public class RestaurantInfoActivity extends BaseActivity {
 				}
 				
 				LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				inflater.inflate(R.layout.view_common_button, mTimeSlotsContainer, true);
+				inflater.inflate(R.layout.view_timeslot_button, mTimeSlotsContainer, true);
 				Button timeSlotButton = (Button) mTimeSlotsContainer.getChildAt(i);
-				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-				params.setMargins(5, 14, 5, 14);
-				timeSlotButton.setWidth(150);
-				timeSlotButton.setLayoutParams(params);
-				timeSlotButton.setBackgroundResource(R.drawable.common_button_background);
-				timeSlotButton.setText(new SimpleDateFormat("h:mm aa").format(d).toLowerCase());
+				timeSlotButton.setText(new SimpleDateFormat("HH:mm").format(d).toLowerCase());
 				timeSlotButton.setTag(d);
+				if (i>0) {
+					LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) timeSlotButton.getLayoutParams();
+					params.leftMargin = (int) (10*scale);
+					timeSlotButton.setLayoutParams(params);
+				}
 				timeSlotButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -314,11 +329,10 @@ public class RestaurantInfoActivity extends BaseActivity {
 			mTimeSlotsScrollView.setVisibility(View.VISIBLE);
 			mTimeSlotsContainer.refreshDrawableState();
 			
-			Log.d("HEY", "targetIdx:"+targetIdx);
-			mTimeSlotsScrollView.scrollToX(targetIdx*160);
 			
-		} else {
-			mNoTableFoundText.setVisibility(View.VISIBLE);
+			int position = (int) (targetIdx*70*scale);
+			mTimeSlotsScrollView.scrollToX(position);
+			
 		}
 		mPickerProgressBar.setVisibility(View.GONE);
 	}

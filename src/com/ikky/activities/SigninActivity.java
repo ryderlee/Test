@@ -13,14 +13,19 @@ import com.ikky.managers.UserManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -50,8 +55,23 @@ public class SigninActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_signin);
+		
+		LayoutInflater inflater = LayoutInflater.from(this.getBaseContext());
+		View actionBarView = inflater.inflate(R.layout.actionbar_view3, null);
+        
+        getActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setDisplayShowCustomEnabled(true);
+        getActionBar().setCustomView(actionBarView);
+        Button upButton = (Button) getActionBar().getCustomView().findViewById(R.id.myUpButton);
+        upButton.setText(getTitle());
+        final Activity act = this;
+        upButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				NavUtils.navigateUpFromSameTask(act);
+			}
+		});
 
 		// Set up the login form.
 		mEmailView = (EditText) findViewById(R.id.email);
@@ -76,14 +96,6 @@ public class SigninActivity extends BaseActivity {
 		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 		mLoginStatusMessageView.setTypeface(mTypefaceRobotoRegular);
 		
-
-		findViewById(R.id.sign_in_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						attemptLogin();
-					}
-				});
 	}
 
 	@Override
@@ -143,6 +155,7 @@ public class SigninActivity extends BaseActivity {
 		} else {
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
+			hideSoftKeyboard();
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
 			mAuthTask = new UserLoginTask();

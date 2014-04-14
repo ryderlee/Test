@@ -27,16 +27,21 @@ import android.provider.CalendarContract.Events;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -64,6 +69,22 @@ public class BookingActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_booking);
+		
+		LayoutInflater inflater = LayoutInflater.from(this.getBaseContext());
+		View actionBarView = inflater.inflate(R.layout.actionbar_view3, null);
+        
+        getActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setDisplayShowCustomEnabled(true);
+        getActionBar().setCustomView(actionBarView);
+        Button upButton = (Button) getActionBar().getCustomView().findViewById(R.id.myUpButton);
+        upButton.setText(getTitle());
+        final Activity act = this;
+        upButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				NavUtils.navigateUpFromSameTask(act);
+			}
+		});
 		
 		mPhoneEditText = (EditText) findViewById(R.id.phoneEditText);
 		mPhoneEditText.setText(UserData.getInstance().getPhone());

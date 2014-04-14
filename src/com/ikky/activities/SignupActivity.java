@@ -12,12 +12,19 @@ import com.ikky.managers.UserManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,8 +54,23 @@ public class SignupActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_signup);
+		
+		LayoutInflater inflater = LayoutInflater.from(this.getBaseContext());
+		View actionBarView = inflater.inflate(R.layout.actionbar_view3, null);
+        
+        getActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setDisplayShowCustomEnabled(true);
+        getActionBar().setCustomView(actionBarView);
+        Button upButton = (Button) getActionBar().getCustomView().findViewById(R.id.myUpButton);
+        upButton.setText(getTitle());
+        final Activity act = this;
+        upButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				NavUtils.navigateUpFromSameTask(act);
+			}
+		});
 
 		// Set up the login form.
 		mFirstNameView = (EditText) findViewById(R.id.SIGNUP_FIRSTNAME);
@@ -62,7 +84,7 @@ public class SignupActivity extends BaseActivity {
 		mPasswordView = (EditText) findViewById(R.id.SIGNUP_PASSWORD);
 		mPasswordConfirmView = (EditText) findViewById(R.id.SIGNUP_PASSWORD_CONFIRM);
 		
-		/*mPasswordView
+		mPasswordConfirmView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
 					public boolean onEditorAction(TextView textView, int id,
@@ -73,20 +95,12 @@ public class SignupActivity extends BaseActivity {
 						}
 						return false;
 					}
-				});*/
+				});
 
 		mLoginFormView = findViewById(R.id.login_form);
 		mLoginStatusView = findViewById(R.id.login_status);
 		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 		mLoginStatusMessageView.setTypeface(mTypefaceRobotoRegular);
-
-		findViewById(R.id.SIGNUP_BUTTON).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						attemptLogin();
-					}
-				});
 	}
 
 	@Override
@@ -248,7 +262,6 @@ public class SignupActivity extends BaseActivity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// TODO: attempt authentication against a network service.
-
 			try {
 				// Simulate network access.
 				Thread.sleep(0);

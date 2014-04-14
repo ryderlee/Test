@@ -50,27 +50,38 @@
 	        <include layout="@layout/view_booking_info" />
 	    </LinearLayout>
 	    
+		<ImageView
+		    android:id="@+id/ikkyLogo"
+		    android:src="@drawable/logo_ikky"
+		    android:layout_alignParentTop="true"
+		    android:layout_marginTop="68dp"
+		    android:layout_width="168dp"
+		    android:layout_height="72dp"
+		    android:layout_centerHorizontal="true"
+		    android:scaleType="fitXY" />
+	    
 	    <Button
 	        android:id="@+id/signinButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_alignParentRight="true"
-	        android:layout_below="@+id/bookingInfoView"
-	        android:layout_marginTop="40dp"
-	        android:text="Sign in with Ikky"
+	        android:layout_width="300dp"
+	        android:layout_height="42dp"
+	        android:layout_below="@+id/ikkyLogo"
+	        android:layout_marginTop="60dp"
+	        android:layout_centerHorizontal="true"
+	        android:text="Sign in with ikky"
+	        android:textSize="18sp"
+	        android:textColor="#777777"
 	        android:background="@drawable/common_button_background"
 	        android:onClick="signinButton_onClick" />
 	
 	    <com.facebook.widget.LoginButton
 	        android:id="@+id/fbSigninButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_width="300dp"
+	        android:layout_height="42dp"
 	        android:layout_alignLeft="@+id/signinButton"
 	        android:layout_alignRight="@+id/signinButton"
-	        android:layout_below="@+id/signinButton"
 	        android:layout_marginTop="10dp"
-	        android:background="@drawable/common_button_background"
+	        android:layout_below="@+id/signinButton"
+	        style="@style/FacebookLoginButton"
 	        android:onClick="fbSigninButton_onClick" />
 	
 	    <TextView
@@ -79,30 +90,36 @@
 	        android:layout_height="wrap_content"
 	        android:layout_below="@+id/fbSigninButton"
 	        android:layout_centerHorizontal="true"
-	        android:layout_marginTop="20dp"
+	        android:layout_marginTop="10dp"
+	        android:textSize="15sp"
+	        android:textColor="#777777"
 	        android:text="OR" />
 	
 	    <Button
 	        android:id="@+id/signupButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_width="300dp"
+	        android:layout_height="42dp"
 	        android:layout_alignLeft="@+id/fbSigninButton"
 	        android:layout_alignRight="@+id/fbSigninButton"
 	        android:layout_below="@+id/textOR"
-	        android:layout_marginTop="20dp"
+	        android:layout_marginTop="10dp"
 	        android:text="Create an account"
+	        android:textSize="18sp"
+	        android:textColor="#777777"
 	        android:background="@drawable/common_button_background"
 	        android:onClick="signupButton_onClick" />
 	    
 	    <Button
 	        android:id="@+id/guestButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_width="300dp"
+	        android:layout_height="42dp"
 	        android:layout_alignLeft="@+id/signinButton"
 	        android:layout_alignRight="@+id/signinButton"
 	        android:layout_below="@+id/signupButton"
 	        android:layout_marginTop="10dp"
 	        android:text="Reserve as a guest"
+	        android:textSize="18sp"
+	        android:textColor="#777777"
 	        android:background="@drawable/common_button_background"
 	        android:onClick="guestButton_onClick" />
     

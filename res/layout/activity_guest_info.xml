@@ -11,21 +11,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-	    <!-- <Button
-	        android:id="@+id/guestBackButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_alignParentTop="true"
-	        android:text="Back"
-	        android:background="@drawable/common_button_background"
-	        android:minHeight="1dp"
-	        android:paddingLeft="10dp"
-	        android:paddingRight="10dp"
-	        android:paddingTop="6dp"
-	        android:paddingBottom="6dp"
-	        android:onClick="guestBackButton_onClick" /> -->
 	
 	    <Button
 	        android:id="@+id/guestNextButton"

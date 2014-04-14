@@ -78,19 +78,33 @@
 	            android:layout_height="45dp"
 	            android:layout_marginTop="6dp"
 	            android:layout_below="@+id/bookingPicker" >
-			
-				<Button
-					android:id="@+id/cancelButton"
-					android:layout_width="0dp"
-					android:layout_height="match_parent"
-					android:layout_weight="1"
-					android:background="#eceded"
-					android:textSize="15sp"
-					android:textColor="#777777"
-					android:drawablePadding="30dp"
-					android:drawableLeft="@drawable/btn_cross"
-					android:text="CANCEL"
-					android:onClick="cancelButton_onClick" />
+		        
+	            <LinearLayout
+				    android:layout_width="0dp"
+				    android:layout_height="match_parent"
+				    android:layout_weight="1"
+				    android:gravity="center"
+				    android:background="#eceded"
+				    android:onClick="cancelButton_onClick" >
+				    
+				    <ImageView
+				        android:layout_width="20dp"
+				        android:layout_height="20dp"
+				        android:scaleType="fitXY"
+				        android:clickable="false"
+				        android:textSize="15sp"
+						android:textColor="#777777"
+						android:background="#0000"
+						android:layout_marginRight="8dp"
+				        android:src="@drawable/btn_cross" />
+				    <TextView
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:clickable="false"
+				        android:background="#0000"
+				        android:text="CANCEL" />
+				    
+				</LinearLayout>
 				
 				<LinearLayout
 				    android:orientation="horizontal"
@@ -105,17 +119,32 @@
 				        android:background="#dcdcdc" />
 			    </LinearLayout>
 				
-				<Button
-					android:id="@+id/searchButton"
-					android:layout_width="0dp"
-					android:layout_height="match_parent"
-					android:layout_weight="1"
-					android:background="#eceded"
-					android:textSize="15sp"
-					android:textColor="#777777"
-					android:drawableLeft="@drawable/btn_tick_normal"
-					android:text="SEARCH"
-					android:onClick="searchButton_onClick" />
+				<LinearLayout
+				    android:layout_width="0dp"
+				    android:layout_height="match_parent"
+				    android:layout_weight="1"
+				    android:gravity="center"
+				    android:background="#eceded"
+				    android:onClick="searchButton_onClick" >
+				    
+				    <ImageView
+				        android:layout_width="24.5dp"
+				        android:layout_height="20dp"
+				        android:scaleType="fitXY"
+				        android:clickable="false"
+				        android:textSize="15sp"
+						android:textColor="#777777"
+						android:background="#0000"
+						android:layout_marginRight="8dp"
+				        android:src="@drawable/btn_tick_normal" />
+				    <TextView
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:clickable="false"
+				        android:background="#0000"
+				        android:text="SEARCH" />
+				    
+				</LinearLayout>
 				
 	        </LinearLayout>
 	        
@@ -133,7 +162,9 @@
 	<ListView
 		android:id="@+id/searchResultListView"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent" />
+	    android:layout_height="match_parent"
+	    android:divider="#c9caca"
+	    android:dividerHeight="1px" />
 	
 	<RelativeLayout
 	    android:id="@+id/googleMapContainer"
@@ -145,23 +176,43 @@
 			android:id="@+id/googleMap"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_above="@+id/miniInfoPager"
-			android:name="com.google.android.gms.maps.MapFragment"/>
+			android:name="com.google.android.gms.maps.MapFragment" />
 	    
-	    <Button
+	    <ImageButton
 	        android:id="@+id/searchHereButton"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_above="@+id/miniInfoPager"
-	        android:layout_marginBottom="30dp"
-	        android:text="Search here"
+	        android:layout_above="@+id/divider"
+	        android:layout_marginLeft="12dp"
+	        android:layout_marginBottom="10dp"
+	        android:background="@null"
+	        android:src="@drawable/ic_search_map"
 	        android:onClick="searchHere" />
+	    
+	    <View android:id="@+id/divider" android:layout_width="match_parent" android:layout_height="1px" android:background="#777777" android:layout_above="@+id/miniInfoPager" />
 	    
 	    <android.support.v4.view.ViewPager
 	        android:id="@+id/miniInfoPager"
 	        android:layout_width="match_parent"
 	        android:layout_height="125dp"
 	        android:layout_alignParentBottom="true" />
+	    
+	    <RelativeLayout
+	        android:id="@+id/miniInfoLoading"
+	        android:layout_width="match_parent"
+	        android:layout_height="125dp"
+	        android:background="#d9ffffff"
+	        android:layout_alignParentBottom="true"
+	        android:visibility="gone" >
+	        
+			<ProgressBar
+		        android:id="@+id/miniProgressBar"
+		        style="?android:attr/progressBarStyle"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:layout_centerInParent="true" />
+				        
+	    </RelativeLayout>
 		
 	</RelativeLayout>
 	

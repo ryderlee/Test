@@ -2,10 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".UserProfileActivity" >
     
     <LinearLayout
@@ -37,21 +33,12 @@
         android:id="@+id/profileView"
         android:layout_width="match_parent"
     	android:layout_height="match_parent" >
-    
-		<TextView
-		    android:id="@+id/usernameTextView"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_alignParentTop="true"
-		    android:layout_centerHorizontal="true"
-		    android:textAppearance="?android:attr/textAppearanceLarge" />
 		
 		<RadioGroup
 		    android:id="@+id/userProfileTab"
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/usernameTextView"
-	        android:layout_marginTop="15dp"
+	        android:layout_height="37.5dp"
+	        android:layout_alignParentTop="true"
 	        android:orientation="horizontal" >
 	        <RadioButton 
 	            android:id="@+id/pointsRadioButton"
@@ -60,6 +47,10 @@
 	            android:background="@drawable/tab_indicator"
 	            android:gravity="center"
 	            android:layout_weight="1"
+	            android:layout_height="match_parent"
+	            android:textSize="15sp"
+	            android:textColor="#33b5e5"
+	            android:textStyle="normal"
 	            android:text="Points" />
 	        <RadioButton
 	            android:id="@+id/bookingsRadioButton"
@@ -68,6 +59,10 @@
 	            android:background="@drawable/tab_indicator"
 	            android:gravity="center"
 	            android:layout_weight="1"
+	            android:layout_height="match_parent"
+	            android:textSize="15sp"
+	            android:textColor="#33b5e5"
+	            android:textStyle="normal"
 	            android:text="Bookings" />
 	        <RadioButton 
 	            android:id="@+id/favouriteRadioButton"
@@ -76,27 +71,32 @@
 	            android:background="@drawable/tab_indicator"
 	            android:gravity="center"
 	            android:layout_weight="1"
+	            android:layout_height="match_parent"
+	            android:textSize="15sp"
+	            android:textColor="#33b5e5"
+	            android:textStyle="normal"
 	            android:text="Faves" />
 	    </RadioGroup>
 	    
 		<RelativeLayout
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
-		    android:layout_alignTop="@+id/userProfileTab"
-		    android:layout_alignBottom="@+id/aboutButton"
-		    android:layout_marginTop="25dp"
-		    android:layout_marginBottom="55dp" >
+		    android:layout_below="@+id/userProfileTab"
+		    android:layout_above="@+id/divider" >
 		    
 		    <ListView
 			    android:id="@+id/bookingsListView"
 			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content" />
+			    android:layout_height="wrap_content"
+			    android:divider="#777777"
+			    android:dividerHeight="1px" />
 		    
 		    <TextView
 		        android:id="@+id/emptyTextView"
 		        android:layout_width="match_parent"
 		        android:layout_height="match_parent"
-		        style="?android:attr/textAppearanceMedium"
+		        android:textSize="18sp"
+		        android:textColor="#777777"
 		        android:gravity="center" />
 		
 	    	<ProgressBar
@@ -107,36 +107,26 @@
 		       	android:layout_centerInParent="true" />
 		</RelativeLayout>
 		
+		<View android:id="@+id/divider" android:layout_width="match_parent" android:layout_height="1px" android:background="#777777" android:layout_above="@+id/fbSigninButton" android:layout_marginBottom="10dp" />
+		
 		<com.facebook.widget.LoginButton
 	        android:id="@+id/fbSigninButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_above="@+id/aboutButton"
+	        android:layout_width="300dp"
+	        android:layout_height="42dp"
+	        android:layout_above="@+id/signoutButton"
+	        android:layout_alignLeft="@+id/signoutButton"
+	        android:layout_alignRight="@+id/signoutButton"
 		    android:layout_marginBottom="10dp"
-		    android:layout_alignParentLeft="true"
-		    android:layout_alignParentRight="true"
-	        android:background="@drawable/common_button_background" />
+	        style="@style/FacebookLoginButton" />
 		
 		<Button
-		    android:id="@+id/aboutButton"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_above="@+id/signoutButton"
-		    android:layout_marginBottom="10dp"
-		    android:layout_alignParentLeft="true"
-		    android:layout_alignParentRight="true"
-		    android:text="About ikky"
-		    android:background="@drawable/common_button_background"
-		    android:onClick="aboutButton_onClick" />
-   
-		<Button
 		    android:id="@+id/signoutButton"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
+		    android:layout_width="300dp"
+		    android:layout_height="42dp"
 		    android:layout_alignParentBottom="true"
-		    android:layout_alignParentLeft="true"
-		    android:layout_alignParentRight="true"
 		    android:text="Sign out"
+		    android:layout_centerHorizontal="true"
+		    android:layout_marginBottom="10dp"
 		    android:background="@drawable/common_button_background"
 		    android:onClick="signoutButton_onClick" />
 		
