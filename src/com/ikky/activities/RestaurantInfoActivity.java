@@ -452,6 +452,8 @@ public class RestaurantInfoActivity extends BaseActivity {
 				rd.setReviewService(json.getString("RESTAURANT_REVIEW_SERVICE"));
 				rd.setReviewAmbiance(json.getString("RESTAURANT_REVIEW_AMBIANCE"));
 				rd.setReviews(json.getString("RESTAURANT_REVIEWS"));
+				rd.setLatitude(json.getDouble("RESTAURANT_LAT"));
+				rd.setLongitude(json.getDouble("RESTAURANT_LONG"));
 				
 				mBookingSlots = new ArrayList<String>();
 				if (json.optJSONObject("RESTAURANT_BOOKING_SLOTS") != null) {
@@ -547,7 +549,12 @@ public class RestaurantInfoActivity extends BaseActivity {
 		
 		public FullScreenAlbumAdapter() {
 	        mImageUrls = new ArrayList<String>();
-	        mImageUrls.add("http://www.foodnut.com/i/Yung-Kee-Restaurant-Hong-Kong/Yung-Kee-Restaurant-Hong-Kong-1.jpg");
+	        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/01.png");
+	        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/02.png");
+	        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/03.png");
+	        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/04.png");
+	        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/05.png");
+	        /*mImageUrls.add("http://www.foodnut.com/i/Yung-Kee-Restaurant-Hong-Kong/Yung-Kee-Restaurant-Hong-Kong-1.jpg");
 	        mImageUrls.add("http://www.12hk.com/area/Admiralty/LippoCtr_PHOT0582.jpg");
 	        mImageUrls.add("http://www.eclectic-cool.com/wp-content/uploads/2011/04/hong-kong-street-signs.jpg");
 	        mImageUrls.add("http://www.discoverhongkong.com/common/images/hotel/1315_image_COMP00050993_photo_1.jpg");
@@ -557,7 +564,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 	        mImageUrls.add("http://www.yuantravel.com/wp-content/gallery/general-about-hong-kong/hongkong_2141.jpg");
 	        mImageUrls.add("https://pbs.twimg.com/media/BbZpkd6CEAAB2GL.jpg");
 	        mImageUrls.add("https://pbs.twimg.com/media/BbhSydpCAAAU-J5.jpg");
-	        mImageUrls.add("http://fc04.deviantart.net/fs51/i/2009/307/a/3/Hong_Kong__Tallest_Building_by_thehardheadedsavior.jpg");
+	        mImageUrls.add("http://fc04.deviantart.net/fs51/i/2009/307/a/3/Hong_Kong__Tallest_Building_by_thehardheadedsavior.jpg");*/
 	    }
 
 		@Override

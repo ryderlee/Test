@@ -58,7 +58,7 @@ public class RestaurantManager {
 		PhotoView photoView = (PhotoView) v.findViewById(R.id.bookingInfoPhotoView);
 		
 		try {
-			URL imageUrl = new URL("http://www.foodnut.com/i/Yung-Kee-Restaurant-Hong-Kong/Yung-Kee-Restaurant-Hong-Kong-1.jpg");
+			URL imageUrl = new URL("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/01.png");
 			photoView.setImageURL(imageUrl, true, null);
 		}
 		catch(MalformedURLException mfe){}

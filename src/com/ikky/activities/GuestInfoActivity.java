@@ -12,12 +12,15 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class GuestInfoActivity extends BaseActivity {
 
@@ -56,6 +59,19 @@ public class GuestInfoActivity extends BaseActivity {
 		mGuestPhoneEditText = (EditText) findViewById(R.id.guestPhoneEditText);
 		mGuestPhoneEditText.setText(UserData.getInstance().getPhone());
 		
+		mGuestPhoneEditText
+		.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView, int id,
+					KeyEvent keyEvent) {
+				if (id == R.id.submit || id == EditorInfo.IME_NULL) {
+					guestInfoSubmit();
+					return true;
+				}
+				return false;
+			}
+		});
+		
 		RestaurantManager.getInstance(this).displayMiniBlock(findViewById(R.id.bookingInfoView));
 	}
 
@@ -70,7 +86,7 @@ public class GuestInfoActivity extends BaseActivity {
 		BookingManager.getInstance(this).cancelGatherGuestInfo();
 	}
 	
-	public void guestNextButton_onClick(View view) {
+	public void guestInfoSubmit() {
 		final String firstName = mGuestFirstNameEditText.getText().toString();
 		final String lastName = mGuestLastNameEditText.getText().toString();
 		final String email = mGuestEmailEditText.getText().toString();

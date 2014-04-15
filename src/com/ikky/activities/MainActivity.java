@@ -74,6 +74,9 @@ public class MainActivity extends BaseActivity {
 	private ImageButton mSwitchViewButton;
 	private Boolean mMapLoaded;
 	
+	private ImageView mArrowUp;
+	private ImageView mArrowDown;
+	
 	private RelativeLayout mMiniInfoLoading;
 	
 	private ListViewAdapter<RestaurantResultItem> mAdapter;
@@ -107,6 +110,9 @@ public class MainActivity extends BaseActivity {
 	
 	private ViewPager mViewPager;
 	
+	private int mPrevNumOfPeople;
+	private Date mPrevSearchDate;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +139,8 @@ public class MainActivity extends BaseActivity {
 				showSearchButton_onClick(v);
 			}
 		});
+        mArrowUp = (ImageView) findViewById(R.id.arrowUp);
+        mArrowDown = (ImageView) findViewById(R.id.arrowDown);
         final Activity act = this;
         getActionBar().getCustomView().findViewById(R.id.actionBarUser).setOnClickListener(new Button.OnClickListener() {
         	@Override
@@ -166,6 +174,8 @@ public class MainActivity extends BaseActivity {
 				mBookingPickerButton.setText(Utils.getLongBookingInfo());
 			}
 		});
+        mPrevNumOfPeople = mBookingPicker.getNoOfParticipants();
+        mPrevSearchDate = mBookingPicker.getDate();
         
         mDistanceSeekBar.setMax(9);
         mDistanceSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -512,15 +522,26 @@ public class MainActivity extends BaseActivity {
 	    	mKeywordEditText.setText("");
 	    	mSearchView.bringToFront();
 	    	mKeywordEditText.requestFocus();
+	    	mArrowUp.setVisibility(View.VISIBLE);
+	    	mArrowDown.setVisibility(View.GONE);
     	}
     }
     public void searchButton_onClick(View view) {
+    	mArrowUp.setVisibility(View.GONE);
+    	mArrowDown.setVisibility(View.VISIBLE);
     	mSearchView.setVisibility(View.GONE);
     	mKeyword = mKeywordEditText.getText().toString();
+    	mPrevNumOfPeople = SearchData.getInstance().getNumberOfReservation();
+    	mPrevSearchDate = SearchData.getInstance().getSearchDate();
     	search(true);
     }
     public void cancelButton_onClick(View view) {
+    	SearchData.getInstance().setSearchDate(mPrevSearchDate);
+    	SearchData.getInstance().setNumberOfReservation(mPrevNumOfPeople);
+    	mBookingPickerButton.setText(Utils.getLongBookingInfo());
     	hideSoftKeyboard();
+    	mArrowUp.setVisibility(View.GONE);
+    	mArrowDown.setVisibility(View.VISIBLE);
     	mSearchView.setVisibility(View.GONE);
     }
     public void bookingPickerButton_onClick(View view) {
@@ -706,6 +727,39 @@ public class MainActivity extends BaseActivity {
 	    	RestaurantResultItem item = mAdapter.getItem(position);
 	    	nameTextView.setText(item.ss);
 	    	addressTextView.setText(item.adr);
+	    	final float scale = getBaseContext().getResources().getDisplayMetrics().density;
+	    	int widthInDp = (int) (50 * scale + 0.5f);
+	    	int heightInDp = (int) (17 * scale + 0.5f);
+	    	Iterator<String> iter = item.timeslots.iterator();
+	    	LinearLayout timeslotsContainer = (LinearLayout) viewLayout.findViewById(R.id.restaurantResult_timeslotsContainer);
+	    	timeslotsContainer.removeAllViews();
+	    	for (int i=0; i<4; i++) {
+	    		TextView timeslot = new TextView(getBaseContext());
+	    		timeslot.setWidth(widthInDp);
+	    		timeslot.setHeight(heightInDp);
+	    		timeslot.setGravity(Gravity.CENTER);
+	    		timeslot.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+	    		timeslot.setTextColor(Color.WHITE);
+	    		String viewString = "-";
+	    		if (iter.hasNext()) {
+	    			timeslot.setBackgroundColor(Color.argb(255, 14, 180, 88));
+	    			String timeslotString = iter.next();
+	    			viewString = timeslotString.substring(0, 2) + ":" + timeslotString.substring(2);
+	    		} else {
+	    			timeslot.setBackgroundColor(Color.argb(255, 214, 214, 214));
+	    		}
+	    		timeslot.setText(viewString);
+	    		timeslotsContainer.addView(timeslot);
+	    		
+	    		if (i<3) {
+	    			LinearLayout paddingView = new LinearLayout(getBaseContext());
+	    			paddingView.setOrientation(LinearLayout.HORIZONTAL);
+	    			LayoutParams params = new LayoutParams(0, LayoutParams.MATCH_PARENT);
+	    			params.weight = 1;
+	    			paddingView.setLayoutParams(params);
+	    			timeslotsContainer.addView(paddingView);
+	    		}
+	    	}
 	    	viewLayout.setTag(item.licno);
 	    	
 	    	PhotoView pv = ((PhotoView) viewLayout.findViewById(R.id.restaurantResult_thumbnailImageView));

@@ -34,22 +34,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
         
-       <LinearLayout
-	        android:id="@+id/bookingInfoView"
-	        android:layout_width="match_parent"
+		<LinearLayout
+			android:id="@+id/bookingInfoView"
+			android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
 	        android:layout_alignParentRight="true"
 	        android:layout_alignParentTop="true"
 	        android:visibility="gone" >
 	        <include layout="@layout/view_booking_info" />
-	    </LinearLayout>
+		</LinearLayout>
+		
+		<View android:id="@+id/divider" android:layout_width="336dp" android:layout_height="1px" android:background="#c9caca" android:layout_centerHorizontal="true" android:layout_below="@+id/bookingInfoView" android:layout_marginBottom="13dp" android:visibility="gone" />
 	    
 		<ImageView
 		    android:id="@+id/ikkyLogo"
 		    android:src="@drawable/logo_ikky"
 		    android:layout_alignParentTop="true"
 		    android:layout_marginTop="68dp"
+		    android:layout_marginBottom="60dp"
 		    android:layout_width="168dp"
 		    android:layout_height="72dp"
 		    android:layout_centerHorizontal="true"
@@ -60,7 +63,6 @@
 	        android:layout_width="300dp"
 	        android:layout_height="42dp"
 	        android:layout_below="@+id/ikkyLogo"
-	        android:layout_marginTop="60dp"
 	        android:layout_centerHorizontal="true"
 	        android:text="Sign in with ikky"
 	        android:textSize="18sp"

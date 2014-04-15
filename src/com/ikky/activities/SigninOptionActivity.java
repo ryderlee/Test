@@ -76,11 +76,11 @@ public class SigninOptionActivity extends BaseActivity {
 		findViewById(R.id.guestButton).setVisibility(mReserve ? View.VISIBLE : View.GONE);
 		findViewById(R.id.bookingInfoView).setVisibility(mReserve ? View.VISIBLE : View.GONE);
 		findViewById(R.id.ikkyLogo).setVisibility(mReserve ? View.GONE : View.VISIBLE);
+		findViewById(R.id.divider).setVisibility(mReserve ? View.VISIBLE: View.GONE);
 		
 		if (mReserve) {
 			RelativeLayout.LayoutParams params = (LayoutParams) findViewById(R.id.signinButton).getLayoutParams();
-			params.addRule(RelativeLayout.BELOW, R.id.bookingInfoView);
-			params.topMargin = 0;
+			params.addRule(RelativeLayout.BELOW, R.id.divider);
 			findViewById(R.id.signinButton).setLayoutParams(params);
 		}
 		

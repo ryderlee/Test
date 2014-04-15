@@ -30,6 +30,25 @@
 			android:layout_alignParentTop="true"
 			android:textColor="#33b5e5"
 			android:textSize="15sp" />
+	    
+	    <ImageView
+	        android:id="@+id/arrowUp"
+	        android:layout_centerVertical="true"
+	        android:layout_toRightOf="@+id/actionBarPicker"
+	        android:layout_marginLeft="5dp"
+	        android:layout_width="7.5dp"
+	        android:layout_height="6dp"
+	        android:src="@drawable/ic_launcher_arrow_up"
+	        android:visibility="gone" />
+	    
+	    <ImageView
+	        android:id="@+id/arrowDown"
+	        android:layout_centerVertical="true"
+	        android:layout_toRightOf="@+id/actionBarPicker"
+	        android:layout_marginLeft="5dp"
+	        android:layout_width="7.5dp"
+	        android:layout_height="6dp"
+	        android:src="@drawable/ic_launcher_arrow_down" />
         
 	    <ImageButton
 	        android:id="@+id/actionBarUser"

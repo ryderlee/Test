@@ -2,50 +2,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".GuestInfoActivity" >
     
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-	
-	    <Button
-	        android:id="@+id/guestNextButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentRight="true"
-	        android:layout_alignParentTop="true"
-	        android:text="Next"
-	        android:background="@drawable/common_button_background"
-	        android:minHeight="1dp"
-	        android:paddingLeft="10dp"
-	        android:paddingRight="10dp"
-	        android:paddingTop="6dp"
-	        android:paddingBottom="6dp"
-	        android:onClick="guestNextButton_onClick" />
 	    
 	    <LinearLayout
 	        android:id="@+id/bookingInfoView"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
-	        android:layout_alignParentRight="true"
-	        android:layout_below="@+id/guestNextButton"
-	        android:layout_marginTop="20dp" >
+	        android:layout_alignParentRight="true" >
 	        <include layout="@layout/view_booking_info" />
 	    </LinearLayout>
 	
-	    <TextView
-	        android:id="@+id/reserveAsGuestTextView"
-	        android:layout_width="wrap_content"
+	    <LinearLayout
+			android:orientation="vertical"
+	        android:id="@+id/reserveAsGuestTitle"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_alignLeft="@+id/guestBackButton"
-	        android:layout_below="@+id/bookingInfoView"
-	        android:layout_marginTop="50dp"
-	        android:text="RESERVE AS A GUEST" />
+	        android:layout_below="@+id/bookingInfoView" >
+	        <View android:layout_width="match_parent" android:layout_height="1px" android:background="#c9caca" />
+	        <View android:layout_width="match_parent" android:layout_height="1px" android:background="#ffffff"/>
+			<TextView
+				android:layout_width="match_parent"
+		        android:layout_height="30dp"
+		        android:paddingLeft="12dp"
+		        android:gravity="center_vertical"
+		        android:textSize="15sp"
+		        android:textColor="#777777"
+		        android:background="#ebebeb"
+		        android:text="RESERVE AS A GUEST" />
+	    </LinearLayout>
 	
 	    <EditText
 	        android:id="@+id/guestFirstNameEditText"
@@ -53,7 +42,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
 	        android:layout_alignParentRight="true"
-	        android:layout_below="@+id/reserveAsGuestTextView"
+	        android:layout_below="@+id/reserveAsGuestTitle"
 	        android:layout_marginTop="15dp"
 	        android:maxLines="1"
 			android:singleLine="true"
@@ -98,7 +87,10 @@
 			android:maxLines="1"
 			android:singleLine="true"
 			android:inputType="phone"
-	        android:maxLength="8" />
+	        android:maxLength="8"
+	        android:imeActionId="@+id/submit"
+			android:imeActionLabel="Submit"
+			android:imeOptions="actionSend" />
     
     </RelativeLayout>
 

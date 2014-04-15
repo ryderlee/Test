@@ -56,8 +56,6 @@ public class BookingActivity extends BaseActivity {
 	
 	private View mBookingStatusView;
 	
-	private TextView mBookingSuccessMessage;
-	
 	private BookingTask mBookingTask;
 	
 	private View mBookingInfoView;
@@ -96,11 +94,6 @@ public class BookingActivity extends BaseActivity {
 		mBookingCompleteView = findViewById(R.id.bookingCompleteView);
 		
 		mBookingStatusView = findViewById(R.id.bookingStatusView);
-		
-		
-		mBookingSuccessMessage = (TextView) findViewById(R.id.bookingSuccessMessage);
-		mBookingSuccessMessage.setText(UserData.getInstance().getFirstName()+", you're all set!");
-		mBookingSuccessMessage.setTypeface(mTypefaceRobotoRegular);
 		
 		mBookingInfoView = (View) findViewById(R.id.bookingInfoView);
 		RestaurantManager.getInstance(this).displayMiniBlock(mBookingInfoView);
@@ -183,8 +176,8 @@ public class BookingActivity extends BaseActivity {
 	}
 	
 	public void directionsToThereButton_onClick(View view) {
-		double latitude = 0;
-		double longitude = 0;
+		double latitude = RestaurantData.getInstance().getRestaurantLatitude();
+		double longitude = RestaurantData.getInstance().getRestaurantLongitude();
 		String label = "Label";
 		String uriBegin = "geo:" + latitude + "," + longitude;
 		String query = latitude + "," + longitude + "(" + label + ")";

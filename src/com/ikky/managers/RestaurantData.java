@@ -17,6 +17,8 @@ public class RestaurantData {
 	private String restaurantReviewService;
 	private String restaurantReviewAmbiance;
 	private String restaurantReviews;
+	private double restaurantLatitude;
+	private double restaurantLongitude;
 	
 	private static RestaurantData sInstance;
 	
@@ -108,6 +110,14 @@ public class RestaurantData {
 		this.restaurantReviews = string;
 	}
 	
+	public void setLatitude(double latitude) {
+		this.restaurantLatitude = latitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.restaurantLongitude = longitude;
+	}
+	
 
 	public String getRestaurantName() {
 		return restaurantName;
@@ -167,6 +177,14 @@ public class RestaurantData {
 
 	public String getRestaurantReviews() {
 		return restaurantReviews;
+	}
+	
+	public double getRestaurantLatitude() {
+		return restaurantLatitude;
+	}
+
+	public double getRestaurantLongitude() {
+		return restaurantLongitude;
 	}
 	
 }
