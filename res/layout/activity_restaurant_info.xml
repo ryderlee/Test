@@ -116,24 +116,52 @@
 				            android:background="#ebebeb"
 				            android:text="BOOK A TABLE" />
 			        </LinearLayout>
-			        
-			        <Button 
-				        android:id="@+id/pickerButton"
-				        android:background="@null"
-				        android:layout_width="match_parent"
-				        android:layout_height="wrap_content"
-				        android:textSize="12sp"
-				        android:textColor="#33b5e5"
-				        android:gravity="center_vertical"
-				        android:layout_marginLeft="12dp"
-				        android:layout_below="@id/titleBookATable"
-				        android:onClick="pickerButton_onClick" />
+
+			        <LinearLayout
+			            android:id="@+id/pickerButtonContainer"
+			            android:orientation="horizontal"
+			            android:layout_below="@id/titleBookATable"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:onClick="pickerButton_onClick" >
+				        
+			            <Button 
+					        android:id="@+id/pickerButton"
+					        android:background="@null"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:textSize="12sp"
+					        android:textColor="#33b5e5"
+					        android:gravity="center_vertical"
+					        android:layout_marginLeft="12dp"
+					        android:onClick="pickerButton_onClick" />
+				        
+				        <ImageView
+				            android:id="@+id/arrowUp"
+				            android:layout_width="7.5dp"
+				            android:layout_height="6dp"
+				            android:scaleType="fitXY"
+				            android:layout_gravity="center_vertical"
+				            android:layout_marginLeft="5dp"
+				            android:src="@drawable/ic_launcher_arrow_up"
+				            android:visibility="gone" />
+				        
+				        <ImageView
+				            android:id="@+id/arrowDown"
+				            android:layout_width="7.5dp"
+				            android:layout_height="6dp"
+				            android:scaleType="fitXY"
+				            android:layout_gravity="center_vertical"
+				            android:layout_marginLeft="5dp"
+				            android:src="@drawable/ic_launcher_arrow_down" />
+				        
+			        </LinearLayout>			        
 			        
 				    <com.ikky.ui.BookingPicker
 				    	android:id="@+id/bookingPicker"
 				    	android:layout_width="match_parent"
 				    	android:layout_height="wrap_content"
-				    	android:layout_below="@id/pickerButton"
+				    	android:layout_below="@id/pickerButtonContainer"
 				    	android:visibility="gone" />
 				    
 				    <LinearLayout

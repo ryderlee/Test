@@ -34,6 +34,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -64,6 +65,9 @@ public class RestaurantInfoActivity extends BaseActivity {
 	private View mMenuView;
 	private View mDetailView;
 	private View mReviewsView;
+	
+	private ImageView mArrowUp;
+	private ImageView mArrowDown;
 	
 	
 	private ArrayList<Date> mAvailableTimeSlots;
@@ -115,6 +119,9 @@ public class RestaurantInfoActivity extends BaseActivity {
 		mMenuView = findViewById(R.id.RESTAURANT_INFO_MENU_VIEW);
 		mDetailView = findViewById(R.id.RESTAURANT_INFO_DETAIL_VIEW);
 		mReviewsView = findViewById(R.id.RESTAURANT_INFO_REVIEWS_VIEW);
+		
+		mArrowUp = (ImageView) findViewById(R.id.arrowUp);
+		mArrowDown = (ImageView) findViewById(R.id.arrowDown);
 		
 		
 		mTimeSlotsView = (View) findViewById(R.id.timeSlotsView);
@@ -265,10 +272,14 @@ public class RestaurantInfoActivity extends BaseActivity {
 	
 	public void pickerButton_onClick(View view) {
 		if (mBookingPicker.getVisibility()==View.VISIBLE) {
+			mArrowUp.setVisibility(View.GONE);
+			mArrowDown.setVisibility(View.VISIBLE);
 			mBookingPicker.setVisibility(View.GONE);
 			mTimeSlotsView.setVisibility(View.VISIBLE);
 			getTimeslots(false);
 		} else {
+			mArrowUp.setVisibility(View.VISIBLE);
+			mArrowDown.setVisibility(View.GONE);
 			mBookingPicker.setVisibility(View.VISIBLE);
 			mTimeSlotsView.setVisibility(View.GONE);
 		}

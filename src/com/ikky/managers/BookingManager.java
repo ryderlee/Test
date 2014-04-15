@@ -2,6 +2,7 @@ package com.ikky.managers;
 
 import com.ikky.activities.BookingActivity;
 import com.ikky.activities.GuestInfoActivity;
+import com.ikky.activities.MainActivity;
 import com.ikky.constants.Constants;
 
 import android.app.Activity;
@@ -71,7 +72,10 @@ public class BookingManager {
 	}
 	
 	public void completeBooking() {
-		backToRestaurantInfo(Constants.ACTION_BOOK_SUCCESS);
+		Intent intent = new Intent();
+		intent.setClass(mActivity, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		mActivity.startActivity(intent);
 	}
 	
 	public void cancelBooking() {

@@ -63,6 +63,9 @@ public class BookingActivity extends BaseActivity {
 	
 	private AlertDialog.Builder mAlertBuilder;
 	
+	private Button mUpButton;
+	private Boolean mCanUp;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,15 +77,18 @@ public class BookingActivity extends BaseActivity {
         getActionBar().setDisplayShowTitleEnabled(false);
         getActionBar().setDisplayShowCustomEnabled(true);
         getActionBar().setCustomView(actionBarView);
-        Button upButton = (Button) getActionBar().getCustomView().findViewById(R.id.myUpButton);
-        upButton.setText(getTitle());
+        mUpButton = (Button) getActionBar().getCustomView().findViewById(R.id.myUpButton);
+        mUpButton.setText(getTitle());
         final Activity act = this;
-        upButton.setOnClickListener(new OnClickListener() {
+        mUpButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				NavUtils.navigateUpFromSameTask(act);
+				if (mCanUp) {
+					NavUtils.navigateUpFromSameTask(act);
+				}
 			}
 		});
+        mCanUp = true;
 		
 		mPhoneEditText = (EditText) findViewById(R.id.phoneEditText);
 		mPhoneEditText.setText(UserData.getInstance().getPhone());
@@ -284,6 +290,9 @@ public class BookingActivity extends BaseActivity {
 				showProgress(false);
 				mBookingFormView.setVisibility(success?View.GONE:View.VISIBLE);
 				mBookingCompleteView.setVisibility(success?View.VISIBLE:View.GONE);
+				mUpButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+				mUpButton.setText("Complete");
+				mCanUp = false;
 				setTitle("Booking Confirmed");
 			} else {
 				// TODO: Need to determine the error code

@@ -59,7 +59,7 @@
         
         <activity
             android:name="com.ikky.activities.BookingActivity"
-            android:label="Complete"
+            android:label="Last Step"
             android:screenOrientation="portrait"
        		android:parentActivityName="com.ikky.activities.RestaurantInfoActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->

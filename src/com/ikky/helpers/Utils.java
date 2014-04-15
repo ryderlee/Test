@@ -21,11 +21,11 @@ public class Utils {
 		targetDate.setTime(date);
 		
 		String infoStr = new SimpleDateFormat("', on' d MMM").format(date);
-		if (targetDate.get(Calendar.DATE) == today.get(Calendar.DATE)) {
+		if (targetDate.get(Calendar.DATE) == today.get(Calendar.DATE) && targetDate.get(Calendar.MONTH) == today.get(Calendar.MONTH) && targetDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
 			infoStr = " today";
-		} else if (targetDate.get(Calendar.DATE) == tmr.get(Calendar.DATE)) {
+		} else if (targetDate.get(Calendar.DATE) == tmr.get(Calendar.DATE) && targetDate.get(Calendar.MONTH) == tmr.get(Calendar.MONTH) && targetDate.get(Calendar.YEAR) == tmr.get(Calendar.YEAR)) {
 			infoStr = " tomorrow";
-		} else if (oneWeek.get(Calendar.DATE) - targetDate.get(Calendar.DATE) > 0) {
+		} else if (oneWeek.get(Calendar.DATE) - targetDate.get(Calendar.DATE) > 0 && targetDate.get(Calendar.MONTH) == oneWeek.get(Calendar.MONTH) && targetDate.get(Calendar.YEAR) == oneWeek.get(Calendar.YEAR)) {
 			infoStr = new SimpleDateFormat("', on' EEE").format(date);
 		}
 		return "Table for " + noOfParticipants + infoStr;
@@ -44,11 +44,11 @@ public class Utils {
 		targetDate.setTime(date);
 		
 		String infoStr = new SimpleDateFormat("EEE, d MMM").format(date);
-		if (targetDate.get(Calendar.DATE) == today.get(Calendar.DATE)) {
+		if (targetDate.get(Calendar.DATE) == today.get(Calendar.DATE) && targetDate.get(Calendar.MONTH) == today.get(Calendar.MONTH) && targetDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
 			infoStr = "today";
-		} else if (targetDate.get(Calendar.DATE) == tmr.get(Calendar.DATE)) {
+		} else if (targetDate.get(Calendar.DATE) == tmr.get(Calendar.DATE) && targetDate.get(Calendar.MONTH) == tmr.get(Calendar.MONTH) && targetDate.get(Calendar.YEAR) == tmr.get(Calendar.YEAR)) {
 			infoStr = "tomorrow";
-		} else if (oneWeek.get(Calendar.DATE) - targetDate.get(Calendar.DATE) > 0) {
+		} else if (oneWeek.get(Calendar.DATE) - targetDate.get(Calendar.DATE) > 0 && targetDate.get(Calendar.MONTH) == oneWeek.get(Calendar.MONTH) && targetDate.get(Calendar.YEAR) == oneWeek.get(Calendar.YEAR)) {
 			infoStr = new SimpleDateFormat("EEEEEEE").format(date);
 		}
 		return "Table for " + noOfParticipants + ", " + infoStr + " at " + new SimpleDateFormat("h:mm aa").format(date).toLowerCase();

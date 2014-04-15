@@ -38,6 +38,7 @@
 	        android:layout_marginLeft="5dp"
 	        android:layout_width="7.5dp"
 	        android:layout_height="6dp"
+	        android:scaleType="fitXY"
 	        android:src="@drawable/ic_launcher_arrow_up"
 	        android:visibility="gone" />
 	    
@@ -48,6 +49,7 @@
 	        android:layout_marginLeft="5dp"
 	        android:layout_width="7.5dp"
 	        android:layout_height="6dp"
+	        android:scaleType="fitXY"
 	        android:src="@drawable/ic_launcher_arrow_down" />
         
 	    <ImageButton
