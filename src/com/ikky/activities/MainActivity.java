@@ -437,6 +437,7 @@ public class MainActivity extends BaseActivity {
     	public String img;
     	public LatLng latlng;
     	public ArrayList<String> timeslots;
+    	public String cuisine;
     }
     
     private class ListViewAdapter<T> extends ArrayAdapter<T> {
@@ -456,9 +457,13 @@ public class MainActivity extends BaseActivity {
 			TextView addressTextView = (TextView) convertView.findViewById(R.id.restaurantResult_addressTextView);
 	    	addressTextView.setTypeface(mTypefaceRobotoRegular);
 	    	
+	    	TextView cuisineTextView = (TextView) convertView.findViewById(R.id.restaurantResult_cusine);
+	    	cuisineTextView.setTypeface(mTypefaceRobotoRegular);
+	    	
 	    	RestaurantResultItem item = (RestaurantResultItem)this.getItem(position);
 	    	nameTextView.setText(item.ss);
 	    	addressTextView.setText(item.adr);
+	    	cuisineTextView.setText(item.cuisine);
 	    	
 	    	final float scale = getContext().getResources().getDisplayMetrics().density;
 	    	int widthInDp = (int) (50 * scale + 0.5f);
@@ -635,6 +640,7 @@ public class MainActivity extends BaseActivity {
 	           			item.ss = jo.getString("SS");
 	           			item.adr = jo.getString("ADR");
 	           			item.img = jo.getString("IMAGE");
+	           			item.cuisine = jo.getString("cuisine");
 	           			ArrayList<String> timeslots = new ArrayList<String>();
 	           			
 	           			if (jo.has("timeslotAvailability")) {

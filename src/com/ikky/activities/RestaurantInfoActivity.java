@@ -453,16 +453,16 @@ public class RestaurantInfoActivity extends BaseActivity {
 				rd.setAddress(json.getString("RESTAURANT_ADDRESS"));
 				rd.setPhone(json.getString("RESTAURANT_PHONE"));
 				rd.setCuisine(json.getString("RESTAURANT_CUISINE"));
-				rd.setPrice(json.getString("RESTAURANT_PRICE"));
-				rd.setHours(json.getString("RESTAURANT_HOURS"));
+				rd.setPrice("$"+json.getString("RESTAURANT_PRICE_LOW")+" - $"+json.getString("RESTAURANT_PRICE_HIGH"));
+				rd.setHours(json.getString("RESTAURANT_OPENING_TIME") + " - " + json.getString("RESTAURANT_CLOSING_TIME"));
 				rd.setParking(json.getString("RESTAURANT_PARKING"));
 				rd.setDescription(json.getString("RESTAURANT_DESCRIPTION"));
-				rd.setMenu(json.getString("RESTAURANT_MENU"));
-				rd.setReviewOverall(json.getString("RESTAURANT_REVIEW_OVERALL"));
-				rd.setReviewFood(json.getString("RESTAURANT_REVIEW_FOOD"));
-				rd.setReviewService(json.getString("RESTAURANT_REVIEW_SERVICE"));
-				rd.setReviewAmbiance(json.getString("RESTAURANT_REVIEW_AMBIANCE"));
-				rd.setReviews(json.getString("RESTAURANT_REVIEWS"));
+//				rd.setMenu(json.getString("RESTAURANT_MENU"));
+//				rd.setReviewOverall(json.getString("RESTAURANT_REVIEW_OVERALL"));
+//				rd.setReviewFood(json.getString("RESTAURANT_REVIEW_FOOD"));
+//				rd.setReviewService(json.getString("RESTAURANT_REVIEW_SERVICE"));
+//				rd.setReviewAmbiance(json.getString("RESTAURANT_REVIEW_AMBIANCE"));
+//				rd.setReviews(json.getString("RESTAURANT_REVIEWS"));
 				rd.setLatitude(json.getDouble("RESTAURANT_LAT"));
 				rd.setLongitude(json.getDouble("RESTAURANT_LONG"));
 				
