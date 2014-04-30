@@ -51,6 +51,7 @@ import com.ikky.helpers.ServerUtils;
 import com.ikky.helpers.Utils;
 import com.ikky.managers.RestaurantManager;
 import com.ikky.managers.SearchData;
+import com.ikky.managers.UserData;
 import com.ikky.managers.UserManager;
 import com.ikky.ui.BookingPicker;
 import com.ikky.ui.PhotoView;
@@ -618,9 +619,9 @@ public class MainActivity extends BaseActivity {
 	    	if (mGoogleMap != null) {
 	    		String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(SearchData.getInstance().getChosenDate());
 	    		if (mVisibleArea) {
-	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "latmin="+mMinLat, "lngmin="+mMinLng, "latmax="+mMaxLat, "lngmax="+mMaxLng, "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
+	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "latmin="+mMinLat, "lngmin="+mMinLng, "latmax="+mMaxLat, "lngmax="+mMaxLng, "booking_datetime="+datetime, "user_id="+UserData.getInstance().getUserId(), "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
 	    		} else {
-	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
+	    			s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize, "du=km", "dt="+mDistance, "lat="+mTargetLocation.getLatitude(), "lng="+mTargetLocation.getLongitude(), "booking_datetime="+datetime, "user_id="+UserData.getInstance().getUserId(), "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
 	    		}
 	    	} else {
 	    		s = ServerUtils.submitRequest("getRestaurantList", "p="+mPage, "k="+mKeyword, "rpp="+mPageSize);

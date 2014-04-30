@@ -19,6 +19,7 @@ import com.ikky.helpers.Utils;
 import com.ikky.managers.BookingManager;
 import com.ikky.managers.RestaurantData;
 import com.ikky.managers.SearchData;
+import com.ikky.managers.UserData;
 import com.ikky.managers.UserManager;
 import com.ikky.ui.BookingPicker;
 import com.ikky.ui.CustomHorizontalScrollView;
@@ -538,7 +539,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 			Date d=SearchData.getInstance().getChosenDate();
 			Calendar calObj= Calendar.getInstance();
 			calObj.setTime(d);
-        	String jsonString = ServerUtils.submitRequest("getAvailableTimeslots", "mid="+RestaurantData.getInstance().getRestaurantID(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
+        	String jsonString = ServerUtils.submitRequest("getAvailableTimeslots", "mid="+RestaurantData.getInstance().getRestaurantID(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation(), "user_id="+UserData.getInstance().getUserId());
         	Calendar currentCal = Calendar.getInstance();
 			try {
 				JSONObject json = new JSONObject(jsonString);
