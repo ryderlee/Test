@@ -1,5 +1,7 @@
 package com.ikky.managers;
 
+import java.util.ArrayList;
+
 public class RestaurantData {
 
 	private String restaurantName;
@@ -19,6 +21,7 @@ public class RestaurantData {
 	private String restaurantReviews;
 	private double restaurantLatitude;
 	private double restaurantLongitude;
+	private ArrayList<String> restaurantImages;
 	
 	private static RestaurantData sInstance;
 	
@@ -47,6 +50,7 @@ public class RestaurantData {
 		this.setReviewService("");
 		this.setReviewAmbiance("");
 		this.setReviews("");
+		this.setImages(new ArrayList<String>());
 	}
 	
 	public void setPhone(String string) {
@@ -118,6 +122,10 @@ public class RestaurantData {
 		this.restaurantLongitude = longitude;
 	}
 	
+	public void setImages(ArrayList<String> images) {
+		this.restaurantImages = images;
+	}
+	
 
 	public String getRestaurantName() {
 		return restaurantName;
@@ -185,6 +193,10 @@ public class RestaurantData {
 
 	public double getRestaurantLongitude() {
 		return restaurantLongitude;
+	}
+	
+	public ArrayList<String> getRestaurantImages() {
+		return restaurantImages;
 	}
 	
 }

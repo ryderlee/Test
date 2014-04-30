@@ -59,6 +59,9 @@ public class RestaurantManager {
 		
 		try {
 			URL imageUrl = new URL("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/01.png");
+			if (!RestaurantData.getInstance().getRestaurantImages().isEmpty()) {
+				imageUrl = new URL(RestaurantData.getInstance().getRestaurantImages().get(0));
+			}
 			photoView.setImageURL(imageUrl, true, null);
 		}
 		catch(MalformedURLException mfe){}

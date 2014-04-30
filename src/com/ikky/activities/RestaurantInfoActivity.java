@@ -33,7 +33,6 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -48,7 +47,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -86,6 +84,8 @@ public class RestaurantInfoActivity extends BaseActivity {
 	private ViewPager mViewPager;
 	private int mViewPagerHeight;
 	private ArrayList<String> mImageUrls;
+	
+	private FullScreenAlbumAdapter mAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -155,8 +155,8 @@ public class RestaurantInfoActivity extends BaseActivity {
         
         mViewPager = (ViewPager) findViewById(R.id.fullScreenAlbumPager);
         mViewPager.setOffscreenPageLimit(3);
-		FullScreenAlbumAdapter adapter = new FullScreenAlbumAdapter();
-		mViewPager.setAdapter(adapter);
+		mAdapter = new FullScreenAlbumAdapter();
+		mViewPager.setAdapter(mAdapter);
 		
 		mViewPagerHeight = mViewPager.getLayoutParams().height;
 		
@@ -268,6 +268,8 @@ public class RestaurantInfoActivity extends BaseActivity {
 			}
 		}
         displayTimeSlots();
+        
+        mAdapter.notifyDataSetChanged();
 	}
 	
 	public void pickerButton_onClick(View view) {
@@ -466,6 +468,26 @@ public class RestaurantInfoActivity extends BaseActivity {
 				rd.setLatitude(json.getDouble("RESTAURANT_LAT"));
 				rd.setLongitude(json.getDouble("RESTAURANT_LONG"));
 				
+				ArrayList<String> images = new ArrayList<String>();
+				JSONArray imagesArray = json.getJSONArray("RESTAURANT_IMAGES");
+				for (int i=0; i<imagesArray.length(); i++) {
+					images.add(imagesArray.getString(i));
+				}
+
+				mImageUrls = new ArrayList<String>();
+				if (images.isEmpty()) {
+			        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/01.png");
+			        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/02.png");
+			        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/03.png");
+			        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/04.png");
+			        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/05.png");
+				} else {
+					mImageUrls.addAll(images);
+				}
+				
+				rd.setImages(mImageUrls);
+				
+				
 				mBookingSlots = new ArrayList<String>();
 				if (json.optJSONObject("RESTAURANT_BOOKING_SLOTS") != null) {
 					JSONArray jsonArr = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
@@ -559,23 +581,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 	private class FullScreenAlbumAdapter extends PagerAdapter {
 		
 		public FullScreenAlbumAdapter() {
-	        mImageUrls = new ArrayList<String>();
-	        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/01.png");
-	        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/02.png");
-	        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/03.png");
-	        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/04.png");
-	        mImageUrls.add("http://ikky-phpapp-env.elasticbeanstalk.com/images/fullscreen/05.png");
-	        /*mImageUrls.add("http://www.foodnut.com/i/Yung-Kee-Restaurant-Hong-Kong/Yung-Kee-Restaurant-Hong-Kong-1.jpg");
-	        mImageUrls.add("http://www.12hk.com/area/Admiralty/LippoCtr_PHOT0582.jpg");
-	        mImageUrls.add("http://www.eclectic-cool.com/wp-content/uploads/2011/04/hong-kong-street-signs.jpg");
-	        mImageUrls.add("http://www.discoverhongkong.com/common/images/hotel/1315_image_COMP00050993_photo_1.jpg");
-	        mImageUrls.add("http://annatam.com/wp-content/uploads/2013/12/cf7434fef207fe283c95be624f5db1b5.jpg");
-	        mImageUrls.add("http://therakeonline.com/wp-content/uploads/2012/09/Where-The-Rake-Stays-Upper-House-Hong-Kong-Semi-private-booth.jpg");
-	        mImageUrls.add("http://farm4.staticflickr.com/3255/2460544629_e3fa24bb40_o.jpg");
-	        mImageUrls.add("http://www.yuantravel.com/wp-content/gallery/general-about-hong-kong/hongkong_2141.jpg");
-	        mImageUrls.add("https://pbs.twimg.com/media/BbZpkd6CEAAB2GL.jpg");
-	        mImageUrls.add("https://pbs.twimg.com/media/BbhSydpCAAAU-J5.jpg");
-	        mImageUrls.add("http://fc04.deviantart.net/fs51/i/2009/307/a/3/Hong_Kong__Tallest_Building_by_thehardheadedsavior.jpg");*/
+			mImageUrls = new ArrayList<String>();
 	    }
 
 		@Override
