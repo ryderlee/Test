@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    			android:clipChildren="false"
                 android:layout_width="match_parent"
                 android:layout_height="125dp"
                 android:paddingLeft="12dp"
@@ -52,6 +53,7 @@
 		    android:id="@+id/restaurantResult_timeslotsContainer"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
+		    android:clipChildren="false"
 		    android:layout_toLeftOf="@+id/restaurantResult_thumbnailImageView"
 		    android:layout_alignBottom="@+id/restaurantResult_thumbnailImageView"
 		    android:layout_marginRight="6dp"

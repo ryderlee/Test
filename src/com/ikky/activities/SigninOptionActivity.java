@@ -82,9 +82,8 @@ public class SigninOptionActivity extends BaseActivity {
 			RelativeLayout.LayoutParams params = (LayoutParams) findViewById(R.id.signinButton).getLayoutParams();
 			params.addRule(RelativeLayout.BELOW, R.id.divider);
 			findViewById(R.id.signinButton).setLayoutParams(params);
+			RestaurantManager.getInstance(this).displayMiniBlock(findViewById(R.id.bookingInfoView));
 		}
-		
-		RestaurantManager.getInstance(this).displayMiniBlock(findViewById(R.id.bookingInfoView));
 		
 		LoginButton fbLoginButton = (LoginButton) findViewById(R.id.fbSigninButton);
 		fbLoginButton.setReadPermissions(Arrays.asList("email"));

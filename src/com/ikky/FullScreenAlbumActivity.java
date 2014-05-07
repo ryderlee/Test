@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 public class FullScreenAlbumActivity extends BaseActivity {
@@ -72,13 +73,13 @@ public class FullScreenAlbumActivity extends BaseActivity {
 		
 		@Override
 	    public Object instantiateItem(ViewGroup container, int position) {
-	        Button btnClose;
+	        ImageView btnClose;
 	        PhotoView photoView;
 	  
 	        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	        View viewLayout = inflater.inflate(R.layout.view_fullscreen_image, container, false);
 	        
-	        btnClose = (Button) viewLayout.findViewById(R.id.fullScreenImageCloseButton);
+	        btnClose = (ImageView) viewLayout.findViewById(R.id.fullScreenImageCloseButton);
 	        photoView = (PhotoView) viewLayout.findViewById(R.id.fullScreenImagePhotoView);
 	        
 			try {

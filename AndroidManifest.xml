@@ -31,7 +31,7 @@
         android:theme="@style/MyTheme" >
         
         <meta-data android:name="com.google.android.gms.version" android:value="4323000" />
-		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAvkAY39w-20RwGuU8MCR2Q5MmNasNKtS4" />
+		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCeNFCQfrF9Q3RNDs_6-Cd3SdCr1nRhGFQ" />
         
         <activity
             android:name="com.ikky.activities.MainActivity"

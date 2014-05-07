@@ -5,6 +5,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 import org.json.JSONArray;
@@ -56,6 +57,8 @@ public class RestaurantInfoActivity extends BaseActivity {
 	
 	private RestaurantInfoRequestTask mRestaurantInfoRequestTask = null;
 	
+	private Boolean isVIP = false;
+	
 	private ScrollView mInfoView;
 	private View mProgressView;
 	private RadioGroup mRadioGroup;
@@ -70,6 +73,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 	
 	
 	private ArrayList<Date> mAvailableTimeSlots;
+	private ArrayList<Date> mVipAvailableTimeSlots;
 	
 	private TimeSlotsRequestTask mTimeSlotsRequestTask = null;
 	private Date mTargetTime;
@@ -110,6 +114,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 		});
 		
 		mAvailableTimeSlots = new ArrayList<Date>();
+		mVipAvailableTimeSlots = new ArrayList<Date>();
 		
 		
 		mInfoView = (ScrollView) findViewById(R.id.RESTAURANT_INFO_VIEW);
@@ -215,7 +220,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 		return true;
 	}
 	
-	private void updateRestaurantInfo(ArrayList<String> timeSlots) {
+	private void updateRestaurantInfo() {
 		TextView nameView = (TextView) findViewById(R.id.RESTAURANT_INFO_NAME);
 		nameView.setTypeface(mTypefaceRobotoRegular);
 		TextView addressView = (TextView) findViewById(R.id.RESTAURANT_INFO_ADDRESS);
@@ -243,32 +248,6 @@ public class RestaurantInfoActivity extends BaseActivity {
 		hoursView.setText(rd.getRestaurantHours());
 		parkingView.setText(rd.getRestaurantParking());
 		descriptionView.setText(rd.getRestaurantDescription());
-		
-		mAvailableTimeSlots.clear();
-		int min;
-		String timeSlotStr;
-		String timeSlotArr[];
-		Calendar timeSlot;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Calendar currentTime = Calendar.getInstance();
-		for (int i=0; i<timeSlots.size(); i++) {
-			timeSlotStr = timeSlots.get(i);
-			timeSlotArr = timeSlotStr.split(":");
-			timeSlot = Calendar.getInstance();
-			timeSlot.setTime(SearchData.getInstance().getSearchDate());
-			timeSlot.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSlotArr[0]));
-			timeSlot.set(Calendar.MINUTE, Integer.parseInt(timeSlotArr[1]));
-			timeSlot.set(Calendar.SECOND, 0);
-//			Log.d("currentTime", ""+ sdf.format(currentTime.getTime()));
-//			Log.d("addingTime", ""+ sdf.format(timeSlot.getTime()));
-			if(currentTime.compareTo(timeSlot) < 0){
-				mAvailableTimeSlots.add(timeSlot.getTime());
-//				Log.d("add","" + timeSlot.getTime());
-			}else{
-//				Log.d("not adding","" + timeSlot.getTime());
-			}
-		}
-        displayTimeSlots();
         
         mAdapter.notifyDataSetChanged();
 	}
@@ -323,18 +302,28 @@ public class RestaurantInfoActivity extends BaseActivity {
 				
 				LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				inflater.inflate(R.layout.view_timeslot_button, mTimeSlotsContainer, true);
-				Button timeSlotButton = (Button) mTimeSlotsContainer.getChildAt(i);
+				RelativeLayout buttonContainer = (RelativeLayout) mTimeSlotsContainer.getChildAt(i);
+				Button timeSlotButton = (Button) buttonContainer.getChildAt(0);
 				timeSlotButton.setText(new SimpleDateFormat("HH:mm").format(d).toLowerCase());
 				timeSlotButton.setTag(d);
+				
+				ImageView vipStar = (ImageView) buttonContainer.getChildAt(1);
+				if (!mVipAvailableTimeSlots.contains(d)) {
+					vipStar.setVisibility(View.GONE);
+				}
+				
 				if (i>0) {
-					LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) timeSlotButton.getLayoutParams();
+					LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) buttonContainer.getLayoutParams();
 					params.leftMargin = (int) (10*scale);
-					timeSlotButton.setLayoutParams(params);
+					buttonContainer.setLayoutParams(params);
 				}
 				timeSlotButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						SearchData.getInstance().setChosenDate((Date)v.getTag());
+						RelativeLayout buttonContainer = (RelativeLayout) v.getParent();
+						ImageView vipStar = (ImageView) buttonContainer.getChildAt(1);
+						SearchData.getInstance().setIsVip(vipStar.getVisibility()==View.VISIBLE);
 						reserveButton_onClick(v);
 					}
 				});
@@ -351,17 +340,36 @@ public class RestaurantInfoActivity extends BaseActivity {
 		mPickerProgressBar.setVisibility(View.GONE);
 	}
 	
-	private void updateTimeSlots(ArrayList<String> timeslots) {
+	private void updateTimeSlots(ArrayList<String> timeslots, ArrayList<String> vipTimeslots) {
 		mAvailableTimeSlots.clear();
+		mVipAvailableTimeSlots.clear();
+		String timeSlotStr;
+		String timeSlotArr[];
+		Calendar timeSlot;
+		Calendar currentTime = Calendar.getInstance();
 		for (int i=0; i<timeslots.size(); i++) {
-			String timeSlotStr = timeslots.get(i);
-			String timeSlotArr[] = timeSlotStr.split(":");
-			Calendar timeSlot = Calendar.getInstance();
+			timeSlotStr = timeslots.get(i);
+			timeSlotArr = timeSlotStr.split(":");
+			timeSlot = Calendar.getInstance();
 			timeSlot.setTime(SearchData.getInstance().getSearchDate());
 			timeSlot.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSlotArr[0]));
 			timeSlot.set(Calendar.MINUTE, Integer.parseInt(timeSlotArr[1]));
 			timeSlot.set(Calendar.SECOND, 0);
-			mAvailableTimeSlots.add(timeSlot.getTime());
+			if(currentTime.compareTo(timeSlot) < 0){
+				mAvailableTimeSlots.add(timeSlot.getTime());
+			}
+		}
+		for (int i=0; i<vipTimeslots.size(); i++) {
+			timeSlotStr = vipTimeslots.get(i);
+			timeSlotArr = timeSlotStr.split(":");
+			timeSlot = Calendar.getInstance();
+			timeSlot.setTime(SearchData.getInstance().getSearchDate());
+			timeSlot.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSlotArr[0]));
+			timeSlot.set(Calendar.MINUTE, Integer.parseInt(timeSlotArr[1]));
+			timeSlot.set(Calendar.SECOND, 0);
+			if(currentTime.compareTo(timeSlot) < 0){
+				mVipAvailableTimeSlots.add(timeSlot.getTime());
+			}
 		}
 	}
 
@@ -433,8 +441,6 @@ public class RestaurantInfoActivity extends BaseActivity {
 	
 	private class RestaurantInfoRequestTask extends AsyncTask<Void, Void, Boolean> {
 		
-		ArrayList<String> mBookingSlots;
-		
 		@Override
 		protected Boolean doInBackground(Void... params) {
 		// TODO: attempt authentication against a network service.
@@ -446,7 +452,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 			}
 		
 			String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(SearchData.getInstance().getChosenDate());
-        	String jsonString = ServerUtils.submitRequest("getMerchantDetail", "mid="+RestaurantData.getInstance().getRestaurantID(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation());
+        	String jsonString = ServerUtils.submitRequest("getMerchantDetail", "mid="+RestaurantData.getInstance().getRestaurantID(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation(), "user_id="+UserData.getInstance().getUserId());
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				
@@ -488,16 +494,6 @@ public class RestaurantInfoActivity extends BaseActivity {
 				
 				rd.setImages(mImageUrls);
 				
-				
-				mBookingSlots = new ArrayList<String>();
-				if (json.optJSONObject("RESTAURANT_BOOKING_SLOTS") != null) {
-					JSONArray jsonArr = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
-					for (int i=0; i<jsonArr.length(); i++) {
-						String timeslotStr = jsonArr.getString(i);
-						mBookingSlots.add(timeslotStr.substring(0, 2) + ":" + timeslotStr.substring(2));
-					}
-				}
-				
 				return true;
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -509,7 +505,7 @@ public class RestaurantInfoActivity extends BaseActivity {
 		protected void onPostExecute(final Boolean success) {
 			mRestaurantInfoRequestTask = null;
 			if (success) {
-				updateRestaurantInfo(mBookingSlots);
+				updateRestaurantInfo();
 				hideProgress();
 			} else {
 			}
@@ -525,6 +521,9 @@ public class RestaurantInfoActivity extends BaseActivity {
 	
 	private class TimeSlotsRequestTask extends AsyncTask<Void, Void, Boolean> {
 
+		ArrayList<String> mBookingSlots;
+		ArrayList<String> mVipBookingSlots;
+		
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			try {
@@ -537,25 +536,38 @@ public class RestaurantInfoActivity extends BaseActivity {
 			String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(SearchData.getInstance().getChosenDate());
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date d=SearchData.getInstance().getChosenDate();
-			Calendar calObj= Calendar.getInstance();
-			calObj.setTime(d);
         	String jsonString = ServerUtils.submitRequest("getAvailableTimeslots", "mid="+RestaurantData.getInstance().getRestaurantID(), "booking_datetime="+datetime, "no_of_participants="+SearchData.getInstance().getNumberOfReservation(), "user_id="+UserData.getInstance().getUserId());
-        	Calendar currentCal = Calendar.getInstance();
 			try {
 				JSONObject json = new JSONObject(jsonString);
 				
-				JSONArray jsonArr = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
+				isVIP = json.getString("IS_VIP").compareTo("0")==0?false:true;
 				
-				ArrayList<String> bookingSlots = new ArrayList<String>();
-				for (int i=0; i<jsonArr.length(); i++) {
-					String timeslotStr = jsonArr.getString(i);
-					calObj.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeslotStr.substring(0, 2)));
-					calObj.set(Calendar.MINUTE, Integer.parseInt(timeslotStr.substring(2)));
-					if(currentCal.compareTo(calObj) <0){
-                            bookingSlots.add(timeslotStr.substring(0, 2) + ":" + timeslotStr.substring(2));
+				mBookingSlots = new ArrayList<String>();
+				mVipBookingSlots = new ArrayList<String>();
+				ArrayList<String> timeslots = new ArrayList<String>();
+				if (json.optJSONArray("RESTAURANT_BOOKING_SLOTS") != null) {
+					JSONArray jsonArr = json.getJSONArray("RESTAURANT_BOOKING_SLOTS");
+					for (int i=0; i<jsonArr.length(); i++) {
+						timeslots.add(jsonArr.getString(i));
 					}
 				}
-				updateTimeSlots(bookingSlots);
+				if (isVIP && json.optJSONArray("RESTAURANT_BOOKING_VIP_SLOTS") != null) {
+					JSONArray jsonArr = json.getJSONArray("RESTAURANT_BOOKING_VIP_SLOTS");
+					for (int i=0; i<jsonArr.length(); i++) {
+						String timeslotStr = jsonArr.getString(i);
+						if (!timeslots.contains(timeslotStr)) {
+							timeslots.add(timeslotStr);
+						}
+						mVipBookingSlots.add(timeslotStr.substring(0, 2) + ":" + timeslotStr.substring(2));
+					}
+				}
+				Collections.sort(timeslots);
+				for (String timeslot : timeslots) {
+					mBookingSlots.add(timeslot.substring(0, 2) + ":" + timeslot.substring(2));
+				}
+				
+				updateTimeSlots(mBookingSlots, mVipBookingSlots);
+				
 				return true;
 			} catch (JSONException e) {
 				e.printStackTrace();

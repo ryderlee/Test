@@ -14,6 +14,7 @@ public class SearchData {
 	private Date mSearchDate;
 	private int mNoOfParticipants;
 	private Date mChosenDate;
+	private Boolean mIsVip;
 	
 	public static synchronized SearchData getInstance() {
 		if (sInstance == null) {
@@ -42,6 +43,10 @@ public class SearchData {
 		return mNoOfParticipants;
 	}
 	
+	public Boolean getIsVip() {
+		return mIsVip;
+	}
+	
 
 	public void setSearchDate(Date d) {
 		Log.d("com.example.test", "set search date");
@@ -55,6 +60,10 @@ public class SearchData {
 
 	public void setNumberOfReservation(int i) {
 		mNoOfParticipants = i;
+	}
+	
+	public void setIsVip(Boolean isVip) {
+		mIsVip = isVip;
 	}
 	
 }

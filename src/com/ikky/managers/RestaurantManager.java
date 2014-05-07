@@ -12,6 +12,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class RestaurantManager {
@@ -54,6 +56,15 @@ public class RestaurantManager {
 		Typeface typefaceRobotoRegular = Typeface.createFromAsset(this.mActivity.getAssets(), "fonts/Roboto-Regular.ttf");
 		tv_RESTAURANT_NAME.setTypeface(typefaceRobotoRegular);
 		tv_RESTAURANT_ADDRESS.setTypeface(typefaceRobotoRegular);
+		
+		LinearLayout container = (LinearLayout) v.findViewById(R.id.noOfParticipantsContainer);
+		ImageView headIcon = (ImageView) container.getChildAt(0);
+		if (SearchData.getInstance().getIsVip()) {
+			headIcon.setImageResource(R.drawable.ic_vip);
+		} else {
+			headIcon.setImageResource(R.drawable.ic_people);
+		}
+		
 		
 		PhotoView photoView = (PhotoView) v.findViewById(R.id.bookingInfoPhotoView);
 		

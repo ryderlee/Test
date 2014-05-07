@@ -17,6 +17,7 @@ import android.content.IntentSender;
 import android.graphics.Color;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.util.Log;
@@ -438,6 +439,7 @@ public class MainActivity extends BaseActivity {
     	public String img;
     	public LatLng latlng;
     	public ArrayList<String> timeslots;
+    	public ArrayList<String> vipTimeslots;
     	public String cuisine;
     }
     
@@ -473,6 +475,8 @@ public class MainActivity extends BaseActivity {
 	    	LinearLayout timeslotsContainer = (LinearLayout) convertView.findViewById(R.id.restaurantResult_timeslotsContainer);
 	    	timeslotsContainer.removeAllViews();
 	    	for (int i=0; i<4; i++) {
+	    		RelativeLayout timeslotWrap = new RelativeLayout(getContext());
+	    		timeslotWrap.setLayoutParams(new LayoutParams(widthInDp, heightInDp));
 	    		TextView timeslot = new TextView(getContext());
 	    		timeslot.setWidth(widthInDp);
 	    		timeslot.setHeight(heightInDp);
@@ -480,15 +484,31 @@ public class MainActivity extends BaseActivity {
 	    		timeslot.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 	    		timeslot.setTextColor(Color.WHITE);
 	    		String viewString = "-";
+	    		Boolean isVip = false;
 	    		if (iter.hasNext()) {
 	    			timeslot.setBackgroundColor(Color.argb(255, 14, 180, 88));
 	    			String timeslotString = iter.next();
+	    			Log.d("ServerUtils", "vipTimeslots:"+item.vipTimeslots.toString());
+	    			if (item.vipTimeslots.contains(timeslotString)) {
+	    				isVip = true;
+	    			}
 	    			viewString = timeslotString.substring(0, 2) + ":" + timeslotString.substring(2);
 	    		} else {
 	    			timeslot.setBackgroundColor(Color.argb(255, 214, 214, 214));
 	    		}
 	    		timeslot.setText(viewString);
-	    		timeslotsContainer.addView(timeslot);
+	    		timeslotWrap.addView(timeslot);
+	    		if (isVip) {
+	    			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (11.5*scale+0.5f), (int) (12*scale+0.5f));
+	    			params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+	    			params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+	    			params.setMargins(0, (int)(-5*scale-0.5f), (int)(-5*scale-0.5f), 0);
+	    			ImageView vipStar = new ImageView(getContext());
+    				vipStar.setLayoutParams(params);
+    				vipStar.setImageResource(R.drawable.ic_listing_star);
+    				timeslotWrap.addView(vipStar);
+	    		}
+	    		timeslotsContainer.addView(timeslotWrap);
 	    		
 	    		if (i<3) {
 	    			LinearLayout paddingView = new LinearLayout(getContext());
@@ -634,6 +654,7 @@ public class MainActivity extends BaseActivity {
 		        }
 	            for(int i=0;i<restaurants.length();i++) {
 	               		JSONObject jo = restaurants.getJSONObject(i);
+	               		Boolean isVIP = jo.getString("is_vip").compareTo("0")==0?false:true;
 	               		RestaurantResultItem item = new RestaurantResultItem();
 	               		item.licno = jo.getString("LICNO");
 	               		item.type = jo.getString("TYPE");
@@ -643,13 +664,28 @@ public class MainActivity extends BaseActivity {
 	           			item.img = jo.getString("IMAGE");
 	           			item.cuisine = jo.getString("cuisine");
 	           			ArrayList<String> timeslots = new ArrayList<String>();
+	           			ArrayList<String> vipTimeslots = new ArrayList<String>();
 	           			
-	           			if (jo.has("timeslotAvailability")) {
+	           			if (jo.has("timeslotAvailability") || jo.has("VIPTimeslotAvailability")) {
 	           				JSONArray timeslotAvailability = jo.getJSONArray("timeslotAvailability");
+	           				JSONArray vipTimeslotAvailability = jo.getJSONArray("VIPTimeslotAvailability");
 	           				for (int j=0; j<timeslotAvailability.length(); j++) {
 	           					String timeslotStr = timeslotAvailability.getString(j);
            						timeslots.add(timeslotStr);
 	           				}
+	           				
+	           				if (isVIP) {
+		           				for (int j=0; j<vipTimeslotAvailability.length(); j++) {
+		           					String timeslotStr = vipTimeslotAvailability.getString(j);
+		           					if (!timeslots.contains(timeslotStr)) {
+		           						timeslots.add(timeslotStr);
+		           					}
+	           						vipTimeslots.add(timeslotStr);
+		           				}
+	           				}
+	           				Collections.sort(timeslots);
+	           				item.vipTimeslots = vipTimeslots;
+	           				
 	           				if (timeslots.size() > 4) {
 	           					ArrayList<String> targetTimeslots = new ArrayList<String>();
 	           					String targetTimeslotStr = new SimpleDateFormat("HHmm").format(SearchData.getInstance().getChosenDate());
@@ -668,6 +704,7 @@ public class MainActivity extends BaseActivity {
 	           					}
 	           					timeslots = targetTimeslots;
 	           				}
+	           				
 	           			}
 	           			item.timeslots = timeslots;
 	           			item.rating = 1;

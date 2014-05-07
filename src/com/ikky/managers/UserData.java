@@ -46,7 +46,7 @@ public class UserData {
 	
 	public void clearAll() {
 		this.setLogin(false);
-		this.setUserId("");
+		this.setUserId("0");
 		this.setFirstName("");
 		this.setLastName("");
 		this.setEmail("");
@@ -63,7 +63,7 @@ public class UserData {
 	}
 	
 	public String getUserId() {
-		return mPrefs.getString(USERDATA_USERID, "");
+		return mPrefs.getString(USERDATA_USERID, "0");
 	}
 	
 	public void setUserId(String userId) {
